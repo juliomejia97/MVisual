@@ -12,14 +12,20 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.reflect.Array;
@@ -29,7 +35,10 @@ public class MainActivity extends AppCompatActivity {
 
     private ImageView image;
     private Bitmap imgBitmap;
-    private Button btnSelect, btnPixels, btnDraw;
+    private Button btnSelect, btnProcess, btnAlgoritmo;
+    private SeekBar sbWindow, sbLevel;
+    private TextView tvWindow, tvLevel;
+    private LinearLayout llWindow, llLevel;
     private static final int ALMACENAMIENTO_EXTERNO = 3;
     private static final int IMAGE_PICKER_REQUEST = 4;
     private static boolean accessAlm = false;
@@ -40,35 +49,94 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        image = findViewById(R.id.imageView);
-        btnSelect = findViewById(R.id.button);
-        btnPixels = findViewById(R.id.button2);
-        btnDraw = findViewById(R.id.drawImageBtn);
+        image = findViewById(R.id.imgView);
+        tvWindow = findViewById(R.id.tvProgressW);
+        tvLevel = findViewById(R.id.tvProgressL);
+        llWindow = findViewById(R.id.llWindow);
+        llLevel = findViewById(R.id.lllevel);
+        btnSelect = findViewById(R.id.btnSeleccionar);
+        btnProcess = findViewById(R.id.btnProcesar);
+        btnAlgoritmo = findViewById(R.id.btnAlgoritmo);
+        sbWindow = findViewById(R.id.sbWindow);
+        sbWindow.setMax(255);
+        sbWindow.setProgress(255);
+        sbLevel = findViewById(R.id.sbLevel);
+        sbLevel.setMax(255);
+        sbLevel.setProgress(128);
+        tvWindow.setText("" + sbWindow.getProgress());
+        tvLevel.setText("" + sbLevel.getProgress());
+
+        image.setDrawingCacheEnabled(true);
+
+        llWindow.setVisibility(View.INVISIBLE);
+        llLevel.setVisibility(View.INVISIBLE);
+        btnProcess.setVisibility(View.INVISIBLE);
+        btnAlgoritmo.setVisibility(View.INVISIBLE);
+
         btnSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                accessAlm   = requestPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE, "Permission to Access Gallery", ALMACENAMIENTO_EXTERNO);
+                accessAlm = requestPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE, "Permission to Access Gallery", ALMACENAMIENTO_EXTERNO);
                 if(accessAlm){
                     usePermissionImage();
                 }
             }
         });
 
-        btnPixels.setOnClickListener(new View.OnClickListener() {
+        btnProcess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("COLOR", "ENTRE");
-                manipulatePixels();
-            }
-        });
-        btnDraw.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                Bitmap bitmapIntent = image.getDrawingCache();
+                bitmapIntent.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+
                 Intent intent = new Intent(view.getContext(), DrawOnBitmapActivity.class);
+                intent.putExtra("BitmapImage", byteArray);
                 startActivity(intent);
             }
         });
 
+        btnAlgoritmo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                wlAlgorithm();
+            }
+        });
+
+        sbWindow.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                updateWindow();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        sbLevel.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+                updateLevel();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
     }
 
@@ -101,6 +169,10 @@ public class MainActivity extends AppCompatActivity {
                         final InputStream is = getContentResolver().openInputStream(imageUri);
                         imgBitmap = BitmapFactory.decodeStream(is);
                         image.setImageBitmap(imgBitmap);
+                        llWindow.setVisibility(View.VISIBLE);
+                        llLevel.setVisibility(View.VISIBLE);
+                        btnProcess.setVisibility(View.VISIBLE);
+                        btnAlgoritmo.setVisibility(View.VISIBLE);
                     }catch(FileNotFoundException e){
                         e.printStackTrace();
                     }
@@ -126,28 +198,84 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void manipulatePixels(){
-
+    public void wlAlgorithm(){
         int W = imgBitmap.getWidth();
         int H = imgBitmap.getHeight();
-        Log.i("COLOR", "W: " + W);
-        Log.i("COLOR", "H: " + H);
-
-        Bitmap imgMan;
-        imgMan = imgBitmap.copy(Bitmap.Config.ARGB_8888, true);
+        Bitmap imgWL;
+        imgWL = imgBitmap.copy(Bitmap.Config.ARGB_8888, true);
 
         for(int i = 0; i < W; i++){
             for(int j = 0; j < H; j++){
-                int color = imgMan.getPixel(i, j);
-                String hex = Integer.toHexString(color);
-                imgMan.setPixel(i, j, color / 2);
+                int color = imgWL.getPixel(i, j);
+                int indColor = (color >> 16) & 0xff;
+                double slope = getSlope(indColor);
+                if(slope > 255){
+                    slope = 255;
+                } else if(slope < 0) {
+                    slope = 0;
+                }
+                int defColor = Color.argb(255, (int) slope, (int) slope, (int) slope);
+                imgWL.setPixel(i, j, defColor);
             }
         }
 
-        Log.i("COLOR", "TERMINE DE PROCESAR IMAGEN");
-        image.setImageBitmap(imgMan);
-        imgBitmap = imgMan;
+        image.setImageBitmap(imgWL);
     }
 
+    public void updateWindow() {
 
+        tvWindow.setText("" + sbWindow.getProgress());
+
+        /*int W = imgBitmap.getWidth();
+        int H = imgBitmap.getHeight();
+        Bitmap imgWindow;
+        imgWindow = imgBitmap.copy(Bitmap.Config.ARGB_8888, true);
+
+        for(int i = 0; i < W; i++){
+            for(int j = 0; j < H; j++){
+                int color = imgWindow.getPixel(i, j);
+                double slope = getSlope(color);
+                if(slope > 255){
+                    slope = 255;
+                } else if(slope < 0) {
+                    slope = 0;
+                }
+                imgWindow.setPixel(i, j, (int) slope);
+            }
+        }
+
+        image.setImageBitmap(imgWindow);*/
+    }
+
+    public void updateLevel() {
+
+        tvLevel.setText("" + sbLevel.getProgress());
+
+        /*int W = imgBitmap.getWidth();
+        int H = imgBitmap.getHeight();
+        Bitmap imgLevel;
+        imgLevel = imgBitmap.copy(Bitmap.Config.ARGB_8888, true);
+        int[] pixels = new int[0];
+        imgLevel.getPixels(pixels,0, 0, 0, 0, W, H);
+        int[] newPixels = getSlope(pixels);
+        imgLevel.setPixels(newPixels, 0, 0, 0, 0, W, H);
+        image.setImageBitmap(imgLevel);*/
+    }
+
+    public double getSlope(int color){
+
+        //Points
+        double x1 = sbLevel.getProgress() - (sbWindow.getProgress() / 2);
+        double y1 = 0;
+        double x2 = sbLevel.getProgress() + (sbWindow.getProgress() / 2);
+        double y2 = 255;
+
+        //Get the slope of the curve
+        double m = (y2 - y1) / (x2 - x1);
+
+        //Get the Y-axis interception of the curve => Y = mX + b  =>  b = Y - mX
+        double b = y2 - (m * x2);
+
+        return m * color + b;
+    }
 }

@@ -6,11 +6,6 @@
     tools:context=".DrawOnBitmapActivity"
     android:orientation="vertical">
 
-    <Button
-        android:id="@+id/ChoosePictureButton"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Choose Image"/>
     <com.example.pixelmanipulation.DrawableImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
