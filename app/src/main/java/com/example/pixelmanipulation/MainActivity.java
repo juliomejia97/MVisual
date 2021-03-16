@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ImageView image;
     private Bitmap imgBitmap;
-    private Button btnSelect, btnProcess, btnAlgoritmo;
+    private Button btnSelect, btnProcess;
     private SeekBar sbWindow, sbLevel;
     private TextView tvWindow, tvLevel;
     private LinearLayout llWindow, llLevel;
@@ -56,7 +56,6 @@ public class MainActivity extends AppCompatActivity {
         llLevel = findViewById(R.id.lllevel);
         btnSelect = findViewById(R.id.btnSeleccionar);
         btnProcess = findViewById(R.id.btnProcesar);
-        btnAlgoritmo = findViewById(R.id.btnAlgoritmo);
         sbWindow = findViewById(R.id.sbWindow);
         sbWindow.setMax(255);
         sbWindow.setProgress(255);
@@ -71,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
         llWindow.setVisibility(View.INVISIBLE);
         llLevel.setVisibility(View.INVISIBLE);
         btnProcess.setVisibility(View.INVISIBLE);
-        btnAlgoritmo.setVisibility(View.INVISIBLE);
 
         btnSelect.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,13 +92,6 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(view.getContext(), DrawOnBitmapActivity.class);
                 intent.putExtra("BitmapImage", byteArray);
                 startActivity(intent);
-            }
-        });
-
-        btnAlgoritmo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                wlAlgorithm();
             }
         });
 
@@ -172,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
                         llWindow.setVisibility(View.VISIBLE);
                         llLevel.setVisibility(View.VISIBLE);
                         btnProcess.setVisibility(View.VISIBLE);
-                        btnAlgoritmo.setVisibility(View.VISIBLE);
                     }catch(FileNotFoundException e){
                         e.printStackTrace();
                     }
@@ -225,41 +215,33 @@ public class MainActivity extends AppCompatActivity {
     public void updateWindow() {
 
         tvWindow.setText("" + sbWindow.getProgress());
-
-        /*int W = imgBitmap.getWidth();
-        int H = imgBitmap.getHeight();
-        Bitmap imgWindow;
-        imgWindow = imgBitmap.copy(Bitmap.Config.ARGB_8888, true);
-
-        for(int i = 0; i < W; i++){
-            for(int j = 0; j < H; j++){
-                int color = imgWindow.getPixel(i, j);
-                double slope = getSlope(color);
-                if(slope > 255){
-                    slope = 255;
-                } else if(slope < 0) {
-                    slope = 0;
-                }
-                imgWindow.setPixel(i, j, (int) slope);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                image.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        wlAlgorithm();
+                    }
+                });
             }
-        }
+        }).start();
 
-        image.setImageBitmap(imgWindow);*/
     }
 
     public void updateLevel() {
-
         tvLevel.setText("" + sbLevel.getProgress());
-
-        /*int W = imgBitmap.getWidth();
-        int H = imgBitmap.getHeight();
-        Bitmap imgLevel;
-        imgLevel = imgBitmap.copy(Bitmap.Config.ARGB_8888, true);
-        int[] pixels = new int[0];
-        imgLevel.getPixels(pixels,0, 0, 0, 0, W, H);
-        int[] newPixels = getSlope(pixels);
-        imgLevel.setPixels(newPixels, 0, 0, 0, 0, W, H);
-        image.setImageBitmap(imgLevel);*/
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                image.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        wlAlgorithm();
+                    }
+                });
+            }
+        }).start();
     }
 
     public double getSlope(int color){
@@ -269,13 +251,10 @@ public class MainActivity extends AppCompatActivity {
         double y1 = 0;
         double x2 = sbLevel.getProgress() + (sbWindow.getProgress() / 2);
         double y2 = 255;
-
         //Get the slope of the curve
         double m = (y2 - y1) / (x2 - x1);
-
         //Get the Y-axis interception of the curve => Y = mX + b  =>  b = Y - mX
         double b = y2 - (m * x2);
-
         return m * color + b;
     }
 }
