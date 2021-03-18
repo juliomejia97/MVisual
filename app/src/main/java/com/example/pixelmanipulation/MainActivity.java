@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 bitmapIntent.compress(Bitmap.CompressFormat.PNG, 100, stream);
                 byte[] byteArray = stream.toByteArray();
 
-                Intent intent = new Intent(view.getContext(), DrawOnBitmapActivity.class);
+                Intent intent = new Intent(view.getContext(), CanvaImageView.class);
                 intent.putExtra("BitmapImage", byteArray);
                 startActivity(intent);
             }
