@@ -31,11 +31,6 @@
         <activity
             android:name=".CanvaImageView"
             android:label="@string/title_activity_canva_image_view">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".DrawOnBitmapActivity" />
         <activity android:name=".MainActivity">
