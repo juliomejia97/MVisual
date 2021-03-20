@@ -101,5 +101,15 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/btnBuffer"
+        android:layout_width="323dp"
+        android:layout_height="43dp"
+        android:layout_marginTop="10dp"
+        android:text="Leer buffer de memoria"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnSeleccionar" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
