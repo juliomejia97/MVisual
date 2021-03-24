@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ImageView image;
     private Bitmap imgBitmap;
-    private Button btnSelect, btnProcess;
+    private Button btnSelect, btnProcess, btnBuffer;
     private SeekBar sbWindow, sbLevel;
     private TextView tvWindow, tvLevel;
     private LinearLayout llWindow, llLevel;
@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         llLevel = findViewById(R.id.lllevel);
         btnSelect = findViewById(R.id.btnSeleccionar);
         btnProcess = findViewById(R.id.btnProcesar);
+        btnBuffer = findViewById(R.id.btnBuffer);
         sbWindow = findViewById(R.id.sbWindow);
         sbWindow.setMax(255);
         sbWindow.setProgress(255);
@@ -92,6 +93,16 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(view.getContext(), DrawOnBitmapActivity.class);
                 intent.putExtra("BitmapImage", byteArray);
                 startActivity(intent);
+            }
+        });
+
+        btnBuffer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getBuffer();
+                llWindow.setVisibility(View.VISIBLE);
+                llLevel.setVisibility(View.VISIBLE);
+                btnProcess.setVisibility(View.VISIBLE);
             }
         });
 
@@ -186,6 +197,27 @@ public class MainActivity extends AppCompatActivity {
                 break;
             }
         }
+    }
+
+    public void getBuffer() {
+
+        int [] buffer = new int[]{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+                0,3,3,3,3,0,0,7,7,7,7,0,0,11,11,11,11,0,0,15,15,15,15,0,
+                0,3,0,0,0,0,0,7,0,0,0,0,0,11,0,0,0,0,0,15,0,0,15,0,
+                0,3,3,3,0,0,0,7,7,7,0,0,0,11,11,11,0,0,0,15,15,15,15,0,
+                0,3,0,0,0,0,0,7,0,0,0,0,0,11,0,0,0,0,0,15,0,0,0,0,
+                0,3,0,0,0,0,0,7,7,7,7,0,0,11,11,11,11,0,0,15,0,0,0,0,
+                0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+        int W = 24;
+        int H = 7;
+
+        for(int i = 0; i < buffer.length; i++){
+            int color = (255 & 0xff) << 24 | (buffer[i] & 0xff) << 16 | (buffer[i] & 0xff) << 8 | (buffer[i] & 0xff);
+            buffer[i] = color;
+        }
+
+        imgBitmap = Bitmap.createBitmap(buffer, W, H, Bitmap.Config.ARGB_8888);
+        image.setImageBitmap(imgBitmap);
     }
 
     public void wlAlgorithm(){
