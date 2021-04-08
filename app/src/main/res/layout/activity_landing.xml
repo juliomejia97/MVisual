@@ -156,8 +156,8 @@
             android:layout_weight="1">
 
             <ImageView
-                android:layout_width="65dp"
-                android:layout_height="65dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 app:srcCompat="@drawable/patient" />
 
             <TextView
@@ -181,8 +181,8 @@
             android:layout_weight="1">
 
             <ImageView
-                android:layout_width="65dp"
-                android:layout_height="65dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 app:srcCompat="@drawable/studies" />
 
             <TextView
@@ -203,8 +203,8 @@
             android:layout_weight="1">
 
             <ImageView
-                android:layout_width="65dp"
-                android:layout_height="65dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 app:srcCompat="@drawable/series" />
 
             <TextView
