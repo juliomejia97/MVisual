@@ -26,12 +26,15 @@
         -->
         <meta-data
             android:name="com.google.android.wearable.standalone"
-            android:value="true" />
+            android:value="false" />
 
         <activity
             android:name=".CanvaImageView"
             android:label="@string/title_activity_canva_image_view">
         </activity>
+        <activity
+            android:name=".AmplifyActivity"
+            android:label="@string/title_activity_canva_image_view"></activity>
         <activity android:name=".DrawOnBitmapActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

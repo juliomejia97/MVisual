@@ -1,11 +1,5 @@
 package com.example.pixelmanipulation;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -13,10 +7,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -25,17 +17,21 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
     private ImageView image;
     private Bitmap imgBitmap;
-    private Button btnSelect, btnProcess, btnBuffer;
+    private Button btnSelect, btnProcess, btnBuffer, btnAmplify;
     private SeekBar sbWindow, sbLevel;
     private TextView tvWindow, tvLevel;
     private LinearLayout llWindow, llLevel;
@@ -57,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         btnSelect = findViewById(R.id.btnSeleccionar);
         btnProcess = findViewById(R.id.btnProcesar);
         btnBuffer = findViewById(R.id.btnBuffer);
+        btnAmplify =findViewById(R.id.buttonAmps);
         sbWindow = findViewById(R.id.sbWindow);
         sbWindow.setMax(255);
         sbWindow.setProgress(255);
@@ -79,6 +76,14 @@ public class MainActivity extends AppCompatActivity {
                 if(accessAlm){
                     usePermissionImage();
                 }
+            }
+        });
+
+        btnAmplify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), AmplifyActivity.class);
+                startActivity(intent);
             }
         });
 
