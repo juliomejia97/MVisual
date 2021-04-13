@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private SeekBar sbWindow, sbLevel, sbDepth;
     private TextView tvWindow, tvLevel, tvDepth;
     private LinearLayout llWindow, llLevel, llDepth;
-    private ArrayList<int []> buffers;
+    private ArrayList<ArrayList<Integer>> buffers;
     private int W, H;
     private static final int ALMACENAMIENTO_EXTERNO = 3;
     private static final int IMAGE_PICKER_REQUEST = 4;
@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         W = -1;
         H = -1;
 
-        buffers = new ArrayList<int []>();
+        buffers = new ArrayList<ArrayList<Integer>>();
 
         image.setDrawingCacheEnabled(true);
 
@@ -186,12 +186,10 @@ public class MainActivity extends AppCompatActivity {
             case FILE_PICKER_REQUEST: {
                 if(resultCode == RESULT_OK){
                     final Uri fileUri = data.getData();
-                    Toast.makeText(MainActivity.this, fileUri.getPath(), Toast.LENGTH_SHORT).show();
-                    //Se le envian las dos rutas al cpp
-                    //Se asigna el retorno del cpp al atributo buffers
-                    //Se muestra por defecto la profundidad 1
-                    //Se muestran los seekbar
-                    showSeekBars();
+                    Log.i("Ruta", fileUri.getPath());
+                    Log.i("Ruta", "" + convertMHD("/document/raw:/storage/emulated/0/Download/radius_ulna_raw.mhd", "/document/raw:/storage/emulated/0/Download/radius_ulna_raw.raw"));
+                    Log.i("Ruta", "" + buffers);
+                    //showSeekBars();
                 }
             }
         }
@@ -262,7 +260,12 @@ public class MainActivity extends AppCompatActivity {
     public void getBuffer(int bufferIndex) {
 
         //Se obtiene el buffer del indice bufferIndex
-        int[] buffer = buffers.get(bufferIndex);
+
+        for(int i = 0; i < buffers.size(); i++){
+            Log.i("Buffer", "" + buffers.get(i).size());
+        }
+
+        /*int[] buffer = buffers.get(bufferIndex);
 
         for(int i = 0; i < buffer.length; i++){
             int color = (255 & 0xff) << 24 | (buffer[i] & 0xff) << 16 | (buffer[i] & 0xff) << 8 | (buffer[i] & 0xff);
@@ -270,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         imgBitmap = Bitmap.createBitmap(buffer, W, H, Bitmap.Config.ARGB_8888);
-        image.setImageBitmap(imgBitmap);
+        image.setImageBitmap(imgBitmap);*/
     }
 
     public void wlAlgorithm(){
@@ -316,8 +319,8 @@ public class MainActivity extends AppCompatActivity {
         sbWindow.setProgress(255);
         sbLevel.setMax(255);
         sbLevel.setProgress(128);
+        sbDepth.setMax(buffers.size());
         sbDepth.setProgress(0);
-        //sbDepth.setMax(DEPTH DEL MHD);
         tvWindow.setText("" + sbWindow.getProgress());
         tvLevel.setText("" + sbLevel.getProgress());
         tvDepth.setText("" + sbDepth.getProgress());
@@ -328,7 +331,7 @@ public class MainActivity extends AppCompatActivity {
         btnProcess.setVisibility(View.VISIBLE);
     }
 
-    public native Integer[] convertMHD(String mhdFile, String rawFile);
+    public native String convertMHD(String mhdFile, String rawFile);
     // Used to load the 'native-lib' library on application startup.
     static {
         System.loadLibrary("native-lib");

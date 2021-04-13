@@ -98,9 +98,13 @@ std::string convertString(JNIEnv *env, jstring jStr){
 }
 
 extern "C"
-JNIEXPORT jobjectArray JNICALL
+JNIEXPORT jstring JNICALL
 Java_com_example_pixelmanipulation_MainActivity_convertMHD(JNIEnv *env, jobject thiz, jstring mhdFile, jstring rawFile) {
-    using TBufferFunction =
+
+    std::string hpta = convertString(env, mhdFile);
+    return env->NewStringUTF(hpta.c_str());
+
+    /*using TBufferFunction =
     std::function<void(const std::string &, const std::vector<int> &, double, double, unsigned char **)>;
 
     // Read MHD file
@@ -171,6 +175,7 @@ Java_com_example_pixelmanipulation_MainActivity_convertMHD(JNIEnv *env, jobject 
     double window = 2048;
     double level = 0;
     unsigned char *wl_buffer;
+    std::cout<<raw_fname;
     raw_function(convertString(env, rawFile), dims, window, level, &wl_buffer);
 
     // Save PGM files to vector
@@ -187,13 +192,24 @@ Java_com_example_pixelmanipulation_MainActivity_convertMHD(JNIEnv *env, jobject 
         } // end for
     }   // end for
 
-    /*for (unsigned long z = 0; z < dims[2]; ++z)
-    {
-        std::cout << "Image #: " << (z + 1) << " " << images[z].size();
-    }*/
+    jclass array1D = env->FindClass("[I");
+    jint sizeDepth = images.size();
+    jint sizePixel = images[0].size();
+
+    jobjectArray buffers = env->NewObjectArray(sizeDepth, array1D, NULL);
+    for(int i = 0; i < sizeDepth; i++){
+        jintArray pixels = env->NewIntArray(sizePixel);
+        jint *buf = new jint[sizePixel];
+        for(int j = 0; j < sizePixel; j++){
+            buf[i] = (jint) images[i][j];
+        }
+        env->SetIntArrayRegion(pixels, 0, sizePixel, buf);
+        delete [] buf;
+        env->SetObjectArrayElement(buffers, i, pixels);
+    }
 
     // Finish
-    delete wl_buffer;
+    delete wl_buffer;*/
 
     return NULL;
 }
