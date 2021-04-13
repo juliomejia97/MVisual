@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout llWindow, llLevel;
     private static final int ALMACENAMIENTO_EXTERNO = 3;
     private static final int IMAGE_PICKER_REQUEST = 4;
+    private static final int FILE_PICKER_REQUEST = 5;
     private static boolean accessAlm = false;
 
 
@@ -103,6 +104,11 @@ public class MainActivity extends AppCompatActivity {
                 llWindow.setVisibility(View.VISIBLE);
                 llLevel.setVisibility(View.VISIBLE);
                 btnProcess.setVisibility(View.VISIBLE);
+                accessAlm = requestPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE, "Permission to Access Gallery", ALMACENAMIENTO_EXTERNO);
+                if(accessAlm){
+                    usePermissionApplication();
+                }
+                //Toast.makeText(MainActivity.this, stringFromJNI("Sepo"), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -154,6 +160,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void usePermissionApplication(){
+        Intent appIntent = new Intent(Intent.ACTION_GET_CONTENT);
+        appIntent.setType("*/*");
+        startActivityForResult(appIntent, FILE_PICKER_REQUEST);
+    }
+
     private void usePermissionImage(){
         Intent pictureIntent = new Intent(Intent.ACTION_PICK);
         pictureIntent.setType("image/*");
@@ -179,6 +191,13 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
                 break;
+            }
+
+            case FILE_PICKER_REQUEST: {
+                if(resultCode == RESULT_OK){
+                    final Uri fileUri = data.getData();
+                    Toast.makeText(MainActivity.this, fileUri.getPath(), Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }
@@ -288,5 +307,12 @@ public class MainActivity extends AppCompatActivity {
         //Get the Y-axis interception of the curve => Y = mX + b  =>  b = Y - mX
         double b = y2 - (m * x2);
         return m * color + b;
+    }
+
+
+    public native String stringFromJNI(String name);
+    // Used to load the 'native-lib' library on application startup.
+    static {
+        System.loadLibrary("native-lib");
     }
 }
