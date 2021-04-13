@@ -11,12 +11,6 @@
 #include <sstream>
 #include <vector>
 
-extern "C"
-JNIEXPORT jobjectArray JNICALL
-Java_com_example_pixelmanipulation_MainActivity_convertMHD(JNIEnv *env, jobject thiz, jstring mhdFile, jstring rawFile) {
-    return NULL;
-}
-
 // -------------------------------------------------------------------------
 void read_file_into_buffer(std::string &buffer, const std::string &fname)
 {
@@ -82,14 +76,39 @@ void convert_buffer(
 }
 
 // -------------------------------------------------------------------------
-int main(int argc, char **argv)
-{
+std::string convertString(JNIEnv *env, jstring jStr){
+    const char *cstr = env->GetStringUTFChars(jStr, NULL);
+    if (!jStr)
+        return "";
+
+    const jclass stringClass = env->GetObjectClass(jStr);
+    const jmethodID getBytes = env->GetMethodID(stringClass, "getBytes", "(Ljava/lang/String;)[B");
+    const jbyteArray stringJbytes = (jbyteArray) env->CallObjectMethod(jStr, getBytes, env->NewStringUTF("UTF-8"));
+
+    size_t length = (size_t) env->GetArrayLength(stringJbytes);
+    jbyte* pBytes = env->GetByteArrayElements(stringJbytes, NULL);
+
+    std::string ret = std::string((char *)pBytes, length);
+    env->ReleaseByteArrayElements(stringJbytes, pBytes, JNI_ABORT);
+
+    env->DeleteLocalRef(stringJbytes);
+    env->DeleteLocalRef(stringClass);
+
+    return ret;
+}
+
+
+
+
+extern "C"
+JNIEXPORT jobjectArray JNICALL
+Java_com_example_pixelmanipulation_MainActivity_convertMHD(JNIEnv *env, jobject thiz, jstring mhdFile, jstring rawFile) {
     using TBufferFunction =
     std::function<void(const std::string &, const std::vector<int> &, double, double, unsigned char **)>;
 
     // Read MHD file
     std::string mhd_buffer;
-    read_file_into_buffer(mhd_buffer, argv[1]);
+    read_file_into_buffer(mhd_buffer, convertString(env, mhdFile));
     std::istringstream mhd_stream(mhd_buffer);
 
     // Parse it
@@ -107,7 +126,7 @@ int main(int argc, char **argv)
                 std::cerr
                         << "Could not load compressed data. Finishing."
                         << std::endl;
-                return (EXIT_FAILURE);
+                return NULL;
             } // end if
         }
         else if (tokens[0] == "DimSize")
@@ -144,7 +163,7 @@ int main(int argc, char **argv)
                 std::cerr
                         << "Could not load data: type not recognized. Finishing."
                         << std::endl;
-                return (EXIT_FAILURE);
+                return NULL;
             } // end if
         }
         else if (tokens[0] == "ElementDataFile")
@@ -155,7 +174,7 @@ int main(int argc, char **argv)
     double window = 2048;
     double level = 0;
     unsigned char *wl_buffer;
-    raw_function(raw_fname, dims, window, level, &wl_buffer);
+    raw_function(convertString(env, rawFile), dims, window, level, &wl_buffer);
 
     // Save PGM files to vector
     unsigned long ndigits = (unsigned long)(std::ceil(std::log10(dims[2])));
@@ -178,4 +197,6 @@ int main(int argc, char **argv)
 
     // Finish
     delete wl_buffer;
+    
+    return NULL;
 }
