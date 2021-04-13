@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.lang.reflect.Array;
@@ -186,10 +187,8 @@ public class MainActivity extends AppCompatActivity {
             case FILE_PICKER_REQUEST: {
                 if(resultCode == RESULT_OK){
                     final Uri fileUri = data.getData();
-                    Log.i("Ruta", fileUri.getPath());
-                    Log.i("Ruta", "" + convertMHD("/document/raw:/storage/emulated/0/Download/radius_ulna_raw.mhd", "/document/raw:/storage/emulated/0/Download/radius_ulna_raw.raw"));
-                    Log.i("Ruta", "" + buffers);
-                    //showSeekBars();
+                    Log.i("Ruta", "" + convertMHD("radius_ulna_raw.mhd", "radius_ulna_raw.raw"));
+                    showSeekBars();
                 }
             }
         }
@@ -331,7 +330,7 @@ public class MainActivity extends AppCompatActivity {
         btnProcess.setVisibility(View.VISIBLE);
     }
 
-    public native String convertMHD(String mhdFile, String rawFile);
+    public native ArrayList<ArrayList<Integer>> convertMHD(String mhdFile, String rawFile);
     // Used to load the 'native-lib' library on application startup.
     static {
         System.loadLibrary("native-lib");

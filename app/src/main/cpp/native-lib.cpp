@@ -98,13 +98,18 @@ std::string convertString(JNIEnv *env, jstring jStr){
 }
 
 extern "C"
-JNIEXPORT jstring JNICALL
+JNIEXPORT jobject JNICALL
 Java_com_example_pixelmanipulation_MainActivity_convertMHD(JNIEnv *env, jobject thiz, jstring mhdFile, jstring rawFile) {
 
-    std::string hpta = convertString(env, mhdFile);
-    return env->NewStringUTF(hpta.c_str());
+    /*
+     * https://stackoverflow.com/questions/11666821/array-of-object-array-2d-arrays-jni/11683012
+     * https://stackoverflow.com/questions/6070679/create-populate-and-return-2d-string-array-from-native-code-jni-ndk
+     * https://stackoverflow.com/questions/50864027/jni-accessing-array-of-array
+     * https://gamedev.stackexchange.com/questions/96947/jni-multidimensional-array-as-return-value
+     * https://stackoverflow.com/questions/10813346/pass-return-and-convert-to-vectors-list-of-lists-over-jni
+     */
 
-    /*using TBufferFunction =
+    using TBufferFunction =
     std::function<void(const std::string &, const std::vector<int> &, double, double, unsigned char **)>;
 
     // Read MHD file
@@ -175,7 +180,6 @@ Java_com_example_pixelmanipulation_MainActivity_convertMHD(JNIEnv *env, jobject 
     double window = 2048;
     double level = 0;
     unsigned char *wl_buffer;
-    std::cout<<raw_fname;
     raw_function(convertString(env, rawFile), dims, window, level, &wl_buffer);
 
     // Save PGM files to vector
@@ -209,7 +213,7 @@ Java_com_example_pixelmanipulation_MainActivity_convertMHD(JNIEnv *env, jobject 
     }
 
     // Finish
-    delete wl_buffer;*/
+    delete wl_buffer;
 
-    return NULL;
+    return buffers;
 }
