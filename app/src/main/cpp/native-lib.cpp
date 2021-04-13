@@ -97,9 +97,6 @@ std::string convertString(JNIEnv *env, jstring jStr){
     return ret;
 }
 
-
-
-
 extern "C"
 JNIEXPORT jobjectArray JNICALL
 Java_com_example_pixelmanipulation_MainActivity_convertMHD(JNIEnv *env, jobject thiz, jstring mhdFile, jstring rawFile) {
@@ -190,13 +187,13 @@ Java_com_example_pixelmanipulation_MainActivity_convertMHD(JNIEnv *env, jobject 
         } // end for
     }   // end for
 
-    for (unsigned long z = 0; z < dims[2]; ++z)
+    /*for (unsigned long z = 0; z < dims[2]; ++z)
     {
         std::cout << "Image #: " << (z + 1) << " " << images[z].size();
-    }
+    }*/
 
     // Finish
     delete wl_buffer;
-    
+
     return NULL;
 }
