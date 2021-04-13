@@ -105,10 +105,10 @@ public class MainActivity extends AppCompatActivity {
                 llLevel.setVisibility(View.VISIBLE);
                 btnProcess.setVisibility(View.VISIBLE);
                 accessAlm = requestPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE, "Permission to Access Gallery", ALMACENAMIENTO_EXTERNO);
-                if(accessAlm){
+                /*if(accessAlm){
                     usePermissionApplication();
-                }
-                //Toast.makeText(MainActivity.this, stringFromJNI("Sepo"), Toast.LENGTH_SHORT).show();
+                }*/
+                Toast.makeText(MainActivity.this, stringFromJNI("Sepo"), Toast.LENGTH_SHORT).show();
             }
         });
 
