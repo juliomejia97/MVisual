@@ -11,13 +11,10 @@
 #include <sstream>
 #include <vector>
 
-std::string test();
-
 extern "C"
-JNIEXPORT jstring JNICALL
-Java_com_example_pixelmanipulation_MainActivity_stringFromJNI(JNIEnv *env, jobject thiz, jstring name) {
-    std::string hello = "Hello from C++";
-    return env->NewStringUTF(hello.c_str());
+JNIEXPORT jobjectArray JNICALL
+Java_com_example_pixelmanipulation_MainActivity_convertMHD(JNIEnv *env, jobject thiz, jstring mhdFile, jstring rawFile) {
+    return NULL;
 }
 
 // -------------------------------------------------------------------------
