@@ -8,6 +8,7 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -16,6 +17,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,10 +27,16 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 
@@ -186,9 +194,56 @@ public class MainActivity extends AppCompatActivity {
 
             case FILE_PICKER_REQUEST: {
                 if(resultCode == RESULT_OK){
-                    final Uri fileUri = data.getData();
-                    Log.i("Ruta", "" + convertMHD("radius_ulna_raw.mhd", "radius_ulna_raw.raw"));
-                    showSeekBars();
+
+                    /**
+                     * https://firebase.google.com/docs/storage/android/download-files?hl=es
+                     * https://stackoverflow.com/questions/38581575/android-not-able-to-select-file-from-internal-storage
+                     * https://developer.android.com/training/data-storage/app-specific?hl=es-419
+                     * https://developer.android.com/studio/debug/device-file-explorer
+                     * https://developer.android.com/training/data-storage
+                     */
+
+                    //WRITE TO INTERNAL STORAGE
+                    /*String text = "Hello World! \n Test file \n For saving files in the internal storage of Android";
+                    String file_name = "test.txt";
+                    FileOutputStream fos = null;
+                    try {
+                        fos = openFileOutput(file_name, MODE_PRIVATE);
+                        fos.write(text.getBytes());
+                        Toast.makeText(this, "Saved to: " + getFilesDir() + "/" + file_name, Toast.LENGTH_LONG).show();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        if(fos != null){
+                            try {
+                                fos.close();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }*/
+
+
+                    //READ FROM INTERNAL STORAGE
+                    /*try {
+                        String line;
+                        FileInputStream fis = null;
+                        fis = openFileInput("test.txt");
+                        InputStreamReader isr = new InputStreamReader(fis);
+                        BufferedReader br = new BufferedReader(isr);
+                        while((line = br.readLine()) != null){
+                            Log.i("Files", line);
+                        }
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }*/
+
+                    Log.i("Ruta", "" + convertMHD("/data/user/0/com.example.pixelmanipulation/files/test.txt", "radius_ulna_raw.raw"));
+                    //showSeekBars();
                 }
             }
         }

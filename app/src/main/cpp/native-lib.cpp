@@ -115,7 +115,7 @@ Java_com_example_pixelmanipulation_MainActivity_convertMHD(JNIEnv *env, jobject 
     // Read MHD file
     std::string mhd_buffer;
     read_file_into_buffer(mhd_buffer, convertString(env, mhdFile));
-    std::istringstream mhd_stream(mhd_buffer);
+    /*std::istringstream mhd_stream(mhd_buffer);
 
     // Parse it
     std::string line, raw_fname;
@@ -215,5 +215,7 @@ Java_com_example_pixelmanipulation_MainActivity_convertMHD(JNIEnv *env, jobject 
     // Finish
     delete wl_buffer;
 
-    return buffers;
+    return buffers;*/
+
+    return NULL;
 }
