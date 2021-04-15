@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -18,6 +19,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -203,6 +205,11 @@ public class MainActivity extends AppCompatActivity {
                      * https://developer.android.com/training/data-storage
                      */
 
+                    final Uri fileUri = data.getData();
+                    String path = getPathFromUri(this, fileUri);
+                    Log.i("Files", path);
+
+
                     //WRITE TO INTERNAL STORAGE
                     /*String text = "Hello World! \n Test file \n For saving files in the internal storage of Android";
                     String file_name = "test.txt";
@@ -242,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }*/
 
-                    Log.i("Ruta", "" + convertMHD("/data/user/0/com.example.pixelmanipulation/files/test.txt", "radius_ulna_raw.raw"));
+                    //Log.i("Ruta", "" + convertMHD("/data/user/0/com.example.pixelmanipulation/files/test.txt", "radius_ulna_raw.raw"));
                     //showSeekBars();
                 }
             }
@@ -314,12 +321,11 @@ public class MainActivity extends AppCompatActivity {
     public void getBuffer(int bufferIndex) {
 
         //Se obtiene el buffer del indice bufferIndex
-
-        for(int i = 0; i < buffers.size(); i++){
-            Log.i("Buffer", "" + buffers.get(i).size());
+        ArrayList<Integer> index = buffers.get(bufferIndex);
+        int[] buffer = new int[index.size()];
+        for(int i = 0; i < index.size(); i++){
+            buffer[i] = index.get(i);
         }
-
-        /*int[] buffer = buffers.get(bufferIndex);
 
         for(int i = 0; i < buffer.length; i++){
             int color = (255 & 0xff) << 24 | (buffer[i] & 0xff) << 16 | (buffer[i] & 0xff) << 8 | (buffer[i] & 0xff);
@@ -327,7 +333,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         imgBitmap = Bitmap.createBitmap(buffer, W, H, Bitmap.Config.ARGB_8888);
-        image.setImageBitmap(imgBitmap);*/
+        image.setImageBitmap(imgBitmap);
     }
 
     public void wlAlgorithm(){
@@ -366,6 +372,24 @@ public class MainActivity extends AppCompatActivity {
         //Get the Y-axis interception of the curve => Y = mX + b  =>  b = Y - mX
         double b = y2 - (m * x2);
         return m * color + b;
+    }
+
+    public String getPathFromUri(Context context, Uri uri){
+        Cursor cursor = null;
+        try {
+            String[] proj = {MediaStore.Files.FileColumns.DATA};
+            cursor = context.getContentResolver().query(uri, proj, null, null, null);
+            int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Files.FileColumns.DATA);
+            cursor.moveToFirst();
+            return cursor.getString(columnIndex);
+        } catch (Exception e){
+            Log.i("Files", "getRealPathFromURI Exception : " + e.toString());
+            return "";
+        } finally {
+            if(cursor != null){
+                cursor.close();
+            }
+        }
     }
 
     public void showSeekBars(){
