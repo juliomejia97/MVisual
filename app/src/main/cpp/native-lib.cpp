@@ -10,6 +10,7 @@
 #include <regex>
 #include <sstream>
 #include <vector>
+#include <android/log.h>
 
 // -------------------------------------------------------------------------
 void read_file_into_buffer(std::string &buffer, const std::string &fname)
@@ -109,13 +110,21 @@ Java_com_example_pixelmanipulation_MainActivity_convertMHD(JNIEnv *env, jobject 
      * https://stackoverflow.com/questions/10813346/pass-return-and-convert-to-vectors-list-of-lists-over-jni
      */
 
+    /*
+    * https://firebase.google.com/docs/storage/android/download-files?hl=es
+    * https://stackoverflow.com/questions/38581575/android-not-able-to-select-file-from-internal-storage
+    * https://developer.android.com/training/data-storage/app-specific?hl=es-419
+    * https://developer.android.com/studio/debug/device-file-explorer
+    * https://developer.android.com/training/data-storage
+    */
+
     using TBufferFunction =
     std::function<void(const std::string &, const std::vector<int> &, double, double, unsigned char **)>;
 
     // Read MHD file
     std::string mhd_buffer;
     read_file_into_buffer(mhd_buffer, convertString(env, mhdFile));
-    /*std::istringstream mhd_stream(mhd_buffer);
+    std::istringstream mhd_stream(mhd_buffer);
 
     // Parse it
     std::string line, raw_fname;
@@ -185,37 +194,43 @@ Java_com_example_pixelmanipulation_MainActivity_convertMHD(JNIEnv *env, jobject 
     // Save PGM files to vector
     unsigned long ndigits = (unsigned long)(std::ceil(std::log10(dims[2])));
     unsigned char *wlIt = wl_buffer;
-    std::vector<std::vector<int>> images(dims[2]);
+
+    jint width = dims[0];
+    jint height = dims[1];
+    jclass image = env->FindClass("com/example/pixelmanipulation/model/ImageMHD");
+    if(image == NULL){
+        __android_log_print(ANDROID_LOG_DEBUG,"path","%s","Could not find Image class");
+        return NULL;
+    }
+    jmethodID constructor = env->GetMethodID(image, "<init>", "(II)V");
+    if(constructor == NULL){
+        __android_log_print(ANDROID_LOG_DEBUG,"path","%s","Could not access Image constructor");
+        return NULL;
+    }
+    jobject buffer = env->NewObject(image, constructor, width, height);
+    jmethodID addBuffer = env->GetMethodID(image, "addBuffer", "(Ljava/util/ArrayList;)V");
+
+    //Create a Java ArrayList
+    jclass arrayClass = env->FindClass("java/util/ArrayList");
+    jmethodID consArray = env->GetMethodID(arrayClass, "<init>", "(I)V");
+    jmethodID addToArray = env->GetMethodID(arrayClass, "add", "(Ljava/lang/Object;)Z");
+
     for (unsigned long z = 0; z < dims[2]; ++z)
     {
-
+        jobject pixels = env->NewObject(arrayClass, consArray, width * height);
         for (int j = 0; j < dims[1]; ++j)
         {
-            for (int i = 0; i < dims[0]; ++i)
-                images[z].push_back(int(*(wlIt++)));
+            for (int i = 0; i < dims[0]; ++i) {
+                jobject pixel = reinterpret_cast<jobject>(*(wlIt++));
+                env->CallBooleanMethod(pixels, addToArray, pixel);
+            }
+
         } // end for
+        env->CallVoidMethod(buffer, addBuffer, pixels);
     }   // end for
-
-    jclass array1D = env->FindClass("[I");
-    jint sizeDepth = images.size();
-    jint sizePixel = images[0].size();
-
-    jobjectArray buffers = env->NewObjectArray(sizeDepth, array1D, NULL);
-    for(int i = 0; i < sizeDepth; i++){
-        jintArray pixels = env->NewIntArray(sizePixel);
-        jint *buf = new jint[sizePixel];
-        for(int j = 0; j < sizePixel; j++){
-            buf[i] = (jint) images[i][j];
-        }
-        env->SetIntArrayRegion(pixels, 0, sizePixel, buf);
-        delete [] buf;
-        env->SetObjectArrayElement(buffers, i, pixels);
-    }
 
     // Finish
     delete wl_buffer;
 
-    return buffers;*/
-
-    return NULL;
+    return buffer;
 }

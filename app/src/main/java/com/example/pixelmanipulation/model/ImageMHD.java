@@ -30,6 +30,8 @@ public class ImageMHD {
         H = h;
     }
 
+    public void addBuffer(ArrayList<Integer> buffer){ this.depths.add(buffer); }
+
     public ArrayList<ArrayList<Integer>> getDepths() {
         return depths;
     }

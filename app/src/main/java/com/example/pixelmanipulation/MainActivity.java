@@ -17,7 +17,6 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -34,19 +33,16 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.commons.io.FileUtils;
+import com.example.pixelmanipulation.model.ImageMHD;
 
-import java.io.BufferedReader;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -58,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvWindow, tvLevel, tvDepth;
     private LinearLayout llWindow, llLevel, llDepth;
     private ArrayList<ArrayList<Integer>> buffers;
-    private int W, H;
+    private ImageMHD imageMHD;
     private static final int ALMACENAMIENTO_EXTERNO = 3;
     private static final int IMAGE_PICKER_REQUEST = 4;
     private static final int FILE_PICKER_REQUEST = 5;
@@ -82,9 +78,6 @@ public class MainActivity extends AppCompatActivity {
         sbWindow = findViewById(R.id.sbWindow);
         sbLevel = findViewById(R.id.sbLevel);
         sbDepth = findViewById(R.id.sbDepth);
-
-        W = -1;
-        H = -1;
 
         buffers = new ArrayList<ArrayList<Integer>>();
 
@@ -203,15 +196,6 @@ public class MainActivity extends AppCompatActivity {
 
             case FILE_PICKER_REQUEST: {
                 if(resultCode == RESULT_OK){
-
-                    /**
-                     * https://firebase.google.com/docs/storage/android/download-files?hl=es
-                     * https://stackoverflow.com/questions/38581575/android-not-able-to-select-file-from-internal-storage
-                     * https://developer.android.com/training/data-storage/app-specific?hl=es-419
-                     * https://developer.android.com/studio/debug/device-file-explorer
-                     * https://developer.android.com/training/data-storage
-                     */
-
                     final Uri fileUri = data.getData();
                     String mhdPath = getPathFromUri(this, fileUri);
                     String mhdName = getFileName(fileUri);
@@ -219,8 +203,11 @@ public class MainActivity extends AppCompatActivity {
                     String rawName = mhdName.replace(".mhd", ".raw");
                     String rawPath = mhdPath.replace(mhdName, rawName);
                     insertIntoInternalStorage(rawName, rawPath);
-                    buffers = convertMHD(getFilesDir().getPath() + "/" + mhdName, getFilesDir().getPath() + "/" + rawName);
-                    showSeekBars();
+                    imageMHD = convertMHD(getFilesDir() + "/" + mhdName, getFilesDir() + "/" + rawName);
+                    Log.i("Files", "" + imageMHD.getW() + " - " + imageMHD.getH());
+                    //TOCA VER BIEN COMO TRAER EL W Y H PARA ASIGNARLOS A LAS VARIABLES GLOBALES
+                    //getBuffer(0);
+                    //showSeekBars();
                     deleteTemporalFiles(mhdName, rawName);
                 }
             }
@@ -303,7 +290,7 @@ public class MainActivity extends AppCompatActivity {
             buffer[i] = color;
         }
 
-        imgBitmap = Bitmap.createBitmap(buffer, W, H, Bitmap.Config.ARGB_8888);
+        imgBitmap = Bitmap.createBitmap(buffer, imageMHD.getW(), imageMHD.getH(), Bitmap.Config.ARGB_8888);
         image.setImageBitmap(imgBitmap);
     }
 
@@ -440,7 +427,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public native ArrayList<ArrayList<Integer>> convertMHD(String mhdFile, String rawFile);
+    public native ImageMHD convertMHD(String mhdFile, String rawFile);
     // Used to load the 'native-lib' library on application startup.
     static {
         System.loadLibrary("native-lib");
