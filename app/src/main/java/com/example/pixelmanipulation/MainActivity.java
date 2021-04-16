@@ -20,6 +20,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
@@ -58,7 +59,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvWindow, tvLevel, tvDepth;
     private LinearLayout llWindow, llLevel, llDepth;
     private ImageMHD imageMHD;
-    private boolean finishedDecompress;
     private static final int ALMACENAMIENTO_EXTERNO = 3;
     private static final int IMAGE_PICKER_REQUEST = 4;
     private static final int FILE_PICKER_REQUEST = 5;
@@ -199,16 +199,13 @@ public class MainActivity extends AppCompatActivity {
             case FILE_PICKER_REQUEST: {
                 if(resultCode == RESULT_OK){
                     final Uri fileUri = data.getData();
-                    finishedDecompress = false;
                     String mhdPath = getPathFromUri(this, fileUri);
                     String mhdName = getFileName(fileUri);
                     insertIntoInternalStorage(mhdName, mhdPath);
                     String rawName = mhdName.replace(".mhd", ".raw");
                     String rawPath = mhdPath.replace(mhdName, rawName);
                     insertIntoInternalStorage(rawName, rawPath);
-                    decompressImage(mhdName, rawName);
-                    //getBuffer(0);
-                    //showSeekBars();
+                    new GenerateImage().execute(mhdName, rawName);
                 }
             }
         }
@@ -392,29 +389,6 @@ public class MainActivity extends AppCompatActivity {
         return buffer;
     }
 
-
-    public void decompressImage(final String mhd, final String raw){
-        ProgressDialog pDialog = ProgressDialog.show(this, "Proccessing Image..", "Please wait", true,false);
-        Thread t = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                imageMHD = convertMHD(getFilesDir() + "/" + mhd, getFilesDir() + "/" + raw);
-                deleteTemporalFiles(mhd, raw);
-                finishedDecompress = true;
-            }
-        });
-        t.start();
-        try {
-            t.join();
-            pDialog.dismiss();
-            image.setImageResource(R.drawable.checked);
-            getBuffer(0);
-            showSeekBars();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
     public void showSeekBars(){
         sbWindow.setMax(255);
         sbWindow.setProgress(255);
@@ -450,6 +424,34 @@ public class MainActivity extends AppCompatActivity {
     static {
         System.loadLibrary("native-lib");
     }
+
+    //----------------------------------------------------ASYNCCLASS
+    private class GenerateImage extends AsyncTask<String, Void, Void>{
+
+        ProgressDialog pDialog;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pDialog = ProgressDialog.show(MainActivity.this, "Generando Imagen..", "Por favor espere", true,false);
+        }
+
+        @Override
+        protected Void doInBackground(String... strings) {
+            imageMHD = convertMHD(getFilesDir() + "/" + strings[0], getFilesDir() + "/" + strings[1]);
+            deleteTemporalFiles(strings[0], strings[1]);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            pDialog.dismiss();
+            getBuffer(0);
+            showSeekBars();
+        }
+    }
+
 
     //----------------------------------------------------UTILS METHODS TO OBTAIN FILE PATHS
 
