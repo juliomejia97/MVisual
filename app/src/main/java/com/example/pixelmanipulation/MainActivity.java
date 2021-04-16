@@ -213,67 +213,13 @@ public class MainActivity extends AppCompatActivity {
                      */
 
                     final Uri fileUri = data.getData();
-                    String path = getPathFromUri(this, fileUri);
-                    String name = getFileName(fileUri);
-                    //path = path.replace(name, "");
-                    Log.i("Files", "Name: " + name);
-                    Log.i("Files", "Path: " + path);
-                    insertIntoInternalStorage(name, path);
-                    Toast.makeText(this, "Added file: " + getFilesDir() + "/" + name, Toast.LENGTH_LONG).show();
-
-                    /*try {
-                        String line;
-                        BufferedReader br = new BufferedReader(new FileReader(path));
-                        while((line = br.readLine()) != null){
-                            Log.i("Files", line);
-                        }
-                        Log.i("Files", "Leyó archivo");
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }*/
-
-                    //WRITE TO INTERNAL STORAGE
-                    /*String text = "Hello World! \n Test file \n For saving files in the internal storage of Android";
-                    String file_name = "test.txt";
-                    FileOutputStream fos = null;
-                    try {
-                        fos = openFileOutput(file_name, MODE_PRIVATE);
-                        fos.write(text.getBytes());
-                        Toast.makeText(this, "Saved to: " + getFilesDir() + "/" + file_name, Toast.LENGTH_LONG).show();
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } finally {
-                        if(fos != null){
-                            try {
-                                fos.close();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                    }*/
-
-
-                    //READ FROM INTERNAL STORAGE
-                    /*try {
-                        String line;
-                        FileInputStream fis = null;
-                        fis = openFileInput("test.txt");
-                        InputStreamReader isr = new InputStreamReader(fis);
-                        BufferedReader br = new BufferedReader(isr);
-                        while((line = br.readLine()) != null){
-                            Log.i("Files", line);
-                        }
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }*/
-
-                    //Log.i("Ruta", "" + convertMHD("/data/user/0/com.example.pixelmanipulation/files/test.txt", "radius_ulna_raw.raw"));
+                    String mhdPath = getPathFromUri(this, fileUri);
+                    String mhdName = getFileName(fileUri);
+                    insertIntoInternalStorage(mhdName, mhdPath);
+                    String rawName = mhdName.replace(".mhd", ".raw");
+                    String rawPath = mhdPath.replace(mhdName, rawName);
+                    insertIntoInternalStorage(rawName, rawPath);
+                    //buffers = convertMHD(getFilesDir().getPath() + "/" + mhdName, getFilesDir().getPath() + "/" + rawName);
                     //showSeekBars();
                 }
             }
