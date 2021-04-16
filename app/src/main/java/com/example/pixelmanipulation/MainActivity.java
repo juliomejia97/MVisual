@@ -9,6 +9,7 @@ import androidx.loader.content.CursorLoader;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
@@ -393,6 +394,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public void decompressImage(final String mhd, final String raw){
+        ProgressDialog pDialog = ProgressDialog.show(this, "Proccessing Image..", "Please wait", true,false);
         Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -402,15 +404,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         t.start();
-        Thread t1 = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                image.setImageResource(R.drawable.waiting);
-            }
-        });
         try {
             t.join();
-            t1.join();
+            pDialog.dismiss();
             image.setImageResource(R.drawable.checked);
             getBuffer(0);
             showSeekBars();
