@@ -219,8 +219,9 @@ public class MainActivity extends AppCompatActivity {
                     String rawName = mhdName.replace(".mhd", ".raw");
                     String rawPath = mhdPath.replace(mhdName, rawName);
                     insertIntoInternalStorage(rawName, rawPath);
-                    //buffers = convertMHD(getFilesDir().getPath() + "/" + mhdName, getFilesDir().getPath() + "/" + rawName);
-                    //showSeekBars();
+                    buffers = convertMHD(getFilesDir().getPath() + "/" + mhdName, getFilesDir().getPath() + "/" + rawName);
+                    showSeekBars();
+                    deleteTemporalFiles(mhdName, rawName);
                 }
             }
         }
@@ -424,6 +425,19 @@ public class MainActivity extends AppCompatActivity {
         llLevel.setVisibility(View.VISIBLE);
         llDepth.setVisibility(View.VISIBLE);
         btnProcess.setVisibility(View.VISIBLE);
+    }
+
+    public void deleteTemporalFiles(String mhd, String raw){
+        File mhdFile = new File(getFilesDir() + "/" + mhd);
+        File rawFile = new File(getFilesDir() + "/" + raw);
+        if(mhdFile.exists()){
+            mhdFile.delete();
+        }else{
+
+        }
+        if(rawFile.exists()){
+            rawFile.delete();
+        }
     }
 
     public native ArrayList<ArrayList<Integer>> convertMHD(String mhdFile, String rawFile);
