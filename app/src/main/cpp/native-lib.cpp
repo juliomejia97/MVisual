@@ -208,24 +208,22 @@ Java_com_example_pixelmanipulation_MainActivity_convertMHD(JNIEnv *env, jobject 
         return NULL;
     }
     jobject buffer = env->NewObject(image, constructor, width, height);
-    jmethodID addBuffer = env->GetMethodID(image, "addBuffer", "(Ljava/util/ArrayList;)V");
-
-    //Create a Java ArrayList
-    jclass arrayClass = env->FindClass("java/util/ArrayList");
-    jmethodID consArray = env->GetMethodID(arrayClass, "<init>", "(I)V");
-    jmethodID addToArray = env->GetMethodID(arrayClass, "add", "(Ljava/lang/Object;)Z");
+    jmethodID addBuffer = env->GetMethodID(image, "addBuffer", "([I)V");
 
     for (unsigned long z = 0; z < dims[2]; ++z)
     {
-        jobject pixels = env->NewObject(arrayClass, consArray, width * height);
+        jintArray pixels = env->NewIntArray(width * height);
+        jint aux[width * height];
+        int cont = 0;
         for (int j = 0; j < dims[1]; ++j)
         {
             for (int i = 0; i < dims[0]; ++i) {
-                jobject pixel = reinterpret_cast<jobject>(*(wlIt++));
-                env->CallBooleanMethod(pixels, addToArray, pixel);
+                aux[cont] = *(wlIt++);
+                cont++;
             }
 
         } // end for
+        env->SetIntArrayRegion(pixels, 0, width * height, aux);
         env->CallVoidMethod(buffer, addBuffer, pixels);
     }   // end for
 

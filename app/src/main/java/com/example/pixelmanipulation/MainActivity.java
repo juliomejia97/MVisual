@@ -45,6 +45,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvWindow, tvLevel, tvDepth;
     private LinearLayout llWindow, llLevel, llDepth;
     private ImageMHD imageMHD;
+    private boolean finishedDecompress;
     private static final int ALMACENAMIENTO_EXTERNO = 3;
     private static final int IMAGE_PICKER_REQUEST = 4;
     private static final int FILE_PICKER_REQUEST = 5;
@@ -195,14 +198,16 @@ public class MainActivity extends AppCompatActivity {
             case FILE_PICKER_REQUEST: {
                 if(resultCode == RESULT_OK){
                     final Uri fileUri = data.getData();
+                    finishedDecompress = false;
                     String mhdPath = getPathFromUri(this, fileUri);
                     String mhdName = getFileName(fileUri);
                     insertIntoInternalStorage(mhdName, mhdPath);
                     String rawName = mhdName.replace(".mhd", ".raw");
                     String rawPath = mhdPath.replace(mhdName, rawName);
                     insertIntoInternalStorage(rawName, rawPath);
-                    image.setImageResource(R.drawable.waiting);
                     decompressImage(mhdName, rawName);
+                    //getBuffer(0);
+                    //showSeekBars();
                 }
             }
         }
@@ -273,12 +278,7 @@ public class MainActivity extends AppCompatActivity {
     public void getBuffer(int bufferIndex) {
 
         //Se obtiene el buffer del indice bufferIndex
-        ArrayList<Integer> index = imageMHD.getDepths().get(bufferIndex);
-        int[] buffer = new int[index.size()];
-        for(int i = 0; i < index.size(); i++){
-            buffer[i] = index.get(i);
-        }
-
+        int[] buffer = imageMHD.getDepths().get(bufferIndex);
         for(int i = 0; i < buffer.length; i++){
             int color = (255 & 0xff) << 24 | (buffer[i] & 0xff) << 16 | (buffer[i] & 0xff) << 8 | (buffer[i] & 0xff);
             buffer[i] = color;
@@ -391,17 +391,26 @@ public class MainActivity extends AppCompatActivity {
         return buffer;
     }
 
+
     public void decompressImage(final String mhd, final String raw){
-        new Thread(new Runnable() {
+        image.setImageResource(R.drawable.waiting);
+        Thread t = new Thread(new Runnable() {
             @Override
             public void run() {
                 imageMHD = convertMHD(getFilesDir() + "/" + mhd, getFilesDir() + "/" + raw);
-                //getBuffer(0);
-                //showSeekBars();
                 deleteTemporalFiles(mhd, raw);
-                image.setImageResource(R.drawable.checked);
+                finishedDecompress = true;
             }
-        }).start();
+        });
+        t.start();
+
+        try {
+            t.join();
+            getBuffer(0);
+            showSeekBars();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void showSeekBars(){
@@ -409,7 +418,7 @@ public class MainActivity extends AppCompatActivity {
         sbWindow.setProgress(255);
         sbLevel.setMax(255);
         sbLevel.setProgress(128);
-        sbDepth.setMax(imageMHD.getDepths().size());
+        sbDepth.setMax(imageMHD.getDepths().size() - 1);
         sbDepth.setProgress(0);
         tvWindow.setText("" + sbWindow.getProgress());
         tvLevel.setText("" + sbLevel.getProgress());

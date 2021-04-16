@@ -6,12 +6,12 @@ public class ImageMHD {
 
     private int W;
     private int H;
-    private ArrayList<ArrayList<Integer>> depths;
+    private ArrayList<int[]> depths;
 
     public ImageMHD(int pW, int pH){
         this.W = pW;
         this.H = pH;
-        this.depths = new ArrayList<ArrayList<Integer>>();
+        this.depths = new ArrayList<int[]>();
     }
 
     public int getW() {
@@ -30,13 +30,13 @@ public class ImageMHD {
         H = h;
     }
 
-    public void addBuffer(ArrayList<Integer> buffer){ this.depths.add(buffer); }
+    public void addBuffer(int[] buffer){ this.depths.add(buffer); }
 
-    public ArrayList<ArrayList<Integer>> getDepths() {
+    public ArrayList<int[]> getDepths() {
         return depths;
     }
 
-    public void setDepths(ArrayList<ArrayList<Integer>> depths) {
+    public void setDepths(ArrayList<int[]> depths) {
         this.depths = depths;
     }
 }
