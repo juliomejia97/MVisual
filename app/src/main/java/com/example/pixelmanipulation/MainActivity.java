@@ -218,21 +218,21 @@ public class MainActivity extends AppCompatActivity {
                     //path = path.replace(name, "");
                     Log.i("Files", "Name: " + name);
                     Log.i("Files", "Path: " + path);
-                    //insertIntoInternalStorage(name, path);
-                    //Toast.makeText(this, "Added file: " + getFilesDir() + "/" + name, Toast.LENGTH_LONG).show();
+                    insertIntoInternalStorage(name, path);
+                    Toast.makeText(this, "Added file: " + getFilesDir() + "/" + name, Toast.LENGTH_LONG).show();
 
-                    try {
+                    /*try {
                         String line;
                         BufferedReader br = new BufferedReader(new FileReader(path));
-                        /*while((line = br.readLine()) != null){
+                        while((line = br.readLine()) != null){
                             Log.i("Files", line);
-                        }*/
+                        }
                         Log.i("Files", "Leyó archivo");
                     } catch (FileNotFoundException e) {
                         e.printStackTrace();
                     } catch (IOException e) {
                         e.printStackTrace();
-                    }
+                    }*/
 
                     //WRITE TO INTERNAL STORAGE
                     /*String text = "Hello World! \n Test file \n For saving files in the internal storage of Android";
@@ -444,6 +444,7 @@ public class MainActivity extends AppCompatActivity {
             FileOutputStream fos = openFileOutput(name, MODE_PRIVATE);
             File file = new File(path);
             byte[] bytes = getBytesFromFile(file);
+            Log.i("Files", "Bytes: " + bytes.length);
             fos.write(bytes);
             fos.close();
         } catch (FileNotFoundException e) {
@@ -453,14 +454,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public byte[] getBytesFromFile(File file){
-        byte[] data = new byte[0];
-        try {
-            data = FileUtils.readFileToByteArray(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return data;
+    public byte[] getBytesFromFile(File file) throws IOException{
+
+        InputStream is = new FileInputStream(file);
+        byte[] buffer = new byte[(int) file.length()];
+        is.read(buffer);
+        is.close();
+        return buffer;
     }
 
     public void showSeekBars(){
