@@ -17,6 +17,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -53,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
     private SeekBar sbWindow, sbLevel, sbDepth;
     private TextView tvWindow, tvLevel, tvDepth;
     private LinearLayout llWindow, llLevel, llDepth;
-    private ArrayList<ArrayList<Integer>> buffers;
     private ImageMHD imageMHD;
     private static final int ALMACENAMIENTO_EXTERNO = 3;
     private static final int IMAGE_PICKER_REQUEST = 4;
@@ -78,8 +78,6 @@ public class MainActivity extends AppCompatActivity {
         sbWindow = findViewById(R.id.sbWindow);
         sbLevel = findViewById(R.id.sbLevel);
         sbDepth = findViewById(R.id.sbDepth);
-
-        buffers = new ArrayList<ArrayList<Integer>>();
 
         image.setDrawingCacheEnabled(true);
 
@@ -203,12 +201,8 @@ public class MainActivity extends AppCompatActivity {
                     String rawName = mhdName.replace(".mhd", ".raw");
                     String rawPath = mhdPath.replace(mhdName, rawName);
                     insertIntoInternalStorage(rawName, rawPath);
-                    imageMHD = convertMHD(getFilesDir() + "/" + mhdName, getFilesDir() + "/" + rawName);
-                    Log.i("Files", "" + imageMHD.getW() + " - " + imageMHD.getH());
-                    //TOCA VER BIEN COMO TRAER EL W Y H PARA ASIGNARLOS A LAS VARIABLES GLOBALES
-                    //getBuffer(0);
-                    //showSeekBars();
-                    deleteTemporalFiles(mhdName, rawName);
+                    image.setImageResource(R.drawable.waiting);
+                    decompressImage(mhdName, rawName);
                 }
             }
         }
@@ -279,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
     public void getBuffer(int bufferIndex) {
 
         //Se obtiene el buffer del indice bufferIndex
-        ArrayList<Integer> index = buffers.get(bufferIndex);
+        ArrayList<Integer> index = imageMHD.getDepths().get(bufferIndex);
         int[] buffer = new int[index.size()];
         for(int i = 0; i < index.size(); i++){
             buffer[i] = index.get(i);
@@ -397,12 +391,25 @@ public class MainActivity extends AppCompatActivity {
         return buffer;
     }
 
+    public void decompressImage(final String mhd, final String raw){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                imageMHD = convertMHD(getFilesDir() + "/" + mhd, getFilesDir() + "/" + raw);
+                //getBuffer(0);
+                //showSeekBars();
+                deleteTemporalFiles(mhd, raw);
+                image.setImageResource(R.drawable.checked);
+            }
+        }).start();
+    }
+
     public void showSeekBars(){
         sbWindow.setMax(255);
         sbWindow.setProgress(255);
         sbLevel.setMax(255);
         sbLevel.setProgress(128);
-        sbDepth.setMax(buffers.size());
+        sbDepth.setMax(imageMHD.getDepths().size());
         sbDepth.setProgress(0);
         tvWindow.setText("" + sbWindow.getProgress());
         tvLevel.setText("" + sbLevel.getProgress());
