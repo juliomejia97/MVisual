@@ -10,6 +10,11 @@
       "StackName": "amplify-mvisualapp-dev-214842",
       "StackId": "arn:aws:cloudformation:us-east-1:126334312475:stack/amplify-mvisualapp-dev-214842/f0706e00-9814-11eb-9874-0e4936f32daf",
       "AmplifyAppId": "d3u0q7h1mfnb7s"
+    },
+    "categories": {
+      "auth": {
+        "mvisualapp2acba8d1": {}
+      }
     }
   }
 }

@@ -20,5 +20,12 @@
             android:layout_height="wrap_content"
             android:text="AMPLIFY" />
 
+        <ImageView
+            android:id="@+id/imagensita"
+            android:layout_width="411dp"
+            android:layout_height="300dp"
+            android:contentDescription="sdfsdf"
+            tools:srcCompat="@tools:sample/avatars" />
+
     </FrameLayout>
 </androidx.wear.widget.BoxInsetLayout>

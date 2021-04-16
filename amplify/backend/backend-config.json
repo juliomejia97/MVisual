@@ -16,5 +16,19 @@
         }
       }
     }
+  },
+  "auth": {
+    "mvisualapp2acba8d1": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  },
+  "storage": {
+    "MVisualS3": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation"
+    }
   }
 }
