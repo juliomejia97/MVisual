@@ -287,6 +287,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void wlAlgorithm(){
+
         int W = imgBitmap.getWidth();
         int H = imgBitmap.getHeight();
         Bitmap imgWL;
@@ -307,6 +308,19 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        /*int[] buffer = imageMHD.getDepths().get(sbDepth.getProgress());
+        for(int i = 0; i < buffer.length; i++){
+            double slope = getSlope(buffer[i]);
+            if(slope > 255){
+                slope = 255;
+            } else if(slope < 0) {
+                slope = 0;
+            }
+            int color = (255 & 0xff) << 24 | ((int) slope & 0xff) << 16 | ((int) slope & 0xff) << 8 | ((int) slope & 0xff);
+            buffer[i] = color;
+        }
+
+        imgBitmap = Bitmap.createBitmap(buffer, imageMHD.getW(), imageMHD.getH(), Bitmap.Config.ARGB_8888);*/
         image.setImageBitmap(imgWL);
     }
 
