@@ -259,7 +259,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateDepth(){
+        sbWindow.setProgress(255);
+        sbLevel.setProgress(128);
         tvDepth.setText("" + sbDepth.getProgress());
+        tvWindow.setText("" + sbWindow.getProgress());
+        tvLevel.setText("" + sbLevel.getProgress());
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -447,7 +451,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = ProgressDialog.show(MainActivity.this, "Generando Imagen..", "Por favor espere", true,false);
+            pDialog = ProgressDialog.show(MainActivity.this, "Generando Imagen...", "Por favor espere", true,false);
         }
 
         @Override
