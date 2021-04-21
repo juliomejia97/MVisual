@@ -5,6 +5,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.loader.content.CursorLoader;
 
 import android.Manifest;
@@ -28,7 +29,9 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -50,7 +53,10 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class MainActivity extends AppCompatActivity {
+import static android.app.Activity.RESULT_OK;
+import static android.content.Context.MODE_PRIVATE;
+
+public class MainActivity extends Fragment {
 
     private ImageView image;
     private Bitmap imgBitmap;
@@ -64,36 +70,33 @@ public class MainActivity extends AppCompatActivity {
     private static final int FILE_PICKER_REQUEST = 5;
     private static boolean accessAlm = false;
 
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        image = findViewById(R.id.imgView);
-        tvWindow = findViewById(R.id.tvProgressW);
-        tvLevel = findViewById(R.id.tvProgressL);
-        tvDepth = findViewById(R.id.tvProgressDepth);
-        llWindow = findViewById(R.id.llWindow);
-        llLevel = findViewById(R.id.lllevel);
-        llDepth = findViewById(R.id.llDepth);
-        btnSelect = findViewById(R.id.btnSeleccionar);
-        btnProcess = findViewById(R.id.btnProcesar);
-        sbWindow = findViewById(R.id.sbWindow);
-        sbLevel = findViewById(R.id.sbLevel);
-        sbDepth = findViewById(R.id.sbDepth);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View mView = inflater.inflate(R.layout.activity_main, container,false);
+        image = mView.findViewById(R.id.imgView);
+        tvWindow = mView.findViewById(R.id.tvProgressW);
+        tvLevel = mView.findViewById(R.id.tvProgressL);
+        tvDepth = mView.findViewById(R.id.tvProgressDepth);
+        llWindow = mView.findViewById(R.id.llWindow);
+        llLevel = mView.findViewById(R.id.lllevel);
+        llDepth = mView.findViewById(R.id.llDepth);
+        btnSelect = mView.findViewById(R.id.btnSeleccionar);
+        btnProcess = mView.findViewById(R.id.btnProcesar);
+        sbWindow = mView.findViewById(R.id.sbWindow);
+        sbLevel = mView.findViewById(R.id.sbLevel);
+        sbDepth = mView.findViewById(R.id.sbDepth);
 
         image.setDrawingCacheEnabled(true);
 
         llWindow.setVisibility(View.INVISIBLE);
         llLevel.setVisibility(View.INVISIBLE);
-        llDepth.setVisibility(View.INVISIBLE);
         btnProcess.setVisibility(View.INVISIBLE);
 
         btnSelect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                accessAlm = requestPermission(MainActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE, "Permission to Access Gallery", ALMACENAMIENTO_EXTERNO);
+                accessAlm = requestPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE, "Permission to Access Gallery", ALMACENAMIENTO_EXTERNO);
                 if(accessAlm){
                     usePermissionApplication();
                 }
@@ -109,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
                 byte[] byteArray = stream.toByteArray();
 
                 Intent intent = new Intent(view.getContext(), CanvaImageView.class);
+
                 intent.putExtra("BitmapImage", byteArray);
                 startActivity(intent);
             }
@@ -152,12 +156,15 @@ public class MainActivity extends AppCompatActivity {
             public void onStopTrackingTouch(SeekBar seekBar) {
             }
         });
+        return mView;
+
     }
+
 
     private boolean requestPermission(Activity context, String permit, String justification, int id){
         if(ContextCompat.checkSelfPermission(context, permit) != PackageManager.PERMISSION_GRANTED){
             if(ActivityCompat.shouldShowRequestPermissionRationale(context, permit)){
-                Toast.makeText(this, justification, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), justification, Toast.LENGTH_SHORT).show();
             }
             ActivityCompat.requestPermissions(context, new String[]{permit}, id);
             return false;
@@ -179,14 +186,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch(requestCode){
             case IMAGE_PICKER_REQUEST: {
                 if(resultCode == RESULT_OK){
                     try{
                         final Uri imageUri = data.getData();
-                        final InputStream is = getContentResolver().openInputStream(imageUri);
+                        final InputStream is =  getActivity().getContentResolver().openInputStream(imageUri);
                         imgBitmap = BitmapFactory.decodeStream(is);
                         image.setImageBitmap(imgBitmap);
                     }catch(FileNotFoundException e){
@@ -199,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
             case FILE_PICKER_REQUEST: {
                 if(resultCode == RESULT_OK){
                     final Uri fileUri = data.getData();
-                    String mhdPath = getPathFromUri(this, fileUri);
+                    String mhdPath = getPathFromUri(getActivity(), fileUri);
                     String mhdName = getFileName(fileUri);
                     insertIntoInternalStorage(mhdName, mhdPath);
                     String rawName = mhdName.replace(".mhd", ".raw");
@@ -220,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                     usePermissionImage();
                 } else {
-                    Toast.makeText(getApplicationContext(), "Access denied to image gallery", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Access denied to image gallery", Toast.LENGTH_LONG).show();
                 }
                 break;
             }
@@ -362,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
     public String getFileName(Uri uri){
         String result = null;
         if(uri.getScheme().equals("content")){
-            Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+            Cursor cursor = getActivity().getContentResolver().query(uri, null, null, null, null);
             try{
                 if (cursor != null && cursor.moveToFirst()){
                     result = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
@@ -385,7 +392,7 @@ public class MainActivity extends AppCompatActivity {
     public void insertIntoInternalStorage(String name, String path){
 
         try {
-            FileOutputStream fos = openFileOutput(name, MODE_PRIVATE);
+            FileOutputStream fos =  getActivity().openFileOutput(name, MODE_PRIVATE);
             File file = new File(path);
             byte[] bytes = getBytesFromFile(file);
             Log.i("Files", "Bytes: " + bytes.length);
@@ -425,8 +432,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void deleteTemporalFiles(String mhd, String raw){
-        File mhdFile = new File(getFilesDir() + "/" + mhd);
-        File rawFile = new File(getFilesDir() + "/" + raw);
+        File mhdFile = new File(getActivity().getFilesDir() + "/" + mhd);
+        File rawFile = new File(getActivity().getFilesDir() + "/" + raw);
         if(mhdFile.exists()){
             mhdFile.delete();
         }else{
@@ -451,12 +458,12 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            pDialog = ProgressDialog.show(MainActivity.this, "Generando Imagen...", "Por favor espere", true,false);
+            pDialog = ProgressDialog.show(getActivity(), "Generando Imagen...", "Por favor espere", true,false);
         }
 
         @Override
         protected Void doInBackground(String... strings) {
-            imageMHD = convertMHD(getFilesDir() + "/" + strings[0], getFilesDir() + "/" + strings[1]);
+            imageMHD = convertMHD(getActivity().getFilesDir() + "/" + strings[0], getActivity().getFilesDir() + "/" + strings[1]);
             deleteTemporalFiles(strings[0], strings[1]);
             return null;
         }
@@ -609,4 +616,9 @@ public class MainActivity extends AppCompatActivity {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
 }
