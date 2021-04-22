@@ -42,6 +42,12 @@ import android.widget.Toast;
 import com.example.pixelmanipulation.model.ImageMHD;
 
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -60,7 +66,7 @@ public class MainActivity extends Fragment {
 
     private ImageView image;
     private Bitmap imgBitmap;
-    private Button btnSelect, btnProcess;
+    private Button btnSelect, btnProcess,btnAmplify;
     private SeekBar sbWindow, sbLevel, sbDepth;
     private TextView tvWindow, tvLevel, tvDepth;
     private LinearLayout llWindow, llLevel, llDepth;
@@ -87,6 +93,15 @@ public class MainActivity extends Fragment {
         sbLevel = mView.findViewById(R.id.sbLevel);
         sbDepth = mView.findViewById(R.id.sbDepth);
 
+
+        btnAmplify = mView.findViewById(R.id.buttonAmps);
+        sbWindow.setMax(255);
+        sbWindow.setProgress(255);
+        sbLevel.setMax(255);
+        sbLevel.setProgress(128);
+        tvWindow.setText("" + sbWindow.getProgress());
+        tvLevel.setText("" + sbLevel.getProgress());
+
         image.setDrawingCacheEnabled(true);
 
         llWindow.setVisibility(View.INVISIBLE);
@@ -100,6 +115,14 @@ public class MainActivity extends Fragment {
                 if(accessAlm){
                     usePermissionApplication();
                 }
+            }
+        });
+
+        btnAmplify.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), AmplifyActivity.class);
+                startActivity(intent);
             }
         });
 
