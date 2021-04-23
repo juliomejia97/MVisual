@@ -47,37 +47,9 @@ public class AmplifyActivity extends AppCompatActivity {
                 Log.e("MyAmplifyApp", "Could not initialize Amplify", error);
             }
 
-        Todo todo = Todo.builder()
-                .name("passar tesis")
-                .description("tcon legardisssssss")
-                .build();
-
-        Amplify.API.mutate(
-                ModelMutation.create(todo),
-                response -> Log.i("MyAmplifyApp", "Added Todo with id: " + response.getData().getId()),
-                error -> Log.e("MyAmplifyApp", "Create failed", error)
-        );
-
-
-            File exampleFile = new File(getApplicationContext().getFilesDir(), "ExampleKey");
-
-            try {
-                BufferedWriter writer = new BufferedWriter(new FileWriter(exampleFile));
-                writer.append("Example file contents");
-                writer.close();
-            } catch (Exception exception) {
-                Log.e("MyAmplifyApp", "Upload failed", exception);
-            }
-
-            Amplify.Storage.uploadFile(
-                    "ExampleKey",
-                    exampleFile,
-                    result -> Log.i("MyAmplifyApp", "Successfully uploaded: " + result.getKey()),
-                    storageFailure -> Log.e("MyAmplifyApp", "Upload failed", storageFailure)
-            );
 
             //lee desde almacenamiento interno
-        Bitmap myBitmap = BitmapFactory.decodeFile(getApplicationContext().getFilesDir()+ "/downlojagd.jpeg");
+            Bitmap myBitmap = BitmapFactory.decodeFile(getApplicationContext().getFilesDir()+ "/downlojagd.jpeg");
             imgView.setImageBitmap(myBitmap);
 
             loadImage();
@@ -101,7 +73,5 @@ public class AmplifyActivity extends AppCompatActivity {
                 result -> Log.i("MyAmplifyApp", "Successfully generated: " + result.getUrl()),
                 error -> Log.e("MyAmplifyApp", "URL generation failure", error)
         );
-
-
     }
 }

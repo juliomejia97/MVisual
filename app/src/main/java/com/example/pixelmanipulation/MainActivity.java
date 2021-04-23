@@ -39,6 +39,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amplifyframework.AmplifyException;
+import com.amplifyframework.api.aws.AWSApiPlugin;
+import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin;
+import com.amplifyframework.core.Amplify;
+import com.amplifyframework.storage.s3.AWSS3StoragePlugin;
 import com.example.pixelmanipulation.model.ImageMHD;
 
 
@@ -104,6 +109,7 @@ public class MainActivity extends Fragment {
 
         image.setDrawingCacheEnabled(true);
 
+        llDepth.setVisibility(View.INVISIBLE);
         llWindow.setVisibility(View.INVISIBLE);
         llLevel.setVisibility(View.INVISIBLE);
         btnProcess.setVisibility(View.INVISIBLE);
@@ -121,10 +127,27 @@ public class MainActivity extends Fragment {
         btnAmplify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), AmplifyActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(v.getContext(), AmplifyActivity.class);
+                //startActivity(intent);
+                try {
+                    // Add these lines to add the AWSApiPlugin plugins
+                    Amplify.addPlugin(new AWSApiPlugin());
+                    Amplify.addPlugin(new AWSCognitoAuthPlugin());
+
+                    Amplify.addPlugin(new AWSS3StoragePlugin());
+                    Amplify.configure(getContext());
+
+                    Log.i("MyAmplifyApp", "Initialized Amplify");
+                } catch (AmplifyException error) {
+                    Log.e("MyAmplifyApp", "Could not initialize Amplify", error);
+                }
+
+                loadImage();
             }
         });
+
+
+
 
         btnProcess.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -183,6 +206,32 @@ public class MainActivity extends Fragment {
 
     }
 
+    private void loadImage(){
+        // descarga y lee desde aws
+        Amplify.Storage.downloadFile(
+                "raw.mhd",
+                new File(getContext().getFilesDir() + "/raw.mhd"),
+                result -> {
+                    Log.i("MyAmplifyApp", "Successfully generated: " + result.getFile().getName());
+                },
+                error -> Log.e("MyAmplifyApp",  "Download Failure", error)
+        );
+        Amplify.Storage.downloadFile(
+                "radius_ulna_raw.raw",
+                new File(getContext().getFilesDir() + "/radius_ulna_raw.raw"),
+                result -> {
+                    Log.i("MyAmplifyApp", "Successfully generated: " + result.getFile().getName());
+                    new GenerateImage().execute("raw.mhd", "radius_ulna_raw.raw");
+                    },
+                error -> Log.e("MyAmplifyApp",  "Download Failure", error)
+        );
+
+        Amplify.Storage.getUrl(
+                "tomografia.jpeg",
+                result -> Log.i("MyAmplifyApp", "Successfully generated: " + result.getUrl()),
+                error -> Log.e("MyAmplifyApp", "URL generation failure", error)
+        );
+    }
 
     private boolean requestPermission(Activity context, String permit, String justification, int id){
         if(ContextCompat.checkSelfPermission(context, permit) != PackageManager.PERMISSION_GRANTED){
@@ -231,10 +280,14 @@ public class MainActivity extends Fragment {
                     final Uri fileUri = data.getData();
                     String mhdPath = getPathFromUri(getActivity(), fileUri);
                     String mhdName = getFileName(fileUri);
+
+
                     insertIntoInternalStorage(mhdName, mhdPath);
                     String rawName = mhdName.replace(".mhd", ".raw");
                     String rawPath = mhdPath.replace(mhdName, rawName);
                     insertIntoInternalStorage(rawName, rawPath);
+                    Log.i("mhd", "mhdnme " + mhdName);
+                    Log.i("mhd", "mhdnme " + rawName);
                     new GenerateImage().execute(mhdName, rawName);
                 }
             }
@@ -486,7 +539,9 @@ public class MainActivity extends Fragment {
 
         @Override
         protected Void doInBackground(String... strings) {
+            
             imageMHD = convertMHD(getActivity().getFilesDir() + "/" + strings[0], getActivity().getFilesDir() + "/" + strings[1]);
+
             deleteTemporalFiles(strings[0], strings[1]);
             return null;
         }
