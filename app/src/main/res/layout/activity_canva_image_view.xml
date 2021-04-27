@@ -6,9 +6,9 @@
     android:layout_height="match_parent"
     android:padding="@dimen/box_inset_layout_padding"
     android:orientation="vertical"
-    tools:context=".CanvaImageView">
+    tools:context=".canva.CanvaImageView">
 
-   <com.example.pixelmanipulation.widget.PaintView
+   <com.example.pixelmanipulation.canva.widget.PaintView
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:layout_weight="1"

@@ -15,7 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NavigationMainActivity">
+        <activity android:name=".NavigationBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -35,11 +35,10 @@
             android:value="false" />
 
         <activity
-            android:name=".CanvaImageView"
+            android:name=".canva.CanvaImageView"
             android:label="@string/title_activity_canva_image_view" />
-        <activity android:name=".DrawOnBitmapActivity" />
-        <activity android:name=".MainActivity"></activity>
-        <activity android:name=".AmplifyActivity"></activity>
+        <activity android:name=".canva.DrawOnBitmapActivity" />
+        <activity android:name=".UploadImageFragment"></activity>
 
     </application>
 

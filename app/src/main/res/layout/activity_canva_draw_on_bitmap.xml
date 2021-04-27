@@ -3,14 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DrawOnBitmapActivity"
+    tools:context=".canva.DrawOnBitmapActivity"
     android:orientation="vertical">
 
-    <com.example.pixelmanipulation.DrawableImageView
+    <com.example.pixelmanipulation.canva.DrawableImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/ChoosenImageView">
-    </com.example.pixelmanipulation.DrawableImageView>
+    </com.example.pixelmanipulation.canva.DrawableImageView>
 
     <Button
         android:layout_width="fill_parent"
