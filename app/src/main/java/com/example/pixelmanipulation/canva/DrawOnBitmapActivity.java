@@ -1,4 +1,4 @@
-package com.example.pixelmanipulation;
+package com.example.pixelmanipulation.canva;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.pixelmanipulation.R;
+
 import java.io.OutputStream;
 
 public class DrawOnBitmapActivity extends AppCompatActivity {
@@ -25,7 +27,7 @@ public class DrawOnBitmapActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_draw_on_bitmap);
+        setContentView(R.layout.activity_canva_draw_on_bitmap);
         //Inflates
         choosenImageView = findViewById(R.id.ChoosenImageView);
         saveImage =  findViewById(R.id.SavePictureButton);

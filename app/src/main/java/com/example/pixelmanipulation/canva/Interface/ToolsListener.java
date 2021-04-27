@@ -1,4 +1,4 @@
-package com.example.pixelmanipulation.Interface;
+package com.example.pixelmanipulation.canva.Interface;
 
 public interface ToolsListener {
 

@@ -1,10 +1,9 @@
-package com.example.pixelmanipulation.widget;
+package com.example.pixelmanipulation.canva.widget;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;

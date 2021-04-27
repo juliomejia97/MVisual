@@ -1,4 +1,4 @@
-package com.example.pixelmanipulation;
+package com.example.pixelmanipulation.canva;
 
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,11 +18,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.pixelmanipulation.Interface.ToolsListener;
+import com.example.pixelmanipulation.R;
+import com.example.pixelmanipulation.canva.Interface.ToolsListener;
 import com.example.pixelmanipulation.adapters.ToolsAdapter;
-import com.example.pixelmanipulation.common.Common;
+import com.example.pixelmanipulation.canva.common.Common;
 import com.example.pixelmanipulation.model.ToolsItem;
-import com.example.pixelmanipulation.widget.PaintView;
+import com.example.pixelmanipulation.canva.widget.PaintView;
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;

@@ -1,4 +1,4 @@
-package com.example.pixelmanipulation.common;
+package com.example.pixelmanipulation.canva.common;
 
 public class Common {
     public static final String BRUSH = "brush";

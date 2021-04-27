@@ -1,4 +1,4 @@
-package com.example.pixelmanipulation.viewHolder;
+package com.example.pixelmanipulation.canva.viewHolder;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -7,7 +7,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.pixelmanipulation.Interface.ViewOnClick;
+import com.example.pixelmanipulation.canva.Interface.ViewOnClick;
 import com.example.pixelmanipulation.R;
 
 public class ToolsViewHolder extends RecyclerView.ViewHolder {
