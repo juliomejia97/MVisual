@@ -39,6 +39,9 @@
             android:label="@string/title_activity_canva_image_view" />
         <activity android:name=".canva.DrawOnBitmapActivity" />
         <activity android:name=".UploadImageFragment"></activity>
+        <activity android:name=".ListFragment"></activity>
+        <activity android:name=".ProcessedImagesFragment"></activity>
+
 
     </application>
 

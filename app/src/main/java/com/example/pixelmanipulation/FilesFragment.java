@@ -1,7 +1,5 @@
 package com.example.pixelmanipulation;
 
-import androidx.fragment.app.Fragment;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,7 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.amplifyframework.datastore.generated.model.AmplifyModelProvider;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 public class FilesFragment extends Fragment {
 
@@ -26,6 +25,12 @@ public class FilesFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Log.i("Layout", "Pressed Patient");
+                Bundle bundle = new Bundle();
+                bundle.putString("Type", "Pacientes");
+                Fragment mFragment= new ListFragment();
+                mFragment.setArguments(bundle);
+                FragmentManager manager = getChildFragmentManager();
+                manager.beginTransaction().replace(R.id.fragment_list_id, mFragment).commit();
             }
         });
 
@@ -33,6 +38,12 @@ public class FilesFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Log.i("Layout", "Pressed Studies");
+                Bundle bundle = new Bundle();
+                bundle.putString("Type", "Estudios");
+                Fragment mFragment= new ListFragment();
+                mFragment.setArguments(bundle);
+                FragmentManager manager = getFragmentManager();
+                manager.beginTransaction().replace(R.id.fragment_list_id, mFragment).commit();
             }
         });
 
@@ -40,14 +51,15 @@ public class FilesFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Log.i("Layout", "Pressed Series");
+                Bundle bundle = new Bundle();
+                bundle.putString("Type", "Series");
+                Fragment mFragment= new ListFragment();
+                mFragment.setArguments(bundle);
+                FragmentManager manager = getFragmentManager();
+                manager.beginTransaction().replace(R.id.fragment_list_id, mFragment).commit();
             }
         });
         return mView;
-
-    }
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
 
     }
 }

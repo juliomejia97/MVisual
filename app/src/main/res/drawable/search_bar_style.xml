@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/search"
+    android:width="10dp"
+    android:height="10dp">
+
+    <corners
+        android:bottomLeftRadius="30dp"
+        android:bottomRightRadius="30dp"
+        android:topLeftRadius="30dp"
+        android:topRightRadius="30dp" />
+    <solid android:color="@color/colorGray" />
+
+    <stroke
+        android:width="5dp"
+        android:color="@color/colorPrimary" />
+
+    <padding
+        android:bottom="1dp"
+        android:left="1dp"
+        android:right="1dp"
+        android:top="1dp" />
+
+</shape>
