@@ -21,26 +21,28 @@ import java.util.Set;
  */
 
 public final class AmplifyModelProvider implements ModelProvider {
+
   private static final String AMPLIFY_MODEL_VERSION = "1e935267ff3bf73800b32443538139cb";
   private static AmplifyModelProvider amplifyGeneratedModelInstance;
-  private AmplifyModelProvider(Context context) {
-      try {
-          // Add these lines to add the AWSApiPlugin plugins
-          Amplify.addPlugin(new AWSApiPlugin());
-          Amplify.addPlugin(new AWSCognitoAuthPlugin());
+  private static Context context;
 
-          Amplify.addPlugin(new AWSS3StoragePlugin());
-          Amplify.configure(context);
-
-          Log.i("MyAmplifyApp", "Initialized Amplify");
-      } catch (AmplifyException error) {
-          Log.e("MyAmplifyApp", "Could not initialize Amplify", error);
-      }
+  private AmplifyModelProvider(Context pContext) {
+    context = pContext;
+    try {
+        // Add these lines to add the AWSApiPlugin plugins
+        Amplify.addPlugin(new AWSApiPlugin());
+        Amplify.addPlugin(new AWSCognitoAuthPlugin());
+        Amplify.addPlugin(new AWSS3StoragePlugin());
+        Amplify.configure(context);
+        Log.i("MyAmplifyApp", "Initialized Amplify");
+    } catch (AmplifyException error) {
+        Log.e("MyAmplifyApp", "Could not initialize Amplify", error);
+    }
   }
   
-  public static AmplifyModelProvider getInstance(Context context) {
+  public static AmplifyModelProvider getInstance(Context pContext) {
     if (amplifyGeneratedModelInstance == null) {
-      amplifyGeneratedModelInstance = new AmplifyModelProvider(context);
+      amplifyGeneratedModelInstance = new AmplifyModelProvider(pContext);
     }
     return amplifyGeneratedModelInstance;
   }

@@ -61,7 +61,7 @@ public class UploadImageFragment extends Fragment {
 
     private ImageView image;
     private Bitmap imgBitmap;
-    private Button btnSelect, btnProcess,btnAmplify;
+    private Button btnSelect, btnProcess;
     private SeekBar sbWindow, sbLevel, sbDepth;
     private TextView tvWindow, tvLevel, tvDepth;
     private LinearLayout llWindow, llLevel, llDepth;
@@ -89,7 +89,6 @@ public class UploadImageFragment extends Fragment {
         sbDepth = mView.findViewById(R.id.sbDepth);
 
 
-        btnAmplify = mView.findViewById(R.id.buttonAmps);
         sbWindow.setMax(255);
         sbWindow.setProgress(255);
         sbLevel.setMax(255);
@@ -113,16 +112,6 @@ public class UploadImageFragment extends Fragment {
                 }
             }
         });
-
-        btnAmplify.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loadImage();
-            }
-        });
-
-
-
 
         btnProcess.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -179,33 +168,6 @@ public class UploadImageFragment extends Fragment {
         });
         return mView;
 
-    }
-
-    private void loadImage(){
-        // descarga y lee desde aws
-        Amplify.Storage.downloadFile(
-                "raw.mhd",
-                new File(getContext().getFilesDir() + "/raw.mhd"),
-                result -> {
-                    Log.i("MyAmplifyApp", "Successfully generated: " + result.getFile().getName());
-                },
-                error -> Log.e("MyAmplifyApp",  "Download Failure", error)
-        );
-        Amplify.Storage.downloadFile(
-                "radius_ulna_raw.raw",
-                new File(getContext().getFilesDir() + "/radius_ulna_raw.raw"),
-                result -> {
-                    Log.i("MyAmplifyApp", "Successfully generated: " + result.getFile().getName());
-                    new GenerateImage().execute("raw.mhd", "radius_ulna_raw.raw");
-                    },
-                error -> Log.e("MyAmplifyApp",  "Download Failure", error)
-        );
-
-        Amplify.Storage.getUrl(
-                "tomografia.jpeg",
-                result -> Log.i("MyAmplifyApp", "Successfully generated: " + result.getUrl()),
-                error -> Log.e("MyAmplifyApp", "URL generation failure", error)
-        );
     }
 
     private boolean requestPermission(Activity context, String permit, String justification, int id){
