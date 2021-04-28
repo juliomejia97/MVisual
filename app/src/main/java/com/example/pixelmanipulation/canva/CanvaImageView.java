@@ -6,15 +6,21 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,32 +35,29 @@ import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static androidx.recyclerview.widget.RecyclerView.*;
 
 public class CanvaImageView  extends AppCompatActivity implements ToolsListener {
 
-    PaintView mPaintView;
-    int colorBackground,colorBrush;
-    int brushSize,eraserSize;
-    Bitmap bmp;
-    Bitmap alteredBitmap;
+    private PaintView mPaintView;
+    private int colorBackground,colorBrush;
+    private int brushSize, eraserSize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_canva_image_view);
-        mPaintView=findViewById(R.id.paint_view);
+        mPaintView = findViewById(R.id.paint_view);
         Intent intent = getIntent();
+        Log.i("Canva", "onCreate");
         byte[] byteArray = intent.getByteArrayExtra("BitmapImage");
-        bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-       // alteredBitmap = Bitmap.createBitmap(bmp.getWidth(), bmp.getHeight(), bmp.getConfig());
-        BitmapDrawable background = new BitmapDrawable(getResources(),bmp);
+        Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+        BitmapDrawable background = new BitmapDrawable(getResources(), bmp);
         initTools();
-
-        //noinspection deprecation
-        mPaintView.setBackgroundDrawable(background);
+        mPaintView.setBackground(background);
     }
 
     private void initTools() {

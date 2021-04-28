@@ -2,6 +2,7 @@ package com.example.pixelmanipulation;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -9,9 +10,11 @@ import androidx.loader.content.CursorLoader;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -54,6 +57,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.MODE_PRIVATE;
 
@@ -116,15 +120,32 @@ public class UploadImageFragment extends Fragment {
         btnProcess.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                Bitmap bitmapIntent = image.getDrawingCache();
-                bitmapIntent.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
+                AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
+                builder.setMessage("¿Seguro que desea continuar?")
+                        .setCancelable(false)
+                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                                Bitmap bitmapIntent = image.getDrawingCache();
+                                bitmapIntent.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                                byte[] byteArray = stream.toByteArray();
+                                Intent intent = new Intent(view.getContext(), CanvaImageView.class);
+                                intent.putExtra("BitmapImage", byteArray);
+                                startActivity(intent);
+                                getActivity().finish();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
 
-                Intent intent = new Intent(view.getContext(), CanvaImageView.class);
 
-                intent.putExtra("BitmapImage", byteArray);
-                startActivity(intent);
             }
         });
 
@@ -629,11 +650,5 @@ public class UploadImageFragment extends Fragment {
 
     public static boolean isGooglePhotosUri(Uri uri) {
         return "com.google.android.apps.photos.content".equals(uri.getAuthority());
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
     }
 }
