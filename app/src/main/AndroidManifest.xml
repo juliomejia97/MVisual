@@ -15,21 +15,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NavigationBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
 
         <uses-library
             android:name="com.google.android.wearable"
             android:required="false" />
-        <!--
-               Set to true if your app is Standalone, that is, it does not require the handheld
-               app to run.
-        -->
+
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="false" />
@@ -38,10 +28,16 @@
             android:name=".canva.CanvaImageView"
             android:label="@string/title_activity_canva_image_view" />
         <activity android:name=".canva.DrawOnBitmapActivity" />
-        <activity android:name=".UploadImageFragment"></activity>
-        <activity android:name=".ListFragment"></activity>
-        <activity android:name=".ProcessedImagesFragment"></activity>
-
+        <activity android:name=".FilesActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ListActivity"></activity>
+        <activity android:name=".ProcessedImagesActivity"></activity>
+        <activity android:name=".UploadImageActivity">
+        </activity>
 
     </application>
 

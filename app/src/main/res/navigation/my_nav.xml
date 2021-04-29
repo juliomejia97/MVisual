@@ -7,18 +7,18 @@
 
     <fragment
         android:id="@+id/secondFragment"
-        android:name="com.example.pixelmanipulation.ProcessedImagesFragment"
+        android:name="com.example.pixelmanipulation.ProcessedImagesActivity"
         android:label="fragment_second"
-        tools:layout="@layout/fragment_processed_images" />
+        tools:layout="@layout/activity_processed_images" />
     <fragment
         android:id="@+id/mainActivity"
-        android:name="com.example.pixelmanipulation.UploadImageFragment"
+        android:name="com.example.pixelmanipulation.UploadImageActivity"
         android:label="activity_main"
-        tools:layout="@layout/fragment_upload_image" />
+        tools:layout="@layout/activity_upload_image" />
     <fragment
         android:id="@+id/filesFragm"
-        android:name="com.example.pixelmanipulation.FilesFragment"
+        android:name="com.example.pixelmanipulation.FilesActivity"
         android:label="activity_landing"
-        tools:layout="@layout/fragment_files" />
+        tools:layout="@layout/activity_files" />
 
 </navigation>

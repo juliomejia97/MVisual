@@ -100,7 +100,7 @@ std::string convertString(JNIEnv *env, jstring jStr){
 
 extern "C"
 JNIEXPORT jobject JNICALL
-Java_com_example_pixelmanipulation_UploadImageFragment_convertMHD(JNIEnv *env, jobject thiz, jstring mhdFile, jstring rawFile) {
+Java_com_example_pixelmanipulation_UploadImageActivity_convertMHD(JNIEnv *env, jobject thiz, jstring mhdFile, jstring rawFile) {
 
     /*
      * https://stackoverflow.com/questions/11666821/array-of-object-array-2d-arrays-jni/11683012
