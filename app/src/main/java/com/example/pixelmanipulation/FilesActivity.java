@@ -152,7 +152,7 @@ public class FilesActivity extends AppCompatActivity {
 
             case ALMACENAMIENTO_EXTERNO: {
                 if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    usePermissionImage();
+                    usePermissionApplication();
                 } else {
                     Toast.makeText(getBaseContext(), "Access denied to image gallery", Toast.LENGTH_LONG).show();
                 }
