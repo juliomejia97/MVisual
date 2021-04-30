@@ -56,6 +56,7 @@ public class ListActivity extends AppCompatActivity {
             peopleList.add(new DataViewHolder("Abel Santiago Cortes Avedaño", type));
             peopleList.add(new DataViewHolder("Julio Andres Mejía Vera", type));
             peopleList.add(new DataViewHolder("Juan Sebastian Osorio Garcia", type));
+            peopleList.add(new DataViewHolder("Leonardo Flórez Valencia", type));
 
             mListInfoAdapter = new ListViewAdapter(ListActivity.this, peopleList);
             mlista.setAdapter(mListInfoAdapter);

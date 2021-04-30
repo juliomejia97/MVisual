@@ -56,7 +56,6 @@ public class FilesActivity extends AppCompatActivity {
         llPacientes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("Layout", "Pressed Patient");
                 Intent intent = new Intent(getApplicationContext(), ListActivity.class);
                 intent.putExtra("Type", "Pacientes");
                 startActivity(intent);
@@ -66,7 +65,6 @@ public class FilesActivity extends AppCompatActivity {
         llEstudios.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("Layout", "Pressed Studies");
                 Intent intent = new Intent(getApplicationContext(), ListActivity.class);
                 intent.putExtra("Type", "Estudios");
                 startActivity(intent);
@@ -76,7 +74,6 @@ public class FilesActivity extends AppCompatActivity {
         llSeries.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("Layout", "Pressed Series");
                 Intent intent = new Intent(getApplicationContext(), ListActivity.class);
                 intent.putExtra("Type", "Series");
                 startActivity(intent);

@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +46,14 @@ public class ListViewAdapter extends ArrayAdapter<DataViewHolder> {
         ImageView image = mView.findViewById(R.id.imgViewAdapter);
         String type = this.listDatos.get(position).getType();
         infoText.setText(this.listDatos.get(position).getInfo());
+        LinearLayout llData = mView.findViewById(R.id.llDataInfo);
+        llData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("Data", infoText.getText().toString());
+            }
+        });
+
         if(type.equalsIgnoreCase("Pacientes")){
             image.setImageDrawable(mView.getResources().getDrawable(R.drawable.avatar5));
         } else if (type.equalsIgnoreCase("Estudios")){
