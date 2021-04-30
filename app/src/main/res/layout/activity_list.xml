@@ -4,87 +4,81 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_margin="20dp"
     tools:context=".ListActivity">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="30dp">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:gravity="left"
+            android:orientation="horizontal">
 
-            <LinearLayout
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/imgViewListBase"
+                    android:layout_width="55dp"
+                    android:layout_height="55dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:src="@drawable/folder2x" />
+
+                <ImageView
+                    android:id="@+id/center"
+                    android:paddingTop="5dp"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_centerInParent="true"
+                    android:layout_centerVertical="true" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tvTypeName"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="50dp"
                 android:gravity="left"
-                android:orientation="horizontal">
-
-                <RelativeLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <ImageView
-                        android:id="@+id/imgViewListBase"
-                        android:layout_width="55dp"
-                        android:layout_height="55dp"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentTop="true"
-                        android:src="@drawable/folder2x" />
-
-                    <ImageView
-                        android:id="@+id/center"
-                        android:layout_width="25dp"
-                        android:layout_height="25dp"
-                        android:layout_centerInParent="true"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/patient" />
-                </RelativeLayout>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:gravity="left"
-                    android:paddingLeft="10dp"
-                    android:paddingTop="20dp"
-                    android:text="Por Paciente"
-                    android:textSize="21sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
-            <EditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/search_bar_style"
-                android:backgroundTint="@color/colorGray"
-                android:drawableRight="@drawable/small_search_icon"
-                android:ems="5"
-                android:imeOptions="actionSearch"
-                android:padding="5dp"
-                android:textAlignment="center" />
-
-            <Spinner
-                android:id="@+id/spinnerList"
-                android:layout_width="120dp"
-                android:layout_height="35dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/drop_down_list_shape"
-                android:spinnerMode="dropdown"
-                android:text="Order by"
-                android:tooltipText="Ordernar por" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycleViewInfoList"
-                android:layout_width="match_parent"
-
-                android:layout_height="match_parent"
-                android:layout_marginTop="20dp" />
+                android:paddingLeft="10dp"
+                android:paddingTop="20dp"
+                android:textSize="21sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
-    </ScrollView>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/search_bar_style"
+            android:backgroundTint="@color/colorGray"
+            android:drawableRight="@drawable/small_search_icon"
+            android:ems="5"
+            android:imeOptions="actionSearch"
+            android:padding="5dp"
+            android:textAlignment="center" />
+
+        <Spinner
+            android:id="@+id/spinnerList"
+            android:layout_width="120dp"
+            android:layout_height="35dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/drop_down_list_shape"
+            android:spinnerMode="dropdown"
+            android:text="Order by"
+            android:tooltipText="Ordernar por" />
+
+        <ListView
+            android:id="@+id/lvData"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="20dp" />
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
