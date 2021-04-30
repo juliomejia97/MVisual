@@ -11,7 +11,6 @@
         android:id="@+id/tvLandingTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
         android:text="Archivos"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -216,6 +215,14 @@
                 android:textSize="21sp" />
 
         </LinearLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:src="@drawable/photo"
+            android:layout_margin="8dp" />
 
     </LinearLayout>
 

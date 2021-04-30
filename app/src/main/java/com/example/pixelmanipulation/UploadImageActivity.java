@@ -1,12 +1,5 @@
 package com.example.pixelmanipulation;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.loader.content.CursorLoader;
-
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -25,7 +18,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.PersistableBundle;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
@@ -38,9 +30,15 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.loader.content.CursorLoader;
+
 import com.example.pixelmanipulation.canva.CanvaImageView;
 import com.example.pixelmanipulation.model.ImageMHD;
-
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -65,8 +63,9 @@ public class UploadImageActivity extends AppCompatActivity {
     private static boolean accessAlm = false;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    public void onCreate( Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_upload_image);
         image = findViewById(R.id.imgView);
         tvWindow = findViewById(R.id.tvProgressW);
         tvLevel = findViewById(R.id.tvProgressL);

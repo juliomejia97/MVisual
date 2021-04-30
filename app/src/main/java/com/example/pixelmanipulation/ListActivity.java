@@ -1,24 +1,12 @@
 package com.example.pixelmanipulation;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Intent;
-import android.database.Cursor;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.amplifyframework.datastore.generated.model.AmplifyModelProvider;
 import com.example.pixelmanipulation.adapters.ListViewAdapter;
@@ -34,8 +22,9 @@ public class ListActivity extends AppCompatActivity {
     private String[] arrayForSpinner = {"Order by", "Name", "Surname"};
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
+    public void onCreate( Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.list_adapter);
         AmplifyModelProvider.getInstance(getApplicationContext());
         mlista = findViewById(R.id.recycleViewInfoList);
         spinner = findViewById(R.id.spinnerList);
