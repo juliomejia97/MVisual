@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.amplifyframework.datastore.generated.model.AmplifyModelProvider;
+import com.amplifyframework.datastore.generated.model.PatientsProvider;
 import com.example.pixelmanipulation.adapters.ListViewAdapter;
 import com.example.pixelmanipulation.model.DataViewHolder;
 
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 
 public class CategoryListActivity extends AppCompatActivity {
 
+    private PatientsProvider provider;
     private ListViewAdapter mListInfoAdapter;
     private ImageView ivCenter, ivPrevious;
     private Spinner spinner;
@@ -31,6 +33,7 @@ public class CategoryListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_list);
         AmplifyModelProvider.getInstance(getApplicationContext());
+        provider = PatientsProvider.getInstance();
         ivCenter = findViewById(R.id.center);
         ivPrevious = findViewById(R.id.ivPreviousCategory);
         tvTypeName = findViewById(R.id.tvTypeName);
@@ -67,51 +70,21 @@ public class CategoryListActivity extends AppCompatActivity {
 
             tvTypeName.setText("Por Paciente");
             ivCenter.setImageDrawable(getResources().getDrawable(R.drawable.patient));
-
-            ArrayList<DataViewHolder> peopleList = new ArrayList<>();
-            peopleList.add(new DataViewHolder("Juan Camilo Chafloque Mesia", type));
-            peopleList.add(new DataViewHolder("Abel Santiago Cortes Avedaño", type));
-            peopleList.add(new DataViewHolder("Julio Andres Mejía Vera", type));
-            peopleList.add(new DataViewHolder("Juan Sebastian Osorio Garcia", type));
-            peopleList.add(new DataViewHolder("Leonardo Flórez Valencia", type));
-
-            mListInfoAdapter = new ListViewAdapter(CategoryListActivity.this, peopleList);
+            mListInfoAdapter = new ListViewAdapter(CategoryListActivity.this, provider.getAllPatients());
             mlista.setAdapter(mListInfoAdapter);
 
         } else if (type.equalsIgnoreCase("Estudios")){
 
             tvTypeName.setText("Por Estudios");
             ivCenter.setImageDrawable(getResources().getDrawable(R.drawable.studies));
-
-            ArrayList<DataViewHolder> studyList = new ArrayList<>();
-            studyList.add(new DataViewHolder("Estudio #1", type));
-            studyList.add(new DataViewHolder("Estudio #2", type));
-            studyList.add(new DataViewHolder("Estudio #3", type));
-            studyList.add(new DataViewHolder("Estudio #4", type));
-            studyList.add(new DataViewHolder("Estudio #5", type));
-            studyList.add(new DataViewHolder("Estudio #6", type));
-            studyList.add(new DataViewHolder("Estudio #7", type));
-            studyList.add(new DataViewHolder("Estudio #8", type));
-
-            mListInfoAdapter = new ListViewAdapter(CategoryListActivity.this, studyList);
+            mListInfoAdapter = new ListViewAdapter(CategoryListActivity.this, provider.getAllStudies());
             mlista.setAdapter(mListInfoAdapter);
 
         } else if (type.equalsIgnoreCase("Series")){
 
             tvTypeName.setText("Por Series");
             ivCenter.setImageDrawable(getResources().getDrawable(R.drawable.series));
-
-            ArrayList<DataViewHolder> seriesList = new ArrayList<>();
-            seriesList.add(new DataViewHolder("Serie #1", type));
-            seriesList.add(new DataViewHolder("Serie #2", type));
-            seriesList.add(new DataViewHolder("Serie #3", type));
-            seriesList.add(new DataViewHolder("Serie #4", type));
-            seriesList.add(new DataViewHolder("Serie #5", type));
-            seriesList.add(new DataViewHolder("Serie #6", type));
-            seriesList.add(new DataViewHolder("Serie #7", type));
-            seriesList.add(new DataViewHolder("Serie #8", type));
-
-            mListInfoAdapter = new ListViewAdapter(CategoryListActivity.this, seriesList);
+            mListInfoAdapter = new ListViewAdapter(CategoryListActivity.this, provider.getAllSeries());
             mlista.setAdapter(mListInfoAdapter);
         }
     }

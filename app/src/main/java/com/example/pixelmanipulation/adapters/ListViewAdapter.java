@@ -52,7 +52,6 @@ public class ListViewAdapter extends ArrayAdapter<DataViewHolder> {
         llData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("Data", infoText.getText().toString());
                 Intent intent = new Intent(getContext(), InfoListActivity.class);
                 intent.putExtra("Type", type);
                 intent.putExtra("Info", infoText.getText().toString());

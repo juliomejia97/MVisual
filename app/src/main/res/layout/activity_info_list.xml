@@ -52,12 +52,32 @@
             </LinearLayout>
 
             <TextView
-                android:id="@+id/tvInfoName"
+                android:id="@+id/tvInfoPrincipal"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:gravity="center_vertical|right"
                 android:paddingLeft="10dp"
                 android:textSize="21sp"
+                android:textStyle="bold"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/tvInfoSecond"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:gravity="center_vertical|right"
+                android:paddingLeft="10dp"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:layout_weight="1"/>
+
+            <TextView
+                android:id="@+id/tvInfoThird"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:gravity="center_vertical|right"
+                android:paddingLeft="10dp"
+                android:textSize="17sp"
                 android:textStyle="bold"
                 android:layout_weight="1"/>
 
