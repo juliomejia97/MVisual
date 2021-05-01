@@ -1,6 +1,8 @@
 package com.example.pixelmanipulation;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -18,11 +20,11 @@ import java.util.ArrayList;
 public class CategoryListActivity extends AppCompatActivity {
 
     private ListViewAdapter mListInfoAdapter;
-    private ImageView ivCenter;
+    private ImageView ivCenter, ivPrevious;
     private Spinner spinner;
     private ListView mlista;
     private TextView tvTypeName;
-    private String[] arrayForSpinner = {"Order by", "Name", "Surname"};
+    private String[] arrayForSpinner = {"Ordenar por", "Nombre", "Apellido"};
 
     @Override
     public void onCreate( Bundle savedInstanceState) {
@@ -30,9 +32,21 @@ public class CategoryListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_category_list);
         AmplifyModelProvider.getInstance(getApplicationContext());
         ivCenter = findViewById(R.id.center);
+        ivPrevious = findViewById(R.id.ivPreviousCategory);
         tvTypeName = findViewById(R.id.tvTypeName);
         mlista = findViewById(R.id.lvData);
         spinner = findViewById(R.id.spinnerList);
+
+        ivPrevious.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), FilesActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+
     }
 
     @Override
@@ -44,6 +58,10 @@ public class CategoryListActivity extends AppCompatActivity {
     }
 
     public void initView(String type) {
+
+        /*
+        TODO: POR CADA TYPE SE DEBE LLAMAR AL AMPLIFY Y HACER UN QUERY PARA TRAER TODO LO QUE SE TENGA DE ESE TIPO
+         */
 
         if(type.equalsIgnoreCase("Pacientes")){
 

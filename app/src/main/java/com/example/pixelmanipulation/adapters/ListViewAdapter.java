@@ -2,6 +2,7 @@
 package com.example.pixelmanipulation.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
@@ -20,6 +21,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pixelmanipulation.InfoListActivity;
 import com.example.pixelmanipulation.R;
 import com.example.pixelmanipulation.model.DataViewHolder;
 
@@ -51,15 +53,23 @@ public class ListViewAdapter extends ArrayAdapter<DataViewHolder> {
             @Override
             public void onClick(View view) {
                 Log.i("Data", infoText.getText().toString());
+                Intent intent = new Intent(getContext(), InfoListActivity.class);
+                intent.putExtra("Type", type);
+                intent.putExtra("Info", infoText.getText().toString());
+                view.getContext().startActivity(intent);
             }
         });
+
+        /*
+        TODO CUANDO SE TRAE LA INFO DE AMPLIFY TAMBIEN TRAER LA IMAGEN ASOCIADA A DICHA ENTIDAD
+         */
 
         if(type.equalsIgnoreCase("Pacientes")){
             image.setImageDrawable(mView.getResources().getDrawable(R.drawable.avatar5));
         } else if (type.equalsIgnoreCase("Estudios")){
-            image.setImageDrawable(mView.getResources().getDrawable(R.drawable.studies));
+            image.setImageDrawable(mView.getResources().getDrawable(R.drawable.folder));
         } else if (type.equalsIgnoreCase("Series")){
-            image.setImageDrawable(mView.getResources().getDrawable(R.drawable.series));
+            image.setImageDrawable(mView.getResources().getDrawable(R.drawable.scan));
         }
 
         return mView;
