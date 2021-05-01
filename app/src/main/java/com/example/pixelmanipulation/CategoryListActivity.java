@@ -1,7 +1,6 @@
 package com.example.pixelmanipulation;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -16,7 +15,7 @@ import com.example.pixelmanipulation.model.DataViewHolder;
 
 import java.util.ArrayList;
 
-public class ListActivity extends AppCompatActivity {
+public class CategoryListActivity extends AppCompatActivity {
 
     private ListViewAdapter mListInfoAdapter;
     private ImageView ivCenter;
@@ -28,7 +27,7 @@ public class ListActivity extends AppCompatActivity {
     @Override
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_list);
+        setContentView(R.layout.activity_category_list);
         AmplifyModelProvider.getInstance(getApplicationContext());
         ivCenter = findViewById(R.id.center);
         tvTypeName = findViewById(R.id.tvTypeName);
@@ -39,7 +38,7 @@ public class ListActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(ListActivity.this, android.R.layout.simple_spinner_dropdown_item, arrayForSpinner);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(CategoryListActivity.this, android.R.layout.simple_spinner_dropdown_item, arrayForSpinner);
         spinner.setAdapter(adapter);
         initView(getIntent().getStringExtra("Type"));
     }
@@ -58,7 +57,7 @@ public class ListActivity extends AppCompatActivity {
             peopleList.add(new DataViewHolder("Juan Sebastian Osorio Garcia", type));
             peopleList.add(new DataViewHolder("Leonardo Flórez Valencia", type));
 
-            mListInfoAdapter = new ListViewAdapter(ListActivity.this, peopleList);
+            mListInfoAdapter = new ListViewAdapter(CategoryListActivity.this, peopleList);
             mlista.setAdapter(mListInfoAdapter);
 
         } else if (type.equalsIgnoreCase("Estudios")){
@@ -76,7 +75,7 @@ public class ListActivity extends AppCompatActivity {
             studyList.add(new DataViewHolder("Estudio #7", type));
             studyList.add(new DataViewHolder("Estudio #8", type));
 
-            mListInfoAdapter = new ListViewAdapter(ListActivity.this, studyList);
+            mListInfoAdapter = new ListViewAdapter(CategoryListActivity.this, studyList);
             mlista.setAdapter(mListInfoAdapter);
 
         } else if (type.equalsIgnoreCase("Series")){
@@ -94,7 +93,7 @@ public class ListActivity extends AppCompatActivity {
             seriesList.add(new DataViewHolder("Serie #7", type));
             seriesList.add(new DataViewHolder("Serie #8", type));
 
-            mListInfoAdapter = new ListViewAdapter(ListActivity.this, seriesList);
+            mListInfoAdapter = new ListViewAdapter(CategoryListActivity.this, seriesList);
             mlista.setAdapter(mListInfoAdapter);
         }
     }

@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -56,7 +55,7 @@ public class FilesActivity extends AppCompatActivity {
         llPacientes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), ListActivity.class);
+                Intent intent = new Intent(getApplicationContext(), CategoryListActivity.class);
                 intent.putExtra("Type", "Pacientes");
                 startActivity(intent);
             }
@@ -65,7 +64,7 @@ public class FilesActivity extends AppCompatActivity {
         llEstudios.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), ListActivity.class);
+                Intent intent = new Intent(getApplicationContext(), CategoryListActivity.class);
                 intent.putExtra("Type", "Estudios");
                 startActivity(intent);
             }
@@ -74,7 +73,7 @@ public class FilesActivity extends AppCompatActivity {
         llSeries.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), ListActivity.class);
+                Intent intent = new Intent(getApplicationContext(), CategoryListActivity.class);
                 intent.putExtra("Type", "Series");
                 startActivity(intent);
             }

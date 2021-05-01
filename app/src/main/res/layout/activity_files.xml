@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="25dp"
         android:text="MVisual"
-        android:textSize="27sp"
+        android:textSize="30sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,7 +22,7 @@
         android:id="@+id/tvRecientes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="25dp"
         android:layout_marginTop="20dp"
         android:text="Recientes"
         android:textSize="22sp"
@@ -33,9 +33,9 @@
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="25dp"
         android:layout_marginTop="15dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="25dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -127,7 +127,7 @@
         android:id="@+id/tvCategorias"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="25dp"
         android:layout_marginTop="35dp"
         android:text="Categorías"
         android:textSize="22sp"
@@ -137,9 +137,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="25dp"
         android:layout_marginTop="25dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="25dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -156,17 +156,17 @@
             android:layout_weight="1">
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                app:srcCompat="@drawable/patient" />
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:srcCompat="@drawable/patient2" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:paddingStart="30dp"
+                android:paddingStart="20dp"
                 android:text="Pacientes"
-                android:textSize="21sp" />
+                android:textSize="20sp" />
 
         </LinearLayout>
 
@@ -181,17 +181,17 @@
             android:layout_weight="1">
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                app:srcCompat="@drawable/studies" />
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:srcCompat="@drawable/folder" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:paddingStart="30dp"
+                android:paddingStart="20dp"
                 android:text="Estudios"
-                android:textSize="21sp" />
+                android:textSize="20sp" />
 
         </LinearLayout>
 
@@ -204,17 +204,17 @@
             android:layout_weight="1">
 
             <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                app:srcCompat="@drawable/series" />
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                app:srcCompat="@drawable/scan" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:paddingStart="30dp"
+                android:paddingStart="20dp"
                 android:text="Series"
-                android:textSize="21sp" />
+                android:textSize="20sp" />
 
         </LinearLayout>
 
@@ -224,7 +224,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:src="@drawable/photo"
-            android:layout_margin="8dp" />
+            android:layout_margin="10dp" />
 
     </LinearLayout>
 

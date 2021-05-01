@@ -36,7 +36,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ListActivity" />
+        <activity android:name=".CategoryListActivity" />
         <activity android:name=".ProcessedImagesActivity" />
         <activity android:name=".UploadImageActivity" />
     </application>
