@@ -53,8 +53,8 @@ public class ListViewAdapter extends ArrayAdapter<DataViewHolder> {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), InfoListActivity.class);
+                intent.putExtra("Id", listDatos.get(position).getId());
                 intent.putExtra("Type", type);
-                intent.putExtra("Info", infoText.getText().toString());
                 view.getContext().startActivity(intent);
             }
         });

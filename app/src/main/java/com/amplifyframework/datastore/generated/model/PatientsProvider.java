@@ -175,6 +175,28 @@ public final class PatientsProvider {
         return null;
     }
 
+    public static DataViewHolder getStudyPatient(String id){
+        for(DataViewHolder patient: patients){
+            for(DataViewHolder study: patient.getData()){
+                if(study.getId().equalsIgnoreCase(id)){
+                    return patient;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static DataViewHolder getSeriesStudy(String id){
+        for(DataViewHolder study: studies){
+            for(DataViewHolder serie: study.getData()){
+                if(serie.getId().equalsIgnoreCase(id)){
+                    return study;
+                }
+            }
+        }
+        return null;
+    }
+
     public static ArrayList<DataViewHolder> getStudiesByPatient(String id){
         for(DataViewHolder patient: patients){
             if(patient.getId().equalsIgnoreCase(id)){
