@@ -87,6 +87,9 @@ public class InfoListActivity extends AppCompatActivity {
         /*
         TODO: LA IMAGEN DE LA ACTIVIDAD DEBE SER LA ASOCIADA AL NOMBRE DESDE AMPLIFY
          */
+        /*
+        TODO: YA SE MOSTRARIAN LAS IMAGENES GUARDADAS PERTENECIENTES A DICHA SERIE
+        */
         tvInfoPrincipal.setText(info.getInfo());
 
         if(info.getType().equalsIgnoreCase("Pacientes")){
@@ -102,9 +105,8 @@ public class InfoListActivity extends AppCompatActivity {
             ivInfo.setImageDrawable(getResources().getDrawable(R.drawable.scan));
             tvInfoSecond.setText(infoSecondary.getInfo());
             tvInfoThird.setText(infoThird.getInfo());
-            /*
-            TODO: YA SE MOSTRARIAN LAS IMAGENES GUARDADAS PERTENECIENTES A DICHA SERIE
-             */
+            mListInfoAdapter = new ListViewAdapter(InfoListActivity.this, provider.getImagesBySeries(info.getId()), (level + 1));
+            mlista.setAdapter(mListInfoAdapter);
         }
     }
 }

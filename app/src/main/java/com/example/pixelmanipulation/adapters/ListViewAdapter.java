@@ -21,8 +21,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.amplifyframework.datastore.generated.model.AmplifyModelProvider;
 import com.example.pixelmanipulation.InfoListActivity;
 import com.example.pixelmanipulation.R;
+import com.example.pixelmanipulation.UploadImageActivity;
 import com.example.pixelmanipulation.model.DataViewHolder;
 
 import java.util.ArrayList;
@@ -33,9 +35,11 @@ public class ListViewAdapter extends ArrayAdapter<DataViewHolder> {
     private List<DataViewHolder> listDatos;
     private Context context;
     private int level;
+    private AmplifyModelProvider provider;
 
     public ListViewAdapter(Context context, ArrayList<DataViewHolder> listDatos, int level) {
         super(context, R.layout.list_adapter, listDatos);
+        this.provider = AmplifyModelProvider.getInstance(context);
         this.context = context;
         this.listDatos = listDatos;
         this.level = level;
@@ -54,11 +58,22 @@ public class ListViewAdapter extends ArrayAdapter<DataViewHolder> {
         llData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), InfoListActivity.class);
-                intent.putExtra("Id", listDatos.get(position).getId());
-                intent.putExtra("Type", type);
-                intent.putExtra("Level", level);
-                view.getContext().startActivity(intent);
+                if(!type.equalsIgnoreCase("Imagenes")){
+                    Intent intent = new Intent(getContext(), InfoListActivity.class);
+                    intent.putExtra("Id", listDatos.get(position).getId());
+                    intent.putExtra("Type", type);
+                    intent.putExtra("Level", level);
+                    view.getContext().startActivity(intent);
+                } else {
+                    String mhdName = listDatos.get(position).getInfo();
+                    String rawName = mhdName.replace(".mhd", ".raw");
+                    provider.loadImage(mhdName, rawName);
+                    Log.i("Test", "Calling activity");
+                    /*Intent intent = new Intent(getContext(), UploadImageActivity.class);
+                    intent.putExtra("mhd", mhdName);
+                    intent.putExtra("raw", rawName);
+                    view.getContext().startActivity(intent);*/
+                }
             }
         });
 
@@ -72,6 +87,8 @@ public class ListViewAdapter extends ArrayAdapter<DataViewHolder> {
             image.setImageDrawable(mView.getResources().getDrawable(R.drawable.folder));
         } else if (type.equalsIgnoreCase("Series")){
             image.setImageDrawable(mView.getResources().getDrawable(R.drawable.scan));
+        } else if (type.equalsIgnoreCase("Imagenes")){
+            image.setImageDrawable(mView.getResources().getDrawable(R.drawable.processed_image));
         }
 
         return mView;

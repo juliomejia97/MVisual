@@ -28,6 +28,7 @@ public final class PatientsProvider {
     private static ArrayList<DataViewHolder> patients;
     private static ArrayList<DataViewHolder> studies;
     private static ArrayList<DataViewHolder> series;
+    private static ArrayList<DataViewHolder> images;
 
 
     private PatientsProvider() {
@@ -35,6 +36,7 @@ public final class PatientsProvider {
         patients = new ArrayList<DataViewHolder>();
         studies = new ArrayList<DataViewHolder>();
         series = new ArrayList<DataViewHolder>();
+        images = new ArrayList<DataViewHolder>();
 
         DataViewHolder p1 = new DataViewHolder("1", "Juan Camilo Chafloque Mesia", "Pacientes");
         DataViewHolder p2 = new DataViewHolder("2", "Abel Santiago Cortes Avedaño", "Pacientes");
@@ -70,6 +72,8 @@ public final class PatientsProvider {
         DataViewHolder s10 = new DataViewHolder("30", "Serie #10", "Series");
         DataViewHolder s11 = new DataViewHolder("31", "Serie #11", "Series");
 
+        DataViewHolder i1 = new DataViewHolder("32", "radius_ulna_raw.mhd", "Imagenes");
+
         p1.addData(e11);
         p2.addData(e10);
         p3.addData(e9);
@@ -93,6 +97,8 @@ public final class PatientsProvider {
         e9.addData(s9);
         e10.addData(s10);
         e11.addData(s11);
+
+        s1.addData(i1);
 
         patients.add(p1);
         patients.add(p2);
@@ -127,6 +133,8 @@ public final class PatientsProvider {
         series.add(s9);
         series.add(s10);
         series.add(s11);
+
+        images.add(i1);
     }
 
     public static PatientsProvider getInstance() {
@@ -210,6 +218,15 @@ public final class PatientsProvider {
         for(DataViewHolder study: studies){
             if(study.getId().equalsIgnoreCase(id)){
                 return study.getData();
+            }
+        }
+        return null;
+    }
+
+    public static ArrayList<DataViewHolder> getImagesBySeries(String id){
+        for(DataViewHolder serie: series){
+            if(serie.getId().equalsIgnoreCase(id)){
+                return serie.getData();
             }
         }
         return null;

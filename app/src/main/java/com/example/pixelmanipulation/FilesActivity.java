@@ -26,6 +26,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.loader.content.CursorLoader;
 
+import com.amplifyframework.datastore.generated.model.AmplifyModelProvider;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
@@ -49,6 +50,7 @@ public class FilesActivity extends AppCompatActivity {
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_files);
+        AmplifyModelProvider.getInstance(getApplicationContext());
         llPacientes = findViewById(R.id.llPacientes);
         llEstudios = findViewById(R.id.llEstudios);
         llSeries = findViewById(R.id.llSeries);
