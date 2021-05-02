@@ -65,26 +65,27 @@ public class CategoryListActivity extends AppCompatActivity {
         /*
         TODO: POR CADA TYPE SE DEBE LLAMAR AL AMPLIFY Y HACER UN QUERY PARA TRAER TODO LO QUE SE TENGA DE ESE TIPO
          */
+        int level = 1;
 
         if(type.equalsIgnoreCase("Pacientes")){
 
             tvTypeName.setText("Por Paciente");
             ivCenter.setImageDrawable(getResources().getDrawable(R.drawable.patient));
-            mListInfoAdapter = new ListViewAdapter(CategoryListActivity.this, provider.getAllPatients());
+            mListInfoAdapter = new ListViewAdapter(CategoryListActivity.this, provider.getAllPatients(), level);
             mlista.setAdapter(mListInfoAdapter);
 
         } else if (type.equalsIgnoreCase("Estudios")){
 
             tvTypeName.setText("Por Estudios");
             ivCenter.setImageDrawable(getResources().getDrawable(R.drawable.studies));
-            mListInfoAdapter = new ListViewAdapter(CategoryListActivity.this, provider.getAllStudies());
+            mListInfoAdapter = new ListViewAdapter(CategoryListActivity.this, provider.getAllStudies(), level);
             mlista.setAdapter(mListInfoAdapter);
 
         } else if (type.equalsIgnoreCase("Series")){
 
             tvTypeName.setText("Por Series");
             ivCenter.setImageDrawable(getResources().getDrawable(R.drawable.series));
-            mListInfoAdapter = new ListViewAdapter(CategoryListActivity.this, provider.getAllSeries());
+            mListInfoAdapter = new ListViewAdapter(CategoryListActivity.this, provider.getAllSeries(), level);
             mlista.setAdapter(mListInfoAdapter);
         }
     }

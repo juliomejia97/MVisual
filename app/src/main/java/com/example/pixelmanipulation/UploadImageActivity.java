@@ -95,7 +95,7 @@ public class UploadImageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
-                builder.setMessage("¿Seguro que desea continuar?")
+                builder.setMessage("¿Seguro que desea continuar? Si continua y regresa perderá su proceso.")
                         .setCancelable(false)
                         .setPositiveButton("Si", new DialogInterface.OnClickListener() {
                             @Override

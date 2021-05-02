@@ -32,11 +32,13 @@ public class ListViewAdapter extends ArrayAdapter<DataViewHolder> {
 
     private List<DataViewHolder> listDatos;
     private Context context;
+    private int level;
 
-    public ListViewAdapter(Context context, ArrayList<DataViewHolder> listDatos) {
+    public ListViewAdapter(Context context, ArrayList<DataViewHolder> listDatos, int level) {
         super(context, R.layout.list_adapter, listDatos);
         this.context = context;
         this.listDatos = listDatos;
+        this.level = level;
     }
 
     @NonNull
@@ -55,6 +57,7 @@ public class ListViewAdapter extends ArrayAdapter<DataViewHolder> {
                 Intent intent = new Intent(getContext(), InfoListActivity.class);
                 intent.putExtra("Id", listDatos.get(position).getId());
                 intent.putExtra("Type", type);
+                intent.putExtra("Level", level);
                 view.getContext().startActivity(intent);
             }
         });

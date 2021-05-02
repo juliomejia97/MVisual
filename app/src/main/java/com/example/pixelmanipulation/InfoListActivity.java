@@ -22,7 +22,8 @@ public class InfoListActivity extends AppCompatActivity {
     private ImageView ivPrevious, ivInfo;
     private TextView tvInfoPrincipal, tvInfoSecond, tvInfoThird;
     private ListView mlista;
-    private DataViewHolder info;
+    private DataViewHolder info, infoSecondary, infoThird;
+    private int level;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +42,19 @@ public class InfoListActivity extends AppCompatActivity {
         ivPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), FilesActivity.class);
-                startActivity(intent);
-                finish();
+                if (level == 1){
+                    Intent intent = new Intent(InfoListActivity.this, CategoryListActivity.class);
+                    intent.putExtra("Type", info.getType());
+                    startActivity(intent);
+                    finish();
+                } else {
+                    Intent intent = new Intent(InfoListActivity.this, InfoListActivity.class);
+                    intent.putExtra("Type", infoSecondary.getType());
+                    intent.putExtra("Id", infoSecondary.getId());
+                    intent.putExtra("Level", (level - 1));
+                    startActivity(intent);
+                    finish();
+                }
             }
         });
     }
@@ -53,12 +64,18 @@ public class InfoListActivity extends AppCompatActivity {
         super.onStart();
         String type = getIntent().getStringExtra("Type");
         String id = getIntent().getStringExtra("Id");
+        level = getIntent().getIntExtra("Level", -1);
         if(type.equalsIgnoreCase("Pacientes")){
             info = provider.getPatientById(id);
+            infoSecondary = null;
+            infoThird = null;
         } else if(type.equalsIgnoreCase("Estudios")){
             info = provider.getStudyById(id);
+            infoSecondary = provider.getStudyPatient(info.getId());
         } else if(type.equalsIgnoreCase("Series")){
             info = provider.getSeriesById(id);
+            infoSecondary = provider.getSeriesStudy(info.getId());
+            infoThird = provider.getStudyPatient(infoSecondary.getId());
         }
 
         initData();
@@ -74,19 +91,17 @@ public class InfoListActivity extends AppCompatActivity {
 
         if(info.getType().equalsIgnoreCase("Pacientes")){
             ivInfo.setImageDrawable(getResources().getDrawable(R.drawable.avatar5));
-            mListInfoAdapter = new ListViewAdapter(InfoListActivity.this, provider.getStudiesByPatient(info.getId()));
+            mListInfoAdapter = new ListViewAdapter(InfoListActivity.this, provider.getStudiesByPatient(info.getId()), (level + 1));
             mlista.setAdapter(mListInfoAdapter);
         } else if (info.getType().equalsIgnoreCase("Estudios")){
             ivInfo.setImageDrawable(getResources().getDrawable(R.drawable.folder));
-            tvInfoSecond.setText(provider.getStudyPatient(info.getId()).getInfo());
-            mListInfoAdapter = new ListViewAdapter(InfoListActivity.this, provider.getSeriesByStudy(info.getId()));
+            tvInfoSecond.setText(infoSecondary.getInfo());
+            mListInfoAdapter = new ListViewAdapter(InfoListActivity.this, provider.getSeriesByStudy(info.getId()), (level + 1));
             mlista.setAdapter(mListInfoAdapter);
         } else if (info.getType().equalsIgnoreCase("Series")){
             ivInfo.setImageDrawable(getResources().getDrawable(R.drawable.scan));
-            DataViewHolder study = provider.getSeriesStudy(info.getId());
-            DataViewHolder patient = provider.getStudyPatient(study.getId());
-            tvInfoSecond.setText(study.getInfo());
-            tvInfoThird.setText(patient.getInfo());
+            tvInfoSecond.setText(infoSecondary.getInfo());
+            tvInfoThird.setText(infoThird.getInfo());
             /*
             TODO: YA SE MOSTRARIAN LAS IMAGENES GUARDADAS PERTENECIENTES A DICHA SERIE
              */
