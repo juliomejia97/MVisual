@@ -1,6 +1,8 @@
 package com.amplifyframework.datastore.generated.model;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import com.amplifyframework.AmplifyException;
@@ -11,6 +13,7 @@ import com.amplifyframework.storage.s3.AWSS3StoragePlugin;
 import com.amplifyframework.util.Immutable;
 import com.amplifyframework.core.model.Model;
 import com.amplifyframework.core.model.ModelProvider;
+import com.example.pixelmanipulation.UploadImageActivity;
 
 import java.io.File;
 import java.util.Arrays;
@@ -60,11 +63,13 @@ public final class AmplifyModelProvider implements ModelProvider {
     return AMPLIFY_MODEL_VERSION;
   }
 
-  public void loadImage(String mhdName, String rawName){
+  public void loadImage(String mhdName, String rawName, Context currContext){
+
+      ProgressDialog pDialog = ProgressDialog.show(currContext, "Obteniendo Archivo de la Base de Datos...", "Por favor espere", true,false);
 
       Amplify.Storage.downloadFile(
-              mhdName,
-              new File(context.getFilesDir() + "/" + mhdName),
+              "raw.mhd",
+              new File(currContext.getFilesDir() + "/" + mhdName),
               result -> {
                   Log.i("Amplify", "Se generó el archivo mhd exitosamente: " + result.getFile().getName());
                   },
@@ -73,10 +78,15 @@ public final class AmplifyModelProvider implements ModelProvider {
 
       Amplify.Storage.downloadFile(
               rawName,
-              new File(context.getFilesDir() + "/" + rawName),
+              new File(currContext.getFilesDir() + "/" + rawName),
               result -> {
                   Log.i("Amplify", "Se generó el archivo raw exitosamente: " + result.getFile().getName());
-                  Log.i("Test", "Download finished");
+                  Intent intent = new Intent(currContext, UploadImageActivity.class);
+                  intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                  intent.putExtra("mhd", mhdName);
+                  intent.putExtra("raw", rawName);
+                  pDialog.dismiss();
+                  context.startActivity(intent);
               },
               error -> Log.e("Amplify",  "Error al descargar el archivo raw", error)
       );

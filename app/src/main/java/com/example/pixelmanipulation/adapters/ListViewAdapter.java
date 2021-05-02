@@ -67,12 +67,7 @@ public class ListViewAdapter extends ArrayAdapter<DataViewHolder> {
                 } else {
                     String mhdName = listDatos.get(position).getInfo();
                     String rawName = mhdName.replace(".mhd", ".raw");
-                    provider.loadImage(mhdName, rawName);
-                    Log.i("Test", "Calling activity");
-                    /*Intent intent = new Intent(getContext(), UploadImageActivity.class);
-                    intent.putExtra("mhd", mhdName);
-                    intent.putExtra("raw", rawName);
-                    view.getContext().startActivity(intent);*/
+                    provider.loadImage(mhdName, rawName, view.getContext());
                 }
             }
         });
