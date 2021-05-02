@@ -8,11 +8,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.pixelmanipulation.Interface.ToolsListener;
-import com.example.pixelmanipulation.Interface.ViewOnClick;
+import com.example.pixelmanipulation.canva.Interface.ToolsListener;
+import com.example.pixelmanipulation.canva.Interface.ViewOnClick;
 import com.example.pixelmanipulation.R;
 import com.example.pixelmanipulation.model.ToolsItem;
-import com.example.pixelmanipulation.viewHolder.ToolsViewHolder;
+import com.example.pixelmanipulation.canva.viewHolder.ToolsViewHolder;
 
 import java.util.List;
 
@@ -31,7 +31,7 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsViewHolder> {
     @Override
     public ToolsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.tools_item,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.tools_canva_item,parent,false);
         return new ToolsViewHolder(view);
     }
 

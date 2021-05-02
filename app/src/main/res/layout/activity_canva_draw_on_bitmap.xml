@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".canva.DrawOnBitmapActivity"
+    android:orientation="vertical">
+
+    <com.example.pixelmanipulation.canva.DrawableImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ChoosenImageView">
+    </com.example.pixelmanipulation.canva.DrawableImageView>
+
+    <Button
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Save Picture" android:id="@+id/SavePictureButton"/>
+
+</LinearLayout>
