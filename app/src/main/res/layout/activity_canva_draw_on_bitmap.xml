@@ -11,20 +11,9 @@
         android:id="@+id/ChoosenImageView"
         android:layout_width="match_parent"
         android:layout_height="350dp"
-        app:layout_constraintEnd_toStartOf="@+id/SavePictureButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
     </com.example.pixelmanipulation.canva.DrawableImageView>
-
-    <Button
-        android:id="@+id/SavePictureButton"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Process"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ChoosenImageView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

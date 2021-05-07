@@ -32,6 +32,8 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsViewHolder> {
     public ToolsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.tools_canva_item,parent,false);
+        //View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.tools_canva_item,parent,false);
+
         return new ToolsViewHolder(view);
     }
 
@@ -44,7 +46,8 @@ public class ToolsAdapter extends RecyclerView.Adapter<ToolsViewHolder> {
             @Override
             public void onClick (int pos){
                 selected= pos;
-                listener.onSelected(toolsItemList.get(pos).getName());
+                listener.onSelected(toolsItemList.get(pos).
+                        getName());
                 notifyDataSetChanged();
             }
         });
