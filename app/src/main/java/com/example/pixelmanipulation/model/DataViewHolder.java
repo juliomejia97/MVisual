@@ -1,5 +1,6 @@
 package com.example.pixelmanipulation.model;
 
+import android.provider.ContactsContract;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -16,21 +17,15 @@ public class DataViewHolder{
     private String id;
     private String info;
     private String type;
-    private ArrayList<DataViewHolder> data;
+    private String parentId;
 
-    public DataViewHolder(String pId, String pInfo, String pType) {
-        this.id = pId;
+    public DataViewHolder(String pInfo, String pType) {
         this.info = pInfo;
         this.type = pType;
-        this.data = new ArrayList<DataViewHolder>();
     }
 
-    public void addData(DataViewHolder data){
-        this.data.add(data);
-    }
+    public DataViewHolder(){
 
-    public ArrayList<DataViewHolder> getData(){
-        return this.data;
     }
 
     public String getId() {
@@ -56,4 +51,8 @@ public class DataViewHolder{
     public void setType(String type) {
         this.type = type;
     }
+
+    public String getParentId() { return parentId; }
+
+    public void setParentId(String parentId) { this.parentId = parentId; }
 }

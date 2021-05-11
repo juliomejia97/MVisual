@@ -26,8 +26,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.loader.content.CursorLoader;
 
-import com.amplifyframework.datastore.generated.model.AmplifyModelProvider;
+import com.example.pixelmanipulation.model.DataViewHolder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.providers.FirebaseProvider;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,7 +43,7 @@ public class FilesActivity extends AppCompatActivity {
     private static final int IMAGE_PICKER_REQUEST = 4;
     private static final int FILE_PICKER_REQUEST = 5;
     private static boolean accessAlm = false;
-
+    private FirebaseProvider provider;
 
     LinearLayout llPacientes, llSeries, llEstudios;
 
@@ -50,7 +51,7 @@ public class FilesActivity extends AppCompatActivity {
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_files);
-        AmplifyModelProvider.getInstance(getApplicationContext());
+        this.provider = FirebaseProvider.getInstance();
         llPacientes = findViewById(R.id.llPacientes);
         llEstudios = findViewById(R.id.llEstudios);
         llSeries = findViewById(R.id.llSeries);
@@ -91,6 +92,12 @@ public class FilesActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        provider.createImages(new DataViewHolder("clavicle_scapula_raw.mhd", "imagenes"), "-M_RBh__5k2jSBcex6ZO");
     }
 
     private boolean requestPermission(Activity context, String permit, String justification, int id){
@@ -135,8 +142,8 @@ public class FilesActivity extends AppCompatActivity {
                     Log.i("mhd", "mhdnme " + mhdName);
                     Log.i("mhd", "mhdnme " + rawName);
                     Intent intent = new Intent(getBaseContext(), UploadImageActivity.class);
-                    intent.putExtra("mhd", mhdName);
-                    intent.putExtra("raw", rawName);
+                    intent.putExtra("mhd", getFilesDir() + "/" + mhdName);
+                    intent.putExtra("raw", getFilesDir() + "/" + rawName);
                     startActivity(intent);
                 }
             }

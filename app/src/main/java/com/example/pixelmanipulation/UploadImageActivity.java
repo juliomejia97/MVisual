@@ -274,6 +274,11 @@ public class UploadImageActivity extends AppCompatActivity {
     }
 
     public void showSeekBars(){
+
+        mhdName = mhdName.replace(getFilesDir().toString() + "/", "");
+        mhdName = mhdName.replace(".mhd", "");
+        mhdName = mhdName.replaceAll("[0-9]","");
+
         sbWindow.setMax(255);
         sbWindow.setProgress(255);
         sbLevel.setMax(255);
@@ -283,7 +288,7 @@ public class UploadImageActivity extends AppCompatActivity {
         tvWindow.setText("" + sbWindow.getProgress());
         tvLevel.setText("" + sbLevel.getProgress());
         tvDepth.setText("" + sbDepth.getProgress());
-        tvImage.setText("" + mhdName.replace(".mhd", ""));
+        tvImage.setText("" + mhdName);
 
         tvImage.setVisibility(View.VISIBLE);
         llWindow.setVisibility(View.VISIBLE);
@@ -293,8 +298,8 @@ public class UploadImageActivity extends AppCompatActivity {
     }
 
     public void deleteTemporalFiles(String mhd, String raw){
-        File mhdFile = new File(getFilesDir() + "/" + mhd);
-        File rawFile = new File(getFilesDir() + "/" + raw);
+        File mhdFile = new File(mhd);
+        File rawFile = new File(raw);
         if(mhdFile.exists()){
             mhdFile.delete();
         }else{
@@ -325,7 +330,7 @@ public class UploadImageActivity extends AppCompatActivity {
         @Override
         protected Void doInBackground(String... strings) {
             
-            imageMHD = convertMHD(getFilesDir() + "/" + strings[0], getFilesDir() + "/" + strings[1]);
+            imageMHD = convertMHD(strings[0], strings[1]);
 
             deleteTemporalFiles(strings[0], strings[1]);
             return null;
