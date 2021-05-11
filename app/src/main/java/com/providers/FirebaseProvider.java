@@ -131,55 +131,54 @@ public class FirebaseProvider {
         return null;
     }
 
-    public static DataViewHolder getStudyPatient(String id){
-        /*for(DataViewHolder patient: patients){
-            for(DataViewHolder study: patient.getData()){
-                if(study.getId().equalsIgnoreCase(id)){
-                    return patient;
-                }
-            }
-        }*/
-        return null;
-    }
-
-
-
-    public static DataViewHolder getSeriesStudy(String id){
-        /*for(DataViewHolder study: studies){
-            for(DataViewHolder serie: study.getData()){
-                if(serie.getId().equalsIgnoreCase(id)){
-                    return study;
-                }
-            }
-        }*/
-        return null;
-    }
-
-    public static ArrayList<DataViewHolder> getStudiesByPatient(String id){
-        for(DataViewHolder patient: patients){
-            if(patient.getId().equalsIgnoreCase(id)){
-                //return patient.getData();
-            }
-        }
-        return null;
-    }
-
-    public static ArrayList<DataViewHolder> getSeriesByStudy(String id){
+    public static DataViewHolder getStudyPatient(String idStudy){
         for(DataViewHolder study: studies){
-            if(study.getId().equalsIgnoreCase(id)){
-                //return study.getData();
+            if(study.getId().equalsIgnoreCase(idStudy)){
+                return getPatientById(study.getParentId());
             }
         }
         return null;
     }
 
-    public static ArrayList<DataViewHolder> getImagesBySeries(String id){
+
+
+    public static DataViewHolder getSeriesStudy(String idSerie){
         for(DataViewHolder serie: series){
-            if(serie.getId().equalsIgnoreCase(id)){
-                //return serie.getData();
+            if(serie.getId().equalsIgnoreCase(idSerie)){
+                return getStudyById(serie.getParentId());
             }
         }
         return null;
+    }
+
+    public static ArrayList<DataViewHolder> getStudiesByPatient(String idPatient){
+        ArrayList<DataViewHolder> patStudies = new ArrayList<>();
+        for(DataViewHolder study: studies){
+            if(study.getParentId().equalsIgnoreCase(idPatient)){
+                patStudies.add(study);
+            }
+        }
+        return patStudies;
+    }
+
+    public static ArrayList<DataViewHolder> getSeriesByStudy(String idStudy){
+        ArrayList<DataViewHolder> serStudies = new ArrayList<>();
+        for(DataViewHolder serie: series){
+            if(serie.getParentId().equalsIgnoreCase(idStudy)){
+                serStudies.add(serie);
+            }
+        }
+        return serStudies;
+    }
+
+    public static ArrayList<DataViewHolder> getImagesBySeries(String idSerie){
+        ArrayList<DataViewHolder> imgSeries = new ArrayList<>();
+        for(DataViewHolder image: images){
+            if(image.getParentId().equalsIgnoreCase(idSerie)){
+                imgSeries.add(image);
+            }
+        }
+        return imgSeries;
     }
 
     public void loadImage(String mhdName, String rawName, Context context){
