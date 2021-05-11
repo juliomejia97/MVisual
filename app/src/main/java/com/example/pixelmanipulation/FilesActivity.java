@@ -26,6 +26,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.loader.content.CursorLoader;
 
+import com.example.pixelmanipulation.model.DataViewHolder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.providers.FirebaseProvider;
 
