@@ -94,12 +94,6 @@ public class FilesActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        provider.createImages(new DataViewHolder("clavicle_scapula_raw.mhd", "imagenes"), "-M_RBh__5k2jSBcex6ZO");
-    }
-
     private boolean requestPermission(Activity context, String permit, String justification, int id){
         if(ContextCompat.checkSelfPermission(context, permit) != PackageManager.PERMISSION_GRANTED){
             if(ActivityCompat.shouldShowRequestPermissionRationale(context, permit)){
