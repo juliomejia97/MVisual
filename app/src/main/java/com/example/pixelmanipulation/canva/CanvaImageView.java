@@ -4,7 +4,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -59,6 +62,7 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         initTools();
         mPaintView.setBackground(background);
     }
+
 
     private void initTools() {
 
@@ -134,7 +138,7 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
                 .with(this)
                 .setTitle("Choose color")
                 .initialColor(color)
-                .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
+                .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
                 .density(12)
                 .setPositiveButton("OK", new ColorPickerClickListener() {
                     @Override

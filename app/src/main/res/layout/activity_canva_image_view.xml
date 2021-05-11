@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,67 +8,49 @@
     android:orientation="vertical"
     tools:context=".canva.CanvaImageView">
 
-   <com.example.pixelmanipulation.canva.widget.PaintView
-       android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:layout_weight="1"
-       android:id="@+id/paint_view"
-       />
-    <androidx.recyclerview.widget.RecyclerView
+    <com.example.pixelmanipulation.canva.widget.PaintView
+        android:id="@+id/paint_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:background="@color/colorPrimary"
-        android:id="@+id/recycle_view_tools"
-       />
+        android:layout_height="350dp"
+        app:layout_constraintBottom_toTopOf="@+id/linear_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
     <LinearLayout
+        android:id="@+id/linear_layout"
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        android:background="@color/colorPrimary"
-        android:orientation="horizontal">
-        <ImageButton
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/paint_view">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycle_view_tools"
+            android:layout_width="wrap_content"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:background="@color/colorPrimary"
-            android:src="@drawable/ic_baseline_arrow_back_24"
-            android:onClick="finishPaint"
-            />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="right"
-            android:layout_weight="1">
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:background="@color/colorPrimary"
-                android:src="@drawable/ic_baseline_share_24"
-                android:onClick="shareApp"
-                />
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:background="@color/colorPrimary"
-                android:src="@drawable/ic_baseline_home_24"
-                android:onClick="showFiles"
-                />
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:background="@color/colorPrimary"
-                android:src="@drawable/ic_baseline_arrow_back_24"
-                android:onClick="finishPaint"
-                />
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:background="@color/colorPrimary"
-                android:src="@drawable/ic_baseline_cloud_download_24"
-                android:onClick="saveFile"
-                />
-        </LinearLayout>
+            android:gravity="center" />
+
     </LinearLayout>
 
-</LinearLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycle_options"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/colorPrimary"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
