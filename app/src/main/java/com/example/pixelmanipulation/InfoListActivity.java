@@ -2,7 +2,6 @@ package com.example.pixelmanipulation;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -10,8 +9,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.amplifyframework.datastore.generated.model.AmplifyModelProvider;
-import com.amplifyframework.datastore.generated.model.PatientsProvider;
+import com.providers.PatientsProvider;
 import com.example.pixelmanipulation.adapters.ListViewAdapter;
 import com.example.pixelmanipulation.model.DataViewHolder;
 
@@ -29,7 +27,6 @@ public class InfoListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info_list);
-        AmplifyModelProvider.getInstance(getApplicationContext());
         provider = PatientsProvider.getInstance();
 
         ivPrevious = findViewById(R.id.ivPrevious);

@@ -1,26 +1,8 @@
-package com.amplifyframework.datastore.generated.model;
+package com.providers;
 
-import android.content.Context;
-import android.util.Log;
-
-import com.amplifyframework.AmplifyException;
-import com.amplifyframework.api.aws.AWSApiPlugin;
-import com.amplifyframework.auth.cognito.AWSCognitoAuthPlugin;
-import com.amplifyframework.core.Amplify;
-import com.amplifyframework.storage.s3.AWSS3StoragePlugin;
-import com.amplifyframework.util.Immutable;
-import com.amplifyframework.core.model.Model;
-import com.amplifyframework.core.model.ModelProvider;
 import com.example.pixelmanipulation.model.DataViewHolder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-/**
- *  Contains the set of model classes that implement {@link Model}
- * interface.
- */
 
 public final class PatientsProvider {
 

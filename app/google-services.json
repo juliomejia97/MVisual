@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "836522577175",
+    "project_id": "mvisual-a74a4",
+    "storage_bucket": "mvisual-a74a4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:836522577175:android:bec79c94efe4517a7b3b52",
+        "android_client_info": {
+          "package_name": "com.example.pixelmanipulation"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "836522577175-91h8esf3mfe8do7q5uu4e5d8lea2mpts.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA3N67IjvPcibgnlgWpzrcuN4bbbVEtrpk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "836522577175-91h8esf3mfe8do7q5uu4e5d8lea2mpts.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

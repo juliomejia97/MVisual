@@ -3,43 +3,35 @@ package com.example.pixelmanipulation.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.database.Cursor;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.recyclerview.widget.RecyclerView;
 
-import com.amplifyframework.datastore.generated.model.AmplifyModelProvider;
 import com.example.pixelmanipulation.InfoListActivity;
 import com.example.pixelmanipulation.R;
-import com.example.pixelmanipulation.UploadImageActivity;
 import com.example.pixelmanipulation.model.DataViewHolder;
+import com.providers.FirebaseProvider;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ListViewAdapter extends ArrayAdapter<DataViewHolder> {
 
+    private FirebaseProvider provider;
     private List<DataViewHolder> listDatos;
     private Context context;
     private int level;
-    private AmplifyModelProvider provider;
 
     public ListViewAdapter(Context context, ArrayList<DataViewHolder> listDatos, int level) {
         super(context, R.layout.list_adapter, listDatos);
-        this.provider = AmplifyModelProvider.getInstance(context);
+        this.provider = FirebaseProvider.getInstance();
         this.context = context;
         this.listDatos = listDatos;
         this.level = level;
@@ -67,6 +59,8 @@ public class ListViewAdapter extends ArrayAdapter<DataViewHolder> {
                 } else {
                     String mhdName = listDatos.get(position).getInfo();
                     String rawName = mhdName.replace(".mhd", ".raw");
+                    mhdName = mhdName.replace(".mhd", "");
+                    rawName = rawName.replace(".raw", "");
                     provider.loadImage(mhdName, rawName, view.getContext());
                 }
             }

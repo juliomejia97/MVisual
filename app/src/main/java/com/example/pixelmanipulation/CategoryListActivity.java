@@ -11,12 +11,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.amplifyframework.datastore.generated.model.AmplifyModelProvider;
-import com.amplifyframework.datastore.generated.model.PatientsProvider;
+import com.providers.PatientsProvider;
 import com.example.pixelmanipulation.adapters.ListViewAdapter;
-import com.example.pixelmanipulation.model.DataViewHolder;
-
-import java.util.ArrayList;
 
 public class CategoryListActivity extends AppCompatActivity {
 
@@ -32,7 +28,6 @@ public class CategoryListActivity extends AppCompatActivity {
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category_list);
-        AmplifyModelProvider.getInstance(getApplicationContext());
         provider = PatientsProvider.getInstance();
         ivCenter = findViewById(R.id.center);
         ivPrevious = findViewById(R.id.ivPreviousCategory);
