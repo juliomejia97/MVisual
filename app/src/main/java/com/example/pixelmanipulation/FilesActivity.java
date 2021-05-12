@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -30,6 +33,7 @@ import com.example.pixelmanipulation.model.DataViewHolder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.providers.FirebaseProvider;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -104,6 +108,23 @@ public class FilesActivity extends AppCompatActivity {
         } else {
             return true;
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        /*Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.processed_static);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+        byte[] byteArray = byteArrayOutputStream .toByteArray();
+        String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+        Intent intent = new Intent(FilesActivity.this, ProcessedImageActivity.class);
+        intent.putExtra("Buffer", Base64.decode(encoded, Base64.DEFAULT));
+        startActivity(intent);
+        */
+
     }
 
     private void usePermissionApplication(){

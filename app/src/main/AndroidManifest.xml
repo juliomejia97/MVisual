@@ -32,7 +32,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".CategoryListActivity" />
-        <activity android:name=".ProcessedImagesActivity" />
+        <activity android:name=".ProcessedImageActivity" />
         <activity android:name=".UploadImageActivity" />
         <activity android:name=".InfoListActivity" />
         <activity android:name=".canva.DrawOnBitmapActivity" />

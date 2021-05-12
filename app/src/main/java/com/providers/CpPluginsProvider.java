@@ -10,6 +10,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -116,21 +117,20 @@ public class CpPluginsProvider {
 
         Log.i("CpPlugins", "Entered POST request...");
         JSONObject data = createJSON(0, 0, null, null);
-        Log.i("JSON", data.toString());
 
         String url = "http://150.136.161.199:5000/api/v1.0/pipeline";
         RequestQueue queue = Volley.newRequestQueue(context);
-        StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, data, new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(String response) {
-                Log.i("CpPlugins POST OK", response);
+            public void onResponse(JSONObject response) {
+                Log.i("CpPlugins POST OK", response.toString());
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i("CpPlugins POST Error", error.toString());
             }
-        }){
+        });/*{
             @Override
             public byte[] getBody() throws AuthFailureError {
                 return data.toString().getBytes();
@@ -142,7 +142,7 @@ public class CpPluginsProvider {
                 headers.put("Content-Type","application/json");
                 return headers;
             }
-        };
+        };*/
         queue.add(request);
     }
 
