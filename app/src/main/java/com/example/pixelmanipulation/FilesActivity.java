@@ -110,23 +110,6 @@ public class FilesActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.processed_static);
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-        byte[] byteArray = byteArrayOutputStream .toByteArray();
-        String encoded = Base64.encodeToString(byteArray, Base64.DEFAULT);
-
-        Intent intent = new Intent(FilesActivity.this, ProcessedImageActivity.class);
-        intent.putExtra("Buffer", Base64.decode(encoded, Base64.DEFAULT));
-        startActivity(intent);
-
-
-    }
-
     private void usePermissionApplication(){
         Intent appIntent = new Intent(Intent.ACTION_GET_CONTENT);
         appIntent.setType("*/*");

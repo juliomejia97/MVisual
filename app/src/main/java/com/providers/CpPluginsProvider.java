@@ -1,6 +1,7 @@
 package com.providers;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Base64;
 import android.util.Log;
 
@@ -13,6 +14,8 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.pixelmanipulation.FilesActivity;
+import com.example.pixelmanipulation.ProcessedImageActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,7 +37,7 @@ public class CpPluginsProvider {
         return cpPluginsProvider;
     }
 
-    public JSONObject createJSON(int height, int width, byte[] initialBuffer, byte[] editedBuffer){
+    public JSONObject createJSON(int H, int W, byte[] initialBuffer, byte[] editedBuffer){
 
         try {
             JSONObject restJSON = new JSONObject();
@@ -65,21 +68,22 @@ public class CpPluginsProvider {
             input1.put("name", "Input");
             input1.put("data_format", "scalar");
             input1.put("data_type", "short");
-            input1.put("dimensions",  "512,512");
+            input1.put("dimensions",  W + "," + H);
             input1.put("origin", "0,0");
             input1.put("spacing", "1,1");
             input1.put("direction", "1,0,0,1");
-            input1.put("raw_buffer", "0101010101");
-            //input1.put("raw_buffer", Base64.encodeToString(originalBuffer, Base64.DEFAULT));
+            //input1.put("raw_buffer", "0101010101");
+            input1.put("raw_buffer", Base64.encodeToString(initialBuffer, Base64.DEFAULT));
 
             input2.put("name", "Mask");
             input2.put("data_format", "rgba");
             input2.put("data_type", "uchar");
-            input2.put("dimensions", "512,512");
+            input2.put("dimensions", W + "," + H);
             input2.put("origin", "0,0");
             input2.put("spacing", "1,1");
             input2.put("direction", "1,0,0,1");
-            input2.put("raw_buffer", "0101010101");
+            //input2.put("raw_buffer", "0101010101");
+            input2.put("raw_buffer", Base64.encodeToString(editedBuffer, Base64.DEFAULT));
 
             inputsArray.put(input1);
             inputsArray.put(input2);
@@ -113,10 +117,9 @@ public class CpPluginsProvider {
         queue.add(request);
     }
 
-    public void sendPOSTRequestCpPlugins(Context context) {
+    public void sendPOSTRequestCpPlugins(Context context, JSONObject data) {
 
         Log.i("CpPlugins", "Entered POST request...");
-        JSONObject data = createJSON(0, 0, null, null);
 
         String url = "http://150.136.161.199:5000/api/v1.0/pipeline";
         RequestQueue queue = Volley.newRequestQueue(context);
@@ -124,6 +127,7 @@ public class CpPluginsProvider {
             @Override
             public void onResponse(JSONObject response) {
                 Log.i("CpPlugins POST OK", response.toString());
+                readPOSTJson(response, context);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -146,13 +150,14 @@ public class CpPluginsProvider {
         queue.add(request);
     }
 
-    public byte[] readPOSTJson(JSONObject json){
+    public void readPOSTJson(JSONObject json, Context context){
         try {
             String raw_buffer = (String) json.get("raw_buffer");
-            return Base64.decode(raw_buffer, Base64.DEFAULT);
+            Intent intent = new Intent(context, ProcessedImageActivity.class);
+            intent.putExtra("Buffer", Base64.decode(raw_buffer, Base64.DEFAULT));
+            context.startActivity(intent);
         } catch (JSONException e) {
             e.printStackTrace();
-            return null;
         }
     }
 

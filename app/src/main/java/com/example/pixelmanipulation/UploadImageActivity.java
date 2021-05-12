@@ -39,6 +39,9 @@ import androidx.loader.content.CursorLoader;
 
 import com.example.pixelmanipulation.canva.CanvaImageView;
 import com.example.pixelmanipulation.model.ImageMHD;
+import com.providers.CpPluginsProvider;
+
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -50,6 +53,7 @@ import java.io.InputStream;
 
 public class UploadImageActivity extends AppCompatActivity {
 
+    private CpPluginsProvider provider;
     private ImageView image;
     private Bitmap imgBitmap;
     private Button btnProcess;
@@ -63,6 +67,7 @@ public class UploadImageActivity extends AppCompatActivity {
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_image);
+        provider = CpPluginsProvider.getInstance();
         image = findViewById(R.id.imgView);
         tvImage = findViewById(R.id.tvImageName);
         tvWindow = findViewById(R.id.tvProgressW);
@@ -119,7 +124,17 @@ public class UploadImageActivity extends AppCompatActivity {
                 AlertDialog alert = builder.create();
                 alert.show();
 
+                /*
+                TODO: BOTON DE CONTINUAR DE CANVA (ENVIAR LOS DOS BUFFERS AL PROVIDER)
+                 */
 
+                /*ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                Bitmap bitmapIntent = image.getDrawingCache();
+                bitmapIntent.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] byteArray = stream.toByteArray();
+
+                JSONObject data = provider.createJSON(bitmapIntent.getHeight(), bitmapIntent.getWidth(), byteArray, byteArray);
+                provider.sendPOSTRequestCpPlugins(UploadImageActivity.this, data);*/
             }
         });
 
