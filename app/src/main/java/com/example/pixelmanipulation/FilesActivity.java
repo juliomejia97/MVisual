@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.provider.OpenableColumns;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -30,6 +33,7 @@ import com.example.pixelmanipulation.model.DataViewHolder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.providers.FirebaseProvider;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -92,12 +96,6 @@ public class FilesActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        provider.createImages(new DataViewHolder("clavicle_scapula_raw.mhd", "imagenes"), "-M_RBh__5k2jSBcex6ZO");
     }
 
     private boolean requestPermission(Activity context, String permit, String justification, int id){
