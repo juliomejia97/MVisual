@@ -114,7 +114,7 @@ public class FilesActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        /*Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.processed_static);
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.processed_static);
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
         byte[] byteArray = byteArrayOutputStream .toByteArray();
@@ -123,7 +123,7 @@ public class FilesActivity extends AppCompatActivity {
         Intent intent = new Intent(FilesActivity.this, ProcessedImageActivity.class);
         intent.putExtra("Buffer", Base64.decode(encoded, Base64.DEFAULT));
         startActivity(intent);
-        */
+
 
     }
 

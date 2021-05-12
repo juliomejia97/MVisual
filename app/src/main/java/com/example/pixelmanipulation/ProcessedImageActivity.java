@@ -3,6 +3,9 @@ package com.example.pixelmanipulation;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,12 +16,21 @@ import java.nio.ByteBuffer;
 public class ProcessedImageActivity extends AppCompatActivity {
 
     private ImageView ivProcessed;
+    private Button btnContinuar;
 
     @Override
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_processed_images);
         ivProcessed = findViewById(R.id.ivProcessed);
+        btnContinuar = findViewById(R.id.btnContinuar);
+        btnContinuar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("Processed Activity", "Continuar a guardar");
+            }
+        });
+
     }
 
     @Override
