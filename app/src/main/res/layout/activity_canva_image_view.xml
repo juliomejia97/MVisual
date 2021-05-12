@@ -6,7 +6,25 @@
     android:layout_height="match_parent"
     android:padding="@dimen/box_inset_layout_padding"
     android:orientation="vertical"
+    android:weightSum="1.0"
     tools:context=".canva.CanvaImageView">
+
+    <TextView
+        android:id="@+id/txt_imagetitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="64dp"
+        android:text="radius_ulna_raw.mhd"
+        android:textAlignment="center"
+        android:textColor="#9dbeb9"
+        android:textSize="32dp"
+        android:textStyle="bold"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </TextView>
 
     <com.example.pixelmanipulation.canva.widget.PaintView
         android:id="@+id/paint_view"
@@ -15,42 +33,65 @@
         app:layout_constraintBottom_toTopOf="@+id/linear_layout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintTop_toBottomOf="@+id/txt_imagetitle" />
 
     <LinearLayout
         android:id="@+id/linear_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_weight=".1"
         android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/linear_btn"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/paint_view">
+        app:layout_constraintStart_toStartOf="parent">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycle_view_tools"
             android:layout_width="wrap_content"
-            android:paddingLeft="50dp"
-            android:paddingRight="50dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@color/colorPrimary"
-            android:gravity="center" />
-
+            android:background="#9dbeb9"
+            android:gravity="center"
+            android:paddingLeft="50dp"
+            android:paddingRight="50dp" />
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycle_options"
+    <LinearLayout
+        android:id="@+id/linear_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="@color/colorPrimary"
-
+        android:layout_weight=".3"
+        android:orientation="horizontal"
+        android:weightSum="1.0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent">
+
+        <Button
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:id="@+id/button2"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:background="#ff8882"
+            android:padding="30dp"
+            android:textSize="20dp"
+            android:textColor="#194350"
+            android:text="Back" />
+
+        <Button
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:id="@+id/button"
+            android:layout_width="0dp"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:background="#194350"
+            android:padding="30dp"
+            android:text="Process    >" />
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

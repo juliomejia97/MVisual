@@ -55,7 +55,7 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         setContentView(R.layout.activity_canva_image_view);
         mPaintView = findViewById(R.id.paint_view);
         Intent intent = getIntent();
-        Log.i("Canva", "onCreate");
+
         byte[] byteArray = intent.getByteArrayExtra("BitmapImage");
         Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
         BitmapDrawable background = new BitmapDrawable(getResources(), bmp);
@@ -70,23 +70,28 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         colorBrush=Color.BLACK;
 
         eraserSize=brushSize=12;
-        //mPaintView=findViewById(R.id.paint_view);
         RecyclerView recyclerView = findViewById(R.id.recycle_view_tools);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, HORIZONTAL,false));
         ToolsAdapter toolsAdapter = new ToolsAdapter(loadTools(),this);
         recyclerView.setAdapter(toolsAdapter);
     }
-
     private List<ToolsItem> loadTools() {
-
         List<ToolsItem> result = new ArrayList<>();
-
         result.add(new ToolsItem(R.drawable.ic_baseline_brush_24, Common.BRUSH));
         result.add(new ToolsItem(R.drawable.eraser24,Common.ERASER));
         result.add(new ToolsItem(R.drawable.ic_baseline_palette_24,Common.COLORS));
         result.add(new ToolsItem(R.drawable.ic_baseline_undo_24,Common.RETURN));
 
+        return result;
+    }
+
+    private List<ToolsItem> loadOptions() {
+
+        List<ToolsItem> result = new ArrayList<>();
+
+        result.add(new ToolsItem(R.drawable.ic_baseline_brush_24, Common.BRUSH));
+        result.add(new ToolsItem(R.drawable.eraser24,Common.ERASER));
 
         return result;
     }
@@ -117,9 +122,6 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
                 break;
             case Common.RETURN:
                 mPaintView.returnLastAction();
-                break;
-            case Common.BACKGROUND:
-                updateColor(name);
                 break;
             case Common.COLORS:
                 updateColor(name);
