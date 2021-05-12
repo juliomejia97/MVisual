@@ -123,18 +123,6 @@ public class UploadImageActivity extends AppCompatActivity {
                         });
                 AlertDialog alert = builder.create();
                 alert.show();
-
-                /*
-                TODO: BOTON DE CONTINUAR DE CANVA (ENVIAR LOS DOS BUFFERS AL PROVIDER)
-                 */
-
-                /*ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                Bitmap bitmapIntent = image.getDrawingCache();
-                bitmapIntent.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                byte[] byteArray = stream.toByteArray();
-
-                JSONObject data = provider.createJSON(bitmapIntent.getHeight(), bitmapIntent.getWidth(), byteArray, byteArray);
-                provider.sendPOSTRequestCpPlugins(UploadImageActivity.this, data);*/
             }
         });
 

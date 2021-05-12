@@ -1,5 +1,6 @@
 package com.example.pixelmanipulation.canva;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -33,7 +34,11 @@ import com.example.pixelmanipulation.canva.widget.PaintView;
 import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.builder.ColorPickerClickListener;
 import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
+import com.providers.CpPluginsProvider;
 
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,6 +47,7 @@ import static androidx.recyclerview.widget.RecyclerView.*;
 
 public class CanvaImageView  extends AppCompatActivity implements ToolsListener {
 
+    private CpPluginsProvider provider;
     private PaintView mPaintView;
     private int colorBackground,colorBrush;
     private int brushSize, eraserSize;
@@ -50,6 +56,7 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_canva_image_view);
+        provider = CpPluginsProvider.getInstance();
         mPaintView = findViewById(R.id.paint_view);
         Intent intent = getIntent();
         Log.i("Canva", "onCreate");
@@ -99,7 +106,9 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
     }
 
     public void saveFile(View view) {
+
     }
+
     @Override
     public void onSelected(String name) {
         switch (name){
@@ -208,4 +217,25 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         builder.setView(view);
         builder.show();
     }
+
+    public void changeBackground(int W, int H){
+        int[] buffer = new int[W * H];
+        for(int i = 0; i < buffer.length; i++){
+            int color = (0 & 0xff) << 24 | (0 & 0xff) << 16 | (0 & 0xff) << 8 | (0 & 0xff);
+            buffer[i] = color;
+        }
+
+        Bitmap imgBitmap = Bitmap.createBitmap(buffer, W, H, Bitmap.Config.ARGB_8888);
+        BitmapDrawable background = new BitmapDrawable(getResources(), imgBitmap);
+        mPaintView.setBackground(background);
+
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        Bitmap bitmapIntent = mPaintView.getBitmap();
+        bitmapIntent.compress(Bitmap.CompressFormat.PNG, 100, stream);
+        byte[] byteArray = stream.toByteArray();
+
+        JSONObject data = provider.createJSON(bitmapIntent.getHeight(), bitmapIntent.getWidth(), byteArray, byteArray);
+        provider.sendPOSTRequestCpPlugins(CanvaImageView.this, data);
+    }
+
 }
