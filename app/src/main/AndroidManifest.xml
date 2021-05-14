@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.pixelmanipulation">
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
@@ -14,7 +15,15 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        tools:replace="android:label"
         android:theme="@style/AppTheme">
+        <activity android:name=".LandingPage">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <!--
                Set to true if your app is Standalone, that is, it does not require the handheld
                app to run.
@@ -22,7 +31,9 @@
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
-
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
 
         <activity android:name=".FilesActivity">
             <intent-filter>
@@ -37,7 +48,6 @@
         <activity android:name=".InfoListActivity" />
         <activity android:name=".canva.DrawOnBitmapActivity" />
         <activity android:name=".canva.CanvaImageView" />
-
     </application>
 
 </manifest>
