@@ -258,7 +258,6 @@ public class UploadImageActivity extends AppCompatActivity {
                 imgWL.setPixel(i, j, defColor);
             }
         }
-
         image.setImageBitmap(imgWL);
     }
 
@@ -273,7 +272,7 @@ public class UploadImageActivity extends AppCompatActivity {
         double m = (y2 - y1) / (x2 - x1);
         //Get the Y-axis interception of the curve => Y = mX + b  =>  b = Y - mX
         double b = y2 - (m * x2);
-        return m * color + b;
+        return (m * color) + b;
     }
 
     public void showSeekBars(){

@@ -9,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -59,7 +60,6 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         provider = CpPluginsProvider.getInstance();
         mPaintView = findViewById(R.id.paint_view);
         Intent intent = getIntent();
-        Log.i("Canva", "onCreate");
         byte[] byteArray = intent.getByteArrayExtra("BitmapImage");
         Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
         BitmapDrawable background = new BitmapDrawable(getResources(), bmp);
@@ -218,23 +218,32 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         builder.show();
     }
 
-    public void changeBackground(int W, int H){
+    public void changeBackground(){
+
+        int W = mPaintView.getBitmap().getWidth();
+        int H = mPaintView.getBitmap().getHeight();
+
         int[] buffer = new int[W * H];
         for(int i = 0; i < buffer.length; i++){
             int color = (0 & 0xff) << 24 | (0 & 0xff) << 16 | (0 & 0xff) << 8 | (0 & 0xff);
             buffer[i] = color;
         }
 
+        Bitmap originalBitmap = mPaintView.getBitmap();
+        ByteArrayOutputStream originalStream = new ByteArrayOutputStream();
+        originalBitmap.compress(Bitmap.CompressFormat.PNG, 100, originalStream);
+        byte[] originalByteArray = originalStream.toByteArray();
+
         Bitmap imgBitmap = Bitmap.createBitmap(buffer, W, H, Bitmap.Config.ARGB_8888);
         BitmapDrawable background = new BitmapDrawable(getResources(), imgBitmap);
         mPaintView.setBackground(background);
 
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        Bitmap bitmapIntent = mPaintView.getBitmap();
-        bitmapIntent.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        byte[] byteArray = stream.toByteArray();
+        ByteArrayOutputStream newStream = new ByteArrayOutputStream();
+        Bitmap newBitmap = mPaintView.getBitmap();
+        newBitmap.compress(Bitmap.CompressFormat.PNG, 100, newStream);
+        byte[] newByteArray = newStream.toByteArray();
 
-        JSONObject data = provider.createJSON(bitmapIntent.getHeight(), bitmapIntent.getWidth(), byteArray, byteArray);
+        JSONObject data = provider.createJSON(H, W, originalByteArray, newByteArray);
         provider.sendPOSTRequestCpPlugins(CanvaImageView.this, data);
     }
 

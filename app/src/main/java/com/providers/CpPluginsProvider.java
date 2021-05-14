@@ -21,6 +21,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,7 +75,6 @@ public class CpPluginsProvider {
             input1.put("origin", "0,0");
             input1.put("spacing", "1,1");
             input1.put("direction", "1,0,0,1");
-            //input1.put("raw_buffer", "0101010101");
             input1.put("raw_buffer", Base64.encodeToString(initialBuffer, Base64.DEFAULT));
 
             input2.put("name", "Mask");
@@ -82,14 +84,12 @@ public class CpPluginsProvider {
             input2.put("origin", "0,0");
             input2.put("spacing", "1,1");
             input2.put("direction", "1,0,0,1");
-            //input2.put("raw_buffer", "0101010101");
             input2.put("raw_buffer", Base64.encodeToString(editedBuffer, Base64.DEFAULT));
 
             inputsArray.put(input1);
             inputsArray.put(input2);
 
             restJSON.put("inputs", inputsArray);
-
             return restJSON;
 
         } catch (JSONException e) {
