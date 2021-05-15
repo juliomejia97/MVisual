@@ -23,4 +23,5 @@
      <![CDATA[ Bienvenido a <b>MVisual</b>
     ]]>
 </string>
+    <string name="title_activity_home">Home</string>
 </resources>
