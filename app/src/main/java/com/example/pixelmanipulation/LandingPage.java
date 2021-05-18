@@ -58,7 +58,7 @@ public class LandingPage extends AppCompatActivity {
         ObjectAnimator animation4 = ObjectAnimator.ofFloat(nurse, "translationX", -550f);
         animation4.setDuration(2500);
 
-        ObjectAnimator animation5 = ObjectAnimator.ofFloat(top_bar, "translationY", 800f);
+        ObjectAnimator animation5 = ObjectAnimator.ofFloat(top_bar, "translationY", 852f);
         animation5.setDuration(2500);
 
         footbar.setOnClickListener(new View.OnClickListener() {

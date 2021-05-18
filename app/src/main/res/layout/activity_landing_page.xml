@@ -79,7 +79,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/doctor_card" />
+        app:srcCompat="@drawable/nurse_home" />
 
     <TableLayout
         android:id="@+id/grid_landing"
@@ -88,7 +88,7 @@
 
         android:layout_height="wrap_content"
         android:layout_marginStart="22dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="200dp"
         android:layout_marginEnd="22dp"
         android:alpha="0"
         app:layout_constraintBottom_toBottomOf="parent"
