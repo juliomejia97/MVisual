@@ -82,7 +82,7 @@ public class FilesActivity extends AppCompatActivity {
             }
         });
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.btnFloating);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

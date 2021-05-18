@@ -2,11 +2,11 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/btn_processed"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
     tools:context=".Home">
-
 
 
     <ImageView
@@ -20,10 +20,11 @@
         app:srcCompat="@drawable/nurse_home" />
 
     <TableLayout
+        android:id="@+id/tlHomeMenu"
         android:layout_width="wrap_content"
+
+
         android:layout_height="wrap_content"
-
-
         android:layout_marginStart="22dp"
         android:layout_marginTop="200dp"
         android:layout_marginEnd="22dp"
@@ -36,10 +37,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <LinearLayout android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/llPatients"
+                android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="20dip"
                     app:srcCompat="@drawable/patients_folder" />
@@ -55,9 +58,12 @@
                     android:textSize="18sp" />
             </LinearLayout>
 
-            <LinearLayout android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/llStudies"
+                android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/btn_studies"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="20dip"
@@ -82,9 +88,12 @@
 
             >
 
-            <LinearLayout android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/llSeries"
+                android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/btn_series"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="20dip"
@@ -101,7 +110,9 @@
                     android:textSize="18sp" />
             </LinearLayout>
 
-            <LinearLayout android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/llProcesed"
+                android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -124,7 +135,7 @@
     </TableLayout>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/btnFloating"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end|bottom"
