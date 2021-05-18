@@ -244,7 +244,7 @@ public class UploadImageActivity extends AppCompatActivity {
         Bitmap imgWL;
         imgWL = imgBitmap.copy(Bitmap.Config.ARGB_8888, true);
 
-        for(int i = 0; i < W; i++){
+        /*for(int i = 0; i < W; i++){
             for(int j = 0; j < H; j++){
                 int color = imgWL.getPixel(i, j);
                 int indColor = (color >> 16) & 0xff;
@@ -257,7 +257,27 @@ public class UploadImageActivity extends AppCompatActivity {
                 int defColor = Color.argb(255, (int) slope, (int) slope, (int) slope);
                 imgWL.setPixel(i, j, defColor);
             }
+        }*/
+        int y = 0;
+        for(int x = 0; x < W; ){
+            if(y < H){
+                int color = imgWL.getPixel(x, y);
+                int indColor = (color >> 16) & 0xff;
+                double slope = getSlope(indColor);
+                if(slope > 255){
+                    slope = 255;
+                } else if(slope < 0) {
+                    slope = 0;
+                }
+                int defColor = Color.argb(255, (int) slope, (int) slope, (int) slope);
+                imgWL.setPixel(x, y, defColor);
+                y++;
+            } else {
+                y = 0;
+                x++;
+            }
         }
+
         image.setImageBitmap(imgWL);
     }
 
