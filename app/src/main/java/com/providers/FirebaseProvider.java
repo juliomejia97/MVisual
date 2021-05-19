@@ -3,6 +3,7 @@ package com.providers;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -19,7 +20,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,11 +34,13 @@ public class FirebaseProvider {
     private static final String STUDIES_PATH = "estudios";
     private static final String SERIES_PATH = "series";
     private static final String IMAGES_PATH = "imagenes";
+    private static final String PROCESSED_PATH = "procesadas";
 
     private static ArrayList<DataViewHolder> patients;
     private static ArrayList<DataViewHolder> studies;
     private static ArrayList<DataViewHolder> series;
     private static ArrayList<DataViewHolder> images;
+    private static ArrayList<DataViewHolder> processed;
 
     private static StorageReference mStorageRef;
     private static FirebaseProvider firebaseInstance;
@@ -49,10 +54,12 @@ public class FirebaseProvider {
         studies = new ArrayList<DataViewHolder>();
         series = new ArrayList<DataViewHolder>();
         images = new ArrayList<DataViewHolder>();
+        processed = new ArrayList<DataViewHolder>();
         getPatientsFromFirebase();
         getStudiesFromFirebase();
         getSeriesFromFirebase();
         getImagesFromFirebase();
+        getProcessedFromFirebase();
     }
 
     public static FirebaseProvider getInstance() {
@@ -151,6 +158,29 @@ public class FirebaseProvider {
         });
     }
 
+    public void getProcessedFromFirebase() {
+        mReference = mDatabase.getReference(PROCESSED_PATH);
+        mReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot image: snapshot.getChildren()){
+                    for(DataSnapshot single: image.getChildren()){
+                        DataViewHolder newProcessed = single.getValue(DataViewHolder.class);
+                        newProcessed.setId(single.getKey());
+                        newProcessed.setParentId(image.getKey());
+                        processed.add(newProcessed);
+                    }
+                }
+                Log.i("Firebase", "Processed Images Initialized");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     public static ArrayList<DataViewHolder> getAllPatients(){
         return patients;
     }
@@ -162,6 +192,8 @@ public class FirebaseProvider {
     public static ArrayList<DataViewHolder> getAllSeries(){
         return series;
     }
+
+    public static ArrayList<DataViewHolder> getAllProcessed() { return processed; }
 
     public static DataViewHolder getPatientById(String id){
         for(DataViewHolder patient: patients){
@@ -240,7 +272,7 @@ public class FirebaseProvider {
         return imgSeries;
     }
 
-    public void loadImage(String mhdName, String rawName, Context context){
+    public void loadImage(String mhdName, String rawName, String parentId, Context context){
         try {
             final File localFile = File.createTempFile(mhdName, ".mhd", context.getFilesDir());
             StorageReference imageRef = mStorageRef.child(STORAGE_IMAGE_PATH + mhdName + ".mhd");
@@ -248,7 +280,7 @@ public class FirebaseProvider {
                     .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                            loadRawImage(rawName, localFile.getAbsolutePath().toString(), context);
+                            loadRawImage(rawName, parentId, localFile.getAbsolutePath().toString(), context);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -261,7 +293,7 @@ public class FirebaseProvider {
         }
     }
 
-    public void loadRawImage(String rawImage, String pathMhd, Context context){
+    public void loadRawImage(String rawImage, String parentId, String pathMhd, Context context){
         try {
             ProgressDialog pDialog = ProgressDialog.show(context, "Obteniendo Archivo de la Base de Datos...", "Por favor espere", true,false);
 
@@ -274,6 +306,7 @@ public class FirebaseProvider {
                             Intent intent = new Intent(context, UploadImageActivity.class);
                             intent.putExtra("mhd", pathMhd);
                             intent.putExtra("raw", localFile.getAbsoluteFile().toString());
+                            intent.putExtra("parent", parentId);
                             pDialog.dismiss();
                             context.startActivity(intent);
                         }
@@ -312,5 +345,30 @@ public class FirebaseProvider {
         mReference.child(idSeries).child(key).setValue(newImage);
     }
 
+    public static String createProcessed(DataViewHolder newProcessed, String idImage){
+        mReference = mDatabase.getReference(PROCESSED_PATH);
+        String key = mReference.push().getKey();
+        mReference.child(idImage).child(key).setValue(newProcessed);
+        return key;
+    }
 
+    public static void uploadProcessedImage(Bitmap processedBmp, String key, String title) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        processedBmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        StorageReference processedRef = mStorageRef.child("Processed/" + key + "/");
+        UploadTask ut = processedRef.putBytes(data);
+        ut.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i("Processed Image", "Failed to upload processed image to storage");
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.i("Processed Image", "Succesfully uploaded processed image to storage");
+            }
+        });
+    }
 }

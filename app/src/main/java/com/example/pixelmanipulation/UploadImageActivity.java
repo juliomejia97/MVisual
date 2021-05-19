@@ -62,7 +62,7 @@ public class UploadImageActivity extends AppCompatActivity {
     private TextView lblWindow, lblLevel, lblDepth;
     private LinearLayout llWindow, llLevel, llDepth;
     private ImageMHD imageMHD;
-    private String mhdName, rawName;
+    private String mhdName, rawName, seriesId;
 
     @Override
     public void onCreate( Bundle savedInstanceState) {
@@ -118,6 +118,8 @@ public class UploadImageActivity extends AppCompatActivity {
                                 byte[] byteArray = stream.toByteArray();
                                 Intent intent = new Intent(view.getContext(), CanvaImageView.class);
                                 intent.putExtra("BitmapImage", byteArray);
+                                intent.putExtra("ImageName", mhdName);
+                                intent.putExtra("parent", seriesId);
                                 startActivity(intent);
                                 finish();
                             }
@@ -178,6 +180,7 @@ public class UploadImageActivity extends AppCompatActivity {
         super.onStart();
         mhdName = getIntent().getStringExtra("mhd");
         rawName = getIntent().getStringExtra("raw");
+        seriesId = getIntent().getStringExtra("parent");
         new GenerateImage().execute(mhdName, rawName);
     }
 

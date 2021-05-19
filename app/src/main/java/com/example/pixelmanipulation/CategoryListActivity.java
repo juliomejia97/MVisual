@@ -41,7 +41,6 @@ public class CategoryListActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
         initView(getIntent().getStringExtra("Type"));
     }
 
@@ -51,24 +50,32 @@ public class CategoryListActivity extends AppCompatActivity {
 
         if(type.equalsIgnoreCase("pacientes")){
 
-            tvTypeName.setText("Patients");
+            tvTypeName.setText("Por Pacientes");
             ivCenter.setImageDrawable(getResources().getDrawable(R.drawable.patients_folder));
             mListInfoAdapter = new ListViewAdapter(CategoryListActivity.this, provider.getAllPatients(), level);
             mlista.setAdapter(mListInfoAdapter);
 
         } else if (type.equalsIgnoreCase("estudios")){
 
-            tvTypeName.setText("Studies");
+            tvTypeName.setText("Por Estudios");
             ivCenter.setImageDrawable(getResources().getDrawable(R.drawable.studies_folder));
             mListInfoAdapter = new ListViewAdapter(CategoryListActivity.this, provider.getAllStudies(), level);
             mlista.setAdapter(mListInfoAdapter);
 
         } else if (type.equalsIgnoreCase("series")){
 
-            tvTypeName.setText("Series");
+            tvTypeName.setText("Por Series");
             ivCenter.setImageDrawable(getResources().getDrawable(R.drawable.heart_folder));
             mListInfoAdapter = new ListViewAdapter(CategoryListActivity.this, provider.getAllSeries(), level);
             mlista.setAdapter(mListInfoAdapter);
+
+        } else if (type.equalsIgnoreCase("procesadas")){
+
+            tvTypeName.setText("Imágenes Procesadas");
+            ivCenter.setImageDrawable(getResources().getDrawable(R.drawable.process_folder));
+            mListInfoAdapter = new ListViewAdapter(CategoryListActivity.this, provider.getAllProcessed(), level);
+            mlista.setAdapter(mListInfoAdapter);
+
         }
     }
 }

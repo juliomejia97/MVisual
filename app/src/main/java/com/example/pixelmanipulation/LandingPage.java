@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.text.HtmlCompat;
 
+import com.example.pixelmanipulation.model.DataViewHolder;
 import com.providers.FirebaseProvider;
 
 public class LandingPage extends AppCompatActivity {
@@ -93,6 +94,5 @@ public class LandingPage extends AppCompatActivity {
             Handler h = new Handler();
             h.postDelayed(r, 2500);
         });
-
     }
 }

@@ -116,7 +116,7 @@ public class Home extends AppCompatActivity {
 
         llStudies.setOnClickListener(view -> {
 
-                hideAnimations(topBarAnimation, "Studies");
+            hideAnimations(topBarAnimation, "Studies");
             Runnable r = () -> {
                 Intent intent = new Intent(getApplicationContext(), CategoryListActivity.class);
                 intent.putExtra("Type", "Estudios");
@@ -146,17 +146,17 @@ public class Home extends AppCompatActivity {
         });
         llProcessed.setOnClickListener(view -> {
             hideAnimations(topBarAnimation, "Processed");
-            llPatients.animate()
-                    .scaleYBy(-0.5f)
-                    .scaleXBy(-0.5f)
-                    .setInterpolator(new AccelerateDecelerateInterpolator())
-                    .setDuration(1000);
+            Runnable r = () -> {
+                Intent intent = new Intent(getApplicationContext(), CategoryListActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                intent.putExtra("Type", "Procesadas");
+                startActivityForResult(intent, 0);
+                overridePendingTransition(0,0);
+                startActivity(intent);
+            };
 
-            tlHomeMenu.animate()
-                    .alpha(0f)
-                    .setDuration(1800)
-                    .setListener(null);
-
+            Handler h = new Handler();
+            h.postDelayed(r, 850);
         });
 
         btnFloating.setOnClickListener(new View.OnClickListener() {
@@ -170,8 +170,7 @@ public class Home extends AppCompatActivity {
         });
     }
 
-
-    private void hideAnimations(ObjectAnimator topBarAnimation,String folder) {
+    private void hideAnimations(ObjectAnimator topBarAnimation, String folder) {
         topBarAnimation.start();
         btnFloating.animate()
                 .alpha(0f)
@@ -300,6 +299,7 @@ public class Home extends AppCompatActivity {
                     Intent intent = new Intent(getBaseContext(), UploadImageActivity.class);
                     intent.putExtra("mhd", getFilesDir() + "/" + mhdName);
                     intent.putExtra("raw", getFilesDir() + "/" + rawName);
+                    intent.putExtra("parent", "");
                     startActivity(intent);
                 }
             }

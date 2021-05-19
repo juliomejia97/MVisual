@@ -43,8 +43,10 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
     private CpPluginsProvider provider;
     private PaintView mPaintView;
     private ImageView previous, btnProcess;
+    private TextView tvTitle;
     private int colorBackground, colorBrush;
     private int brushSize, eraserSize;
+    private String seriesId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -55,6 +57,7 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         mPaintView = findViewById(R.id.paint_view);
         previous = findViewById(R.id.previousCanva);
         btnProcess = findViewById(R.id.btnProcessCanva);
+        tvTitle = findViewById(R.id.txt_imagetitle);
 
         Intent intent = getIntent();
 
@@ -63,6 +66,9 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         BitmapDrawable background = new BitmapDrawable(getResources(), bmp);
         initTools();
         mPaintView.setBackground(background);
+
+        tvTitle.setText("" + intent.getStringExtra("ImageName"));
+        seriesId = intent.getStringExtra("parent");
 
         previous.setOnClickListener(new OnClickListener() {
             @Override
@@ -257,8 +263,8 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         byte[] newByteArray = newStream.toByteArray();
 
         //Se hace la petición al servidor de CpPlugins
-        //JSONObject data = provider.createJSON(H, W, originalByteArray, newByteArray);
-        //provider.sendPOSTRequestCpPlugins(CanvaImageView.this, data);
+        JSONObject data = provider.createJSON(H, W, originalByteArray, newByteArray);
+        provider.sendPOSTRequestCpPlugins(CanvaImageView.this, data, seriesId);
     }
 
 }

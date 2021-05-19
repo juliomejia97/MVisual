@@ -117,7 +117,7 @@ public class CpPluginsProvider {
         queue.add(request);
     }
 
-    public void sendPOSTRequestCpPlugins(Context context, JSONObject data) {
+    public void sendPOSTRequestCpPlugins(Context context, JSONObject data, String seriesId) {
 
         Log.i("CpPlugins", "Entered POST request...");
 
@@ -127,7 +127,7 @@ public class CpPluginsProvider {
             @Override
             public void onResponse(JSONObject response) {
                 Log.i("CpPlugins POST OK", response.toString());
-                readPOSTJson(response, context);
+                readPOSTJson(response, seriesId, context);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -150,11 +150,14 @@ public class CpPluginsProvider {
         queue.add(request);
     }
 
-    public void readPOSTJson(JSONObject json, Context context){
+    public void readPOSTJson(JSONObject json, String seriesId, Context context){
         try {
             String raw_buffer = (String) json.get("raw_buffer");
             Intent intent = new Intent(context, ProcessedImageActivity.class);
             intent.putExtra("Buffer", Base64.decode(raw_buffer, Base64.DEFAULT));
+            intent.putExtra("parent", seriesId);
+            intent.putExtra("arrival", "CpPlugins");
+            intent.putExtra("title", "nueva_imagen_procesada");
             context.startActivity(intent);
         } catch (JSONException e) {
             e.printStackTrace();
