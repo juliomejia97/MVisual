@@ -241,43 +241,23 @@ public class UploadImageActivity extends AppCompatActivity {
 
         int W = imgBitmap.getWidth();
         int H = imgBitmap.getHeight();
+        int[] pixels = new int[W * H];
         Bitmap imgWL;
         imgWL = imgBitmap.copy(Bitmap.Config.ARGB_8888, true);
+        imgWL.getPixels(pixels, 0, W, 0, 0, W, H);
 
-        /*for(int i = 0; i < W; i++){
-            for(int j = 0; j < H; j++){
-                int color = imgWL.getPixel(i, j);
-                int indColor = (color >> 16) & 0xff;
-                double slope = getSlope(indColor);
-                if(slope > 255){
-                    slope = 255;
-                } else if(slope < 0) {
-                    slope = 0;
-                }
-                int defColor = Color.argb(255, (int) slope, (int) slope, (int) slope);
-                imgWL.setPixel(i, j, defColor);
+        for(int i = 0; i < pixels.length; i++){
+            int indColor = (pixels[i] >> 16) & 0xff;
+            double slope = getSlope(indColor);
+            if(slope > 255){
+                slope = 255;
+            } else if(slope < 0) {
+                slope = 0;
             }
-        }*/
-        int y = 0;
-        for(int x = 0; x < W; ){
-            if(y < H){
-                int color = imgWL.getPixel(x, y);
-                int indColor = (color >> 16) & 0xff;
-                double slope = getSlope(indColor);
-                if(slope > 255){
-                    slope = 255;
-                } else if(slope < 0) {
-                    slope = 0;
-                }
-                int defColor = Color.argb(255, (int) slope, (int) slope, (int) slope);
-                imgWL.setPixel(x, y, defColor);
-                y++;
-            } else {
-                y = 0;
-                x++;
-            }
+            pixels[i] = Color.argb(255, (int) slope, (int) slope, (int) slope);
         }
 
+        imgWL.setPixels(pixels, 0, W, 0, 0, W, H);
         image.setImageBitmap(imgWL);
     }
 
