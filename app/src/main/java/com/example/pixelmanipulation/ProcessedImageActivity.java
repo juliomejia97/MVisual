@@ -42,6 +42,7 @@ public class ProcessedImageActivity extends AppCompatActivity {
     private String imageId, arrival;
     private Bitmap processedBmp;
     private TextView title;
+    private boolean savedFile;
 
     @Override
     public void onCreate( Bundle savedInstanceState) {
@@ -53,6 +54,7 @@ public class ProcessedImageActivity extends AppCompatActivity {
         title = findViewById(R.id.tvProcessedImage);
         btnNube = findViewById(R.id.btnNube);
         btnDispositivo = findViewById(R.id.btnDispositivo);
+        savedFile = false;
 
         ivPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,7 +66,31 @@ public class ProcessedImageActivity extends AppCompatActivity {
                     finish();
                 } else if(arrival.equalsIgnoreCase("CpPlugins")){
                     Log.i("Processed", "Retornar desde CpPlugins");
-                    //MANDAR UN DIALOGO DE CONFIRMACIÓN INIDICANDO QUE GUARDE LA FOTO DE ALGUNA MANERA O SE PERDERAN LOS DATOS
+                    if(!savedFile){
+                        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(view.getContext());
+                        builder.setMessage("¿Seguro que desea regresar? Se recomienda guardar la imagen primero ya que se perderá el procesamiento realizado.")
+                                .setCancelable(false)
+                                .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        Intent intent = new Intent(ProcessedImageActivity.this, Home.class);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                })
+                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialogInterface, int i) {
+                                        dialogInterface.cancel();
+                                    }
+                                });
+                        android.app.AlertDialog alert = builder.create();
+                        alert.show();
+                    } else {
+                        Intent intent = new Intent(ProcessedImageActivity.this, Home.class);
+                        startActivity(intent);
+                        finish();
+                    }
                 }
             }
         });
@@ -73,6 +99,7 @@ public class ProcessedImageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                savedFile = true;
                 AlertDialog.Builder builder = new AlertDialog.Builder(ProcessedImageActivity.this);
                 builder.setTitle("Digite el nombre de la imagen a guardar");
                 final EditText input = new EditText(ProcessedImageActivity.this);
@@ -101,6 +128,7 @@ public class ProcessedImageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
+                savedFile = true;
                 AlertDialog.Builder builder = new AlertDialog.Builder(ProcessedImageActivity.this);
                 builder.setTitle("Digite el nombre de la imagen a guardar");
                 final EditText input = new EditText(ProcessedImageActivity.this);

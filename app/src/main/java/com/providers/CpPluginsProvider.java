@@ -1,6 +1,8 @@
 package com.providers;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Base64;
 import android.util.Log;
@@ -16,6 +18,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.pixelmanipulation.FilesActivity;
 import com.example.pixelmanipulation.ProcessedImageActivity;
+import com.example.pixelmanipulation.UploadImageActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -119,6 +122,9 @@ public class CpPluginsProvider {
 
     public void sendPOSTRequestCpPlugins(Context context, JSONObject data, String seriesId) {
 
+        ProgressDialog pDialog;
+        pDialog = ProgressDialog.show(context, "Procesando Imagen...", "Por favor espere", true,false);
+
         Log.i("CpPlugins", "Entered POST request...");
 
         String url = "http://150.136.161.199:5000/api/v1.0/pipeline";
@@ -127,12 +133,23 @@ public class CpPluginsProvider {
             @Override
             public void onResponse(JSONObject response) {
                 Log.i("CpPlugins POST OK", response.toString());
+                pDialog.dismiss();
                 readPOSTJson(response, seriesId, context);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i("CpPlugins POST Error", error.toString());
+                pDialog.dismiss();
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
+                builder.setMessage("Error procesando la imagen en CpPlugins.")
+                        .setCancelable(false)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) { }
+                        });
+                android.app.AlertDialog alert = builder.create();
+                alert.show();
             }
         });/*{
             @Override

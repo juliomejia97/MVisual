@@ -264,16 +264,20 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         newBitmap.compress(Bitmap.CompressFormat.PNG, 100, newStream);
         byte[] newByteArray = newStream.toByteArray();
 
-        //Se hace la petición al servidor de CpPlugins
-        JSONObject data = provider.createJSON(H, W, originalByteArray, newByteArray);
-        provider.sendPOSTRequestCpPlugins(CanvaImageView.this, data, imageId);
+        //Se actualiza nuevamente el background a la imagen original
+        BitmapDrawable back = new BitmapDrawable(getResources(), originalBitmap);
+        mPaintView.setBackground(back);
 
-        /*Intent intent = new Intent(CanvaImageView.this, ProcessedImageActivity.class);
+        //Se hace la petición al servidor de CpPlugins
+        //JSONObject data = provider.createJSON(H, W, originalByteArray, newByteArray);
+        //provider.sendPOSTRequestCpPlugins(CanvaImageView.this, data, imageId);
+
+        Intent intent = new Intent(CanvaImageView.this, ProcessedImageActivity.class);
         intent.putExtra("Buffer", newByteArray);
         intent.putExtra("imageId", imageId);
         intent.putExtra("arrival", "CpPlugins");
         intent.putExtra("title", "nueva_imagen_procesada");
-        startActivity(intent);*/
+        startActivity(intent);
     }
 
 }
