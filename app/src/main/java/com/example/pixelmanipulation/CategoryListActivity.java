@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,10 +18,8 @@ public class CategoryListActivity extends AppCompatActivity {
     private FirebaseProvider provider;
     private ListViewAdapter mListInfoAdapter;
     private ImageView ivCenter, ivPrevious;
-    private Spinner spinner;
     private ListView mlista;
     private TextView tvTypeName;
-    private String[] arrayForSpinner = {"Ordenar por", "Nombre", "Apellido"};
 
     @Override
     public void onCreate( Bundle savedInstanceState) {
@@ -33,23 +30,18 @@ public class CategoryListActivity extends AppCompatActivity {
         ivPrevious = findViewById(R.id.ivPreviousCategory);
         tvTypeName = findViewById(R.id.tvTypeName);
         mlista = findViewById(R.id.lvData);
-        spinner = findViewById(R.id.spinnerList);
 
-        ivPrevious.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), FilesActivity.class);
-                startActivity(intent);
-                finish();
-            }
+        ivPrevious.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), Home.class);
+            startActivity(intent);
+            finish();
         });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(CategoryListActivity.this, android.R.layout.simple_spinner_dropdown_item, arrayForSpinner);
-        spinner.setAdapter(adapter);
+
         initView(getIntent().getStringExtra("Type"));
     }
 
@@ -59,22 +51,22 @@ public class CategoryListActivity extends AppCompatActivity {
 
         if(type.equalsIgnoreCase("pacientes")){
 
-            tvTypeName.setText("Por Paciente");
-            ivCenter.setImageDrawable(getResources().getDrawable(R.drawable.patient));
+            tvTypeName.setText("Patients");
+            ivCenter.setImageDrawable(getResources().getDrawable(R.drawable.patients_folder));
             mListInfoAdapter = new ListViewAdapter(CategoryListActivity.this, provider.getAllPatients(), level);
             mlista.setAdapter(mListInfoAdapter);
 
         } else if (type.equalsIgnoreCase("estudios")){
 
-            tvTypeName.setText("Por Estudios");
-            ivCenter.setImageDrawable(getResources().getDrawable(R.drawable.studies));
+            tvTypeName.setText("Studies");
+            ivCenter.setImageDrawable(getResources().getDrawable(R.drawable.studies_folder));
             mListInfoAdapter = new ListViewAdapter(CategoryListActivity.this, provider.getAllStudies(), level);
             mlista.setAdapter(mListInfoAdapter);
 
         } else if (type.equalsIgnoreCase("series")){
 
-            tvTypeName.setText("Por Series");
-            ivCenter.setImageDrawable(getResources().getDrawable(R.drawable.series));
+            tvTypeName.setText("Series");
+            ivCenter.setImageDrawable(getResources().getDrawable(R.drawable.heart_folder));
             mListInfoAdapter = new ListViewAdapter(CategoryListActivity.this, provider.getAllSeries(), level);
             mlista.setAdapter(mListInfoAdapter);
         }

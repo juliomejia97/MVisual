@@ -12,17 +12,20 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.text.HtmlCompat;
 
+import com.providers.FirebaseProvider;
+
 public class LandingPage extends AppCompatActivity {
 
     private TextView text_landing1,text_landing2;
     private ImageView nurse,footbar,top_bar;
     private TableLayout grid_buttons;
+    private FirebaseProvider provider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_page);
-
+        this.provider = FirebaseProvider.getInstance();
 
 
         text_landing1 = findViewById(R.id.title_landing1);
@@ -61,43 +64,35 @@ public class LandingPage extends AppCompatActivity {
         ObjectAnimator animation5 = ObjectAnimator.ofFloat(top_bar, "translationY", 852f);
         animation5.setDuration(2500);
 
-        footbar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                animation3.start();
-                animation4.start();
-                animation5.start();
+        footbar.setOnClickListener(v -> {
+            animation3.start();
+            animation4.start();
+            animation5.start();
 
-                text_landing1.animate()
-                        .alpha(0f)
-                        .setDuration(2000)
-                        .setListener(null);
-                text_landing2.animate()
-                        .alpha(0f)
-                        .setDuration(2000)
-                        .setListener(null);
+            text_landing1.animate()
+                    .alpha(0f)
+                    .setDuration(2000)
+                    .setListener(null);
+            text_landing2.animate()
+                    .alpha(0f)
+                    .setDuration(2000)
+                    .setListener(null);
 
-                grid_buttons.animate()
-                        .alpha(1f)
-                        .setDuration(2500)
-                        .setListener(null);
-                Runnable r = new Runnable() {
-                    @Override
-                    public void run(){
-                        Intent intent = new Intent(getApplicationContext(), Home.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-                        startActivityForResult(intent, 0);
-                        overridePendingTransition(0,0);
+            grid_buttons.animate()
+                    .alpha(1f)
+                    .setDuration(2500)
+                    .setListener(null);
+            Runnable r = () -> {
+                Intent intent = new Intent(getApplicationContext(), Home.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                startActivityForResult(intent, 0);
+                overridePendingTransition(0,0);
 
-                        startActivity(intent);
-                    }
-                };
+                startActivity(intent);
+            };
 
-                Handler h = new Handler();
-                h.postDelayed(r, 2500);
-
-
-            }
+            Handler h = new Handler();
+            h.postDelayed(r, 2500);
         });
 
     }
