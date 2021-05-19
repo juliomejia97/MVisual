@@ -73,16 +73,16 @@ public class ListViewAdapter extends ArrayAdapter<DataViewHolder> {
                     intent.putExtra("Level", level);
                     view.getContext().startActivity(intent);
                 } else if(type.equalsIgnoreCase("imagenes")) {
-                    String parentId = listDatos.get(position).getParentId();
+                    String id = listDatos.get(position).getId();
                     String mhdName = listDatos.get(position).getInfo();
                     String rawName = mhdName.replace(".mhd", ".raw");
                     mhdName = mhdName.replace(".mhd", "");
                     rawName = rawName.replace(".raw", "");
-                    provider.loadImage(mhdName, rawName, parentId, view.getContext());
+                    provider.loadImage(mhdName, rawName, id, view.getContext());
                 } else if(type.equalsIgnoreCase("procesadas")){
                     Intent intent = new Intent(getContext(), ProcessedImageActivity.class);
                     intent.putExtra("Buffer", getBuffer(image));
-                    intent.putExtra("parent", listDatos.get(position).getParentId());
+                    intent.putExtra("imageId", listDatos.get(position).getId());
                     intent.putExtra("arrival", "ProcessedList");
                     intent.putExtra("title", listDatos.get(position).getInfo());
                     context.startActivity(intent);

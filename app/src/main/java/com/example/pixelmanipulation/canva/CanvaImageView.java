@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pixelmanipulation.Home;
+import com.example.pixelmanipulation.ProcessedImageActivity;
 import com.example.pixelmanipulation.R;
 import com.example.pixelmanipulation.canva.Interface.ToolsListener;
 import com.example.pixelmanipulation.adapters.ToolsAdapter;
@@ -46,7 +48,7 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
     private TextView tvTitle;
     private int colorBackground, colorBrush;
     private int brushSize, eraserSize;
-    private String seriesId;
+    private String imageId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -68,7 +70,7 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         mPaintView.setBackground(background);
 
         tvTitle.setText("" + intent.getStringExtra("ImageName"));
-        seriesId = intent.getStringExtra("parent");
+        imageId = intent.getStringExtra("imageId");
 
         previous.setOnClickListener(new OnClickListener() {
             @Override
@@ -264,7 +266,14 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
 
         //Se hace la petición al servidor de CpPlugins
         JSONObject data = provider.createJSON(H, W, originalByteArray, newByteArray);
-        provider.sendPOSTRequestCpPlugins(CanvaImageView.this, data, seriesId);
+        provider.sendPOSTRequestCpPlugins(CanvaImageView.this, data, imageId);
+
+        /*Intent intent = new Intent(CanvaImageView.this, ProcessedImageActivity.class);
+        intent.putExtra("Buffer", newByteArray);
+        intent.putExtra("imageId", imageId);
+        intent.putExtra("arrival", "CpPlugins");
+        intent.putExtra("title", "nueva_imagen_procesada");
+        startActivity(intent);*/
     }
 
 }

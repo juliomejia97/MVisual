@@ -2,12 +2,14 @@ package com.providers;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.pixelmanipulation.ProcessedImageActivity;
 import com.example.pixelmanipulation.UploadImageActivity;
 import com.example.pixelmanipulation.model.DataViewHolder;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -272,7 +274,7 @@ public class FirebaseProvider {
         return imgSeries;
     }
 
-    public void loadImage(String mhdName, String rawName, String parentId, Context context){
+    public void loadImage(String mhdName, String rawName, String imageId, Context context){
         try {
             final File localFile = File.createTempFile(mhdName, ".mhd", context.getFilesDir());
             StorageReference imageRef = mStorageRef.child(STORAGE_IMAGE_PATH + mhdName + ".mhd");
@@ -280,7 +282,7 @@ public class FirebaseProvider {
                     .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                            loadRawImage(rawName, parentId, localFile.getAbsolutePath().toString(), context);
+                            loadRawImage(rawName, imageId, localFile.getAbsolutePath().toString(), context);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -293,9 +295,9 @@ public class FirebaseProvider {
         }
     }
 
-    public void loadRawImage(String rawImage, String parentId, String pathMhd, Context context){
+    public void loadRawImage(String rawImage, String imageId, String pathMhd, Context context){
         try {
-            ProgressDialog pDialog = ProgressDialog.show(context, "Obteniendo Archivo de la Base de Datos...", "Por favor espere", true,false);
+            ProgressDialog pDialog = ProgressDialog.show(context, "Obteniendo archivo de la base de datos...", "Por favor espere", true,false);
 
             final File localFile = File.createTempFile(rawImage, ".raw", context.getFilesDir());
             StorageReference imageRef = mStorageRef.child(STORAGE_IMAGE_PATH + rawImage + ".raw");
@@ -306,7 +308,7 @@ public class FirebaseProvider {
                             Intent intent = new Intent(context, UploadImageActivity.class);
                             intent.putExtra("mhd", pathMhd);
                             intent.putExtra("raw", localFile.getAbsoluteFile().toString());
-                            intent.putExtra("parent", parentId);
+                            intent.putExtra("imageId", imageId);
                             pDialog.dismiss();
                             context.startActivity(intent);
                         }
@@ -352,22 +354,40 @@ public class FirebaseProvider {
         return key;
     }
 
-    public static void uploadProcessedImage(Bitmap processedBmp, String key, String title) {
+    public static void uploadProcessedImage(Bitmap processedBmp, String key, String title, Context context) {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         processedBmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] data = baos.toByteArray();
 
-        StorageReference processedRef = mStorageRef.child("Processed/" + key + "/");
+        StorageReference processedRef = mStorageRef.child("Processed/" + key + "/" + title + ".png");
         UploadTask ut = processedRef.putBytes(data);
         ut.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
                 Log.i("Processed Image", "Failed to upload processed image to storage");
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
+                builder.setMessage("No se pudo guardar la imagen en la base de datos.")
+                        .setCancelable(false)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) { }
+                        });
+                android.app.AlertDialog alert = builder.create();
+                alert.show();
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Log.i("Processed Image", "Succesfully uploaded processed image to storage");
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
+                builder.setMessage("La imagen se guardó en la base de datos exitosamente.")
+                        .setCancelable(false)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) { }
+                        });
+                android.app.AlertDialog alert = builder.create();
+                alert.show();
             }
         });
     }

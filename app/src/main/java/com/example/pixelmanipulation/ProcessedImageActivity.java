@@ -39,7 +39,7 @@ public class ProcessedImageActivity extends AppCompatActivity {
     private FirebaseProvider provider;
     private ImageView ivProcessed, ivPrevious;
     private Button btnNube, btnDispositivo;
-    private String seriesId, arrival;
+    private String imageId, arrival;
     private Bitmap processedBmp;
     private TextView title;
 
@@ -82,8 +82,8 @@ public class ProcessedImageActivity extends AppCompatActivity {
                 builder.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String key = provider.createProcessed(new DataViewHolder(input.getText().toString(), "procesadas"), seriesId);
-                        provider.uploadProcessedImage(processedBmp, key, input.getText().toString());
+                        String key = provider.createProcessed(new DataViewHolder(input.getText().toString(), "procesadas"), imageId);
+                        provider.uploadProcessedImage(processedBmp, key, input.getText().toString(), ProcessedImageActivity.this);
                     }
                 });
                 builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -111,7 +111,6 @@ public class ProcessedImageActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         saveImage(processedBmp, input.getText().toString());
-                        Log.i("Processed", input.getText().toString());
                     }
                 });
                 builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -130,7 +129,7 @@ public class ProcessedImageActivity extends AppCompatActivity {
     protected void onStart() {
         //https://stackoverflow.com/questions/7620401/how-to-convert-image-file-data-in-a-byte-array-to-a-bitmap
         super.onStart();
-        seriesId = getIntent().getStringExtra("parent");
+        imageId = getIntent().getStringExtra("imageId");
         arrival = getIntent().getStringExtra("arrival");
         byte[] buffer = getIntent().getByteArrayExtra("Buffer");
         title.setText(getIntent().getStringExtra("title"));
