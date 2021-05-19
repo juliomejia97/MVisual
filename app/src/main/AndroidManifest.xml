@@ -11,6 +11,7 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="MVisual"
+        android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -41,7 +42,7 @@
 
         <activity android:name=".FilesActivity"/>
         <activity android:name=".CategoryListActivity" />
-        <activity android:name=".ProcessedImagesActivity" />
+        <activity android:name=".ProcessedImageActivity" />
         <activity android:name=".UploadImageActivity" />
         <activity android:name=".InfoListActivity" />
         <activity android:name=".canva.DrawOnBitmapActivity" />

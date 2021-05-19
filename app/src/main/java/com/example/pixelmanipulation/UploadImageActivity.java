@@ -39,6 +39,9 @@ import androidx.loader.content.CursorLoader;
 
 import com.example.pixelmanipulation.canva.CanvaImageView;
 import com.example.pixelmanipulation.model.ImageMHD;
+import com.providers.CpPluginsProvider;
+
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -50,6 +53,7 @@ import java.io.InputStream;
 
 public class UploadImageActivity extends AppCompatActivity {
 
+    private CpPluginsProvider provider;
     private ImageView image;
     private Bitmap imgBitmap;
     private Button btnProcess;
@@ -63,6 +67,7 @@ public class UploadImageActivity extends AppCompatActivity {
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_image);
+        provider = CpPluginsProvider.getInstance();
         image = findViewById(R.id.imgView);
         tvImage = findViewById(R.id.tvImageName);
         tvWindow = findViewById(R.id.tvProgressW);
@@ -118,8 +123,6 @@ public class UploadImageActivity extends AppCompatActivity {
                         });
                 AlertDialog alert = builder.create();
                 alert.show();
-
-
             }
         });
 
@@ -238,24 +241,23 @@ public class UploadImageActivity extends AppCompatActivity {
 
         int W = imgBitmap.getWidth();
         int H = imgBitmap.getHeight();
+        int[] pixels = new int[W * H];
         Bitmap imgWL;
         imgWL = imgBitmap.copy(Bitmap.Config.ARGB_8888, true);
+        imgWL.getPixels(pixels, 0, W, 0, 0, W, H);
 
-        for(int i = 0; i < W; i++){
-            for(int j = 0; j < H; j++){
-                int color = imgWL.getPixel(i, j);
-                int indColor = (color >> 16) & 0xff;
-                double slope = getSlope(indColor);
-                if(slope > 255){
-                    slope = 255;
-                } else if(slope < 0) {
-                    slope = 0;
-                }
-                int defColor = Color.argb(255, (int) slope, (int) slope, (int) slope);
-                imgWL.setPixel(i, j, defColor);
+        for(int i = 0; i < pixels.length; i++){
+            int indColor = (pixels[i] >> 16) & 0xff;
+            double slope = getSlope(indColor);
+            if(slope > 255){
+                slope = 255;
+            } else if(slope < 0) {
+                slope = 0;
             }
+            pixels[i] = Color.argb(255, (int) slope, (int) slope, (int) slope);
         }
 
+        imgWL.setPixels(pixels, 0, W, 0, 0, W, H);
         image.setImageBitmap(imgWL);
     }
 
@@ -270,7 +272,7 @@ public class UploadImageActivity extends AppCompatActivity {
         double m = (y2 - y1) / (x2 - x1);
         //Get the Y-axis interception of the curve => Y = mX + b  =>  b = Y - mX
         double b = y2 - (m * x2);
-        return m * color + b;
+        return (m * color) + b;
     }
 
     public void showSeekBars(){
