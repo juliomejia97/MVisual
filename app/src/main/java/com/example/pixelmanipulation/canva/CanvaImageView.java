@@ -1,34 +1,24 @@
 package com.example.pixelmanipulation.canva;
 
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Base64;
-import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.pixelmanipulation.Home;
 import com.example.pixelmanipulation.R;
 import com.example.pixelmanipulation.canva.Interface.ToolsListener;
 import com.example.pixelmanipulation.adapters.ToolsAdapter;
@@ -44,7 +34,6 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static androidx.recyclerview.widget.RecyclerView.*;
@@ -53,15 +42,20 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
 
     private CpPluginsProvider provider;
     private PaintView mPaintView;
-    private int colorBackground,colorBrush;
+    private ImageView previous, btnProcess;
+    private int colorBackground, colorBrush;
     private int brushSize, eraserSize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_canva_image_view);
         provider = CpPluginsProvider.getInstance();
         mPaintView = findViewById(R.id.paint_view);
+        previous = findViewById(R.id.previousCanva);
+        btnProcess = findViewById(R.id.btnProcessCanva);
+
         Intent intent = getIntent();
 
         byte[] byteArray = intent.getByteArrayExtra("BitmapImage");
@@ -69,8 +63,24 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         BitmapDrawable background = new BitmapDrawable(getResources(), bmp);
         initTools();
         mPaintView.setBackground(background);
-    }
 
+        previous.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(CanvaImageView.this, Home.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        btnProcess.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                processImage();
+            }
+        });
+
+    }
 
     private void initTools() {
 
@@ -104,20 +114,13 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         return result;
     }
 
-    public void finishPaint (View view){
+    public void finishPaint (View view){ }
 
-    }
+    public void shareApp(View view) { }
 
+    public void showFiles(View view) { }
 
-    public void shareApp(View view) {
-    }
-
-    public void showFiles(View view) {
-    }
-
-    public void saveFile(View view) {
-
-    }
+    public void saveFile(View view) { }
 
     @Override
     public void onSelected(String name) {
@@ -184,22 +187,22 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         if(isEraser){
             toolsSelected.setText("Eraser Size");
             ivTools.setImageResource(R.drawable.eraser24);
-            statusSize.setText("Selected Size: "+eraserSize);
+            statusSize.setText("Selected Size: "+ eraserSize);
         }else{
             toolsSelected.setText("Brush Size");
             ivTools.setImageResource(R.drawable.ic_baseline_brush_24);
-            statusSize.setText("Selected Size: "+brushSize);
+            statusSize.setText("Selected Size: "+ brushSize);
         }
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 if(isEraser){
-                    eraserSize=i+1;
-                    statusSize.setText("Selected Size: "+eraserSize);
+                    eraserSize = i + 1;
+                    statusSize.setText("Selected Size: " + eraserSize);
                     mPaintView.setSizeEraser(eraserSize);
                 }else{
                     brushSize=i+1;
-                    statusSize.setText("Selected Size: "+brushSize);
+                    statusSize.setText("Selected Size: " + brushSize);
                     mPaintView.setSizeBrush(brushSize);
                 }
             }
@@ -225,7 +228,7 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         builder.show();
     }
 
-    public void changeBackground(){
+    public void processImage(){
 
         int W = mPaintView.getBitmap().getWidth();
         int H = mPaintView.getBitmap().getHeight();
@@ -236,22 +239,26 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
             buffer[i] = color;
         }
 
+        //Se obtiene el buffer del bitmap inicial (Solo la imagen)
         Bitmap originalBitmap = mPaintView.getBitmap();
         ByteArrayOutputStream originalStream = new ByteArrayOutputStream();
         originalBitmap.compress(Bitmap.CompressFormat.PNG, 100, originalStream);
         byte[] originalByteArray = originalStream.toByteArray();
 
+        //Se actualiza en nuevo background con el fondo transparente
         Bitmap imgBitmap = Bitmap.createBitmap(buffer, W, H, Bitmap.Config.ARGB_8888);
         BitmapDrawable background = new BitmapDrawable(getResources(), imgBitmap);
         mPaintView.setBackground(background);
 
+        //Se obtiene el buffer del bitmap final (Fondo transparente y los trazos)
         ByteArrayOutputStream newStream = new ByteArrayOutputStream();
         Bitmap newBitmap = mPaintView.getBitmap();
         newBitmap.compress(Bitmap.CompressFormat.PNG, 100, newStream);
         byte[] newByteArray = newStream.toByteArray();
 
-        JSONObject data = provider.createJSON(H, W, originalByteArray, newByteArray);
-        provider.sendPOSTRequestCpPlugins(CanvaImageView.this, data);
+        //Se hace la petición al servidor de CpPlugins
+        //JSONObject data = provider.createJSON(H, W, originalByteArray, newByteArray);
+        //provider.sendPOSTRequestCpPlugins(CanvaImageView.this, data);
     }
 
 }

@@ -40,6 +40,7 @@
         </TextView>
 
         <ImageView
+            android:id="@+id/btnProcessCanva"
             android:layout_width="33dp"
             android:layout_height="27dp"
             android:layout_marginTop="28dp"
@@ -49,7 +50,7 @@
             app:srcCompat="@drawable/check" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/previousCanva"
             android:layout_width="39dp"
             android:layout_height="40dp"
             android:layout_marginStart="16dp"

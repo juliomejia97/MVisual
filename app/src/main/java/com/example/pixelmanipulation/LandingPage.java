@@ -27,7 +27,6 @@ public class LandingPage extends AppCompatActivity {
         setContentView(R.layout.activity_landing_page);
         this.provider = FirebaseProvider.getInstance();
 
-
         text_landing1 = findViewById(R.id.title_landing1);
         text_landing2 = findViewById(R.id.title_landing2);
         nurse= findViewById(R.id.enfermera);

@@ -59,6 +59,7 @@ public class UploadImageActivity extends AppCompatActivity {
     private Button btnProcess;
     private SeekBar sbWindow, sbLevel, sbDepth;
     private TextView tvImage, tvWindow, tvLevel, tvDepth;
+    private TextView lblWindow, lblLevel, lblDepth;
     private LinearLayout llWindow, llLevel, llDepth;
     private ImageMHD imageMHD;
     private String mhdName, rawName;
@@ -73,6 +74,9 @@ public class UploadImageActivity extends AppCompatActivity {
         tvWindow = findViewById(R.id.tvProgressW);
         tvLevel = findViewById(R.id.tvProgressL);
         tvDepth = findViewById(R.id.tvProgressDepth);
+        lblWindow = findViewById(R.id.textView3);
+        lblLevel = findViewById(R.id.textView4);
+        lblDepth = findViewById(R.id.txt_depth);
         llWindow = findViewById(R.id.llWindow);
         llLevel = findViewById(R.id.lllevel);
         llDepth = findViewById(R.id.llDepth);
@@ -90,6 +94,9 @@ public class UploadImageActivity extends AppCompatActivity {
 
         image.setDrawingCacheEnabled(true);
 
+        lblWindow.setVisibility(View.INVISIBLE);
+        lblLevel.setVisibility(View.INVISIBLE);
+        lblDepth.setVisibility(View.INVISIBLE);
         tvImage.setVisibility(View.INVISIBLE);
         llDepth.setVisibility(View.INVISIBLE);
         llWindow.setVisibility(View.INVISIBLE);
@@ -292,6 +299,9 @@ public class UploadImageActivity extends AppCompatActivity {
         tvDepth.setText("" + sbDepth.getProgress());
         tvImage.setText("" + mhdName);
 
+        lblWindow.setVisibility(View.VISIBLE);
+        lblLevel.setVisibility(View.VISIBLE);
+        lblDepth.setVisibility(View.VISIBLE);
         tvImage.setVisibility(View.VISIBLE);
         llWindow.setVisibility(View.VISIBLE);
         llLevel.setVisibility(View.VISIBLE);
