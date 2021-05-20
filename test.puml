@@ -1,0 +1,336 @@
+@startuml
+class com.example.pixelmanipulation.ExampleUnitTest {
++ void addition_isCorrect()
+}
+class com.example.pixelmanipulation.LandingPage {
+- TextView text_landing1
+- ImageView nurse
+- TableLayout grid_buttons
+# void onCreate(Bundle)
+}
+class com.example.pixelmanipulation.canva.viewHolder.ToolsViewHolder {
++ ImageView icone
++ TextView name
+- ViewOnClick viewOnClick
++ void setViewOnClick(ViewOnClick)
+}
+interface com.example.pixelmanipulation.canva.Interface.ToolsListener {
++ void onSelected(String)
+}
+class com.example.pixelmanipulation.canva.DrawOnBitmapActivity {
+~ DrawableImageView choosenImageView
+~ Button saveImage
+~ Bitmap bmp
+~ Bitmap alteredBitmap
+# void onCreate(Bundle)
+}
+class com.example.pixelmanipulation.data.model.LoggedInUser {
+- String userId
+- String displayName
++ String getUserId()
++ String getDisplayName()
+}
+class com.example.pixelmanipulation.FilesActivity {
+- {static} int ALMACENAMIENTO_EXTERNO
+- {static} int IMAGE_PICKER_REQUEST
+- {static} int FILE_PICKER_REQUEST
+- {static} boolean accessAlm
+- FirebaseProvider provider
+~ LinearLayout llPacientes
++ void onCreate(Bundle)
+# void onStart()
+- boolean requestPermission(Activity,String,String,int)
+- void usePermissionApplication()
+- void usePermissionImage()
++ void onActivityResult(int,int,Intent)
++ void onRequestPermissionsResult(int,String[],int[])
++ String getPathFromUri(Context,Uri)
++ String getFileName(Uri)
++ void insertIntoInternalStorage(String,String)
++ byte[] getBytesFromFile(File)
++ {static} String getRealPathFromURI_API11to18(Context,Uri)
++ {static} String getRealPathFromURI_BelowAPI11(Context,Uri)
++ {static} String getRealPathFromURI_API19(Context,Uri)
++ {static} String getDataColumn(Context,Uri,String,String[])
++ {static} boolean isExternalStorageDocument(Uri)
++ {static} boolean isDownloadsDocument(Uri)
++ {static} boolean isMediaDocument(Uri)
++ {static} boolean isGooglePhotosUri(Uri)
+}
+class com.example.pixelmanipulation.ExampleInstrumentedTest {
++ void useAppContext()
+}
+class com.example.pixelmanipulation.canva.widget.PaintView {
+- Bitmap btmBackground
+- Paint mPaint
+- Path mPath
+- int sizeBrush
+- float mX
+- Canvas mCanvas
+- int DEFFERENCE_SPACE
+- ArrayList<Bitmap> listAction
+- void init()
+- float toPx(int)
+# void onSizeChanged(int,int,int,int)
+# void onDraw(Canvas)
++ void setColorBackground(int)
++ void setSizeBrush(int)
++ void setBrushColor(int)
++ void setSizeEraser(int)
++ void enableEraser()
++ void disableEraser()
++ void addLastAction(Bitmap)
++ void returnLastAction()
++ boolean onTouchEvent(MotionEvent)
+- void touchUp()
+- void touchMove(float,float)
+- void touchStart(float,float)
++ Bitmap getBitmap()
+}
+class com.example.pixelmanipulation.model.ImageMHD {
+- int W
+- int H
+- ArrayList<int[]> depths
++ int getW()
++ void setW(int)
++ int getH()
++ void setH(int)
++ void addBuffer(int[])
++ ArrayList<int[]> getDepths()
++ void setDepths(ArrayList<int[]>)
+}
+class com.example.pixelmanipulation.BuildConfig {
++ {static} boolean DEBUG
++ {static} String APPLICATION_ID
++ {static} String BUILD_TYPE
++ {static} int VERSION_CODE
++ {static} String VERSION_NAME
+}
+class com.example.pixelmanipulation.Home {
+# void onCreate(Bundle)
+}
+class com.example.pixelmanipulation.NavigationBar {
+# void onCreate(Bundle)
+}
+class com.example.pixelmanipulation.data.Result {
++ String toString()
+}
+class com.example.pixelmanipulation.data.Result.Success {
+- T data
++ T getData()
+}
+class com.example.pixelmanipulation.data.Result.Error {
+- Exception error
++ Exception getError()
+}
+interface com.example.pixelmanipulation.canva.Interface.ViewOnClick {
++ void onClick(int)
+}
+class com.providers.FirebaseProvider {
+- {static} String STORAGE_IMAGE_PATH
+- {static} String PATIENTS_PATH
+- {static} String STUDIES_PATH
+- {static} String SERIES_PATH
+- {static} String IMAGES_PATH
+- {static} ArrayList<DataViewHolder> patients
+- {static} ArrayList<DataViewHolder> studies
+- {static} ArrayList<DataViewHolder> series
+- {static} ArrayList<DataViewHolder> images
+- {static} StorageReference mStorageRef
+- {static} FirebaseProvider firebaseInstance
+- {static} FirebaseDatabase mDatabase
+- {static} DatabaseReference mReference
++ {static} FirebaseProvider getInstance()
++ {static} void getPatientsFromFirebase()
++ {static} void getStudiesFromFirebase()
++ {static} void getSeriesFromFirebase()
++ {static} void getImagesFromFirebase()
++ {static} ArrayList<DataViewHolder> getAllPatients()
++ {static} ArrayList<DataViewHolder> getAllStudies()
++ {static} ArrayList<DataViewHolder> getAllSeries()
++ {static} DataViewHolder getPatientById(String)
++ {static} DataViewHolder getStudyById(String)
++ {static} DataViewHolder getSeriesById(String)
++ {static} DataViewHolder getStudyPatient(String)
++ {static} DataViewHolder getSeriesStudy(String)
++ {static} ArrayList<DataViewHolder> getStudiesByPatient(String)
++ {static} ArrayList<DataViewHolder> getSeriesByStudy(String)
++ {static} ArrayList<DataViewHolder> getImagesBySeries(String)
++ void loadImage(String,String,Context)
++ void loadRawImage(String,String,Context)
++ {static} void createPatient(DataViewHolder)
++ {static} void createStudies(DataViewHolder,String)
++ {static} void createSeries(DataViewHolder,String)
++ {static} void createImages(DataViewHolder,String)
+}
+class com.example.pixelmanipulation.CategoryListActivity {
+- FirebaseProvider provider
+- ListViewAdapter mListInfoAdapter
+- ImageView ivCenter
+- Spinner spinner
+- ListView mlista
+- TextView tvTypeName
+- String[] arrayForSpinner
++ void onCreate(Bundle)
+# void onStart()
++ void initView(String)
+}
+class com.example.pixelmanipulation.model.ToolsItem {
+- int icone
+- String name
++ int getIcone()
++ void setIcone(int)
++ String getName()
++ void setName(String)
+}
+class com.example.pixelmanipulation.canva.CanvaImageView {
+- PaintView mPaintView
+- int colorBackground
+- int brushSize
+# void onCreate(Bundle)
+- void initTools()
+- List<ToolsItem> loadTools()
+- List<ToolsItem> loadOptions()
++ void finishPaint(View)
++ void shareApp(View)
++ void showFiles(View)
++ void saveFile(View)
++ void onSelected(String)
+- void updateColor(String)
+- void showDialogSize(boolean)
+}
+class com.example.pixelmanipulation.UploadImageActivity {
+- ImageView image
+- Bitmap imgBitmap
+- Button btnProcess
+- SeekBar sbWindow
+- TextView tvImage
+- LinearLayout llWindow
+- ImageMHD imageMHD
+- String mhdName
++ void onCreate(Bundle)
+# void onStart()
++ void updateWindow()
++ void updateLevel()
++ void updateDepth()
++ void getBuffer(int)
++ void wlAlgorithm()
++ double getSlope(int)
++ void showSeekBars()
++ void deleteTemporalFiles(String,String)
++ ImageMHD convertMHD(String,String)
+}
+class com.example.pixelmanipulation.UploadImageActivity.GenerateImage {
+~ ProgressDialog pDialog
+# void onPreExecute()
+# Void doInBackground(String)
+# void onPostExecute(Void)
+}
+class com.example.pixelmanipulation.ProcessedImagesActivity {
++ void onCreate(Bundle)
+}
+class com.example.pixelmanipulation.model.DataViewHolder {
+- String id
+- String info
+- String type
+- String parentId
++ String getId()
++ void setId(String)
++ String getInfo()
++ void setInfo(String)
++ String getType()
++ void setType(String)
++ String getParentId()
++ void setParentId(String)
+}
+class com.example.pixelmanipulation.adapters.ListViewAdapter {
+- FirebaseProvider provider
+- List<DataViewHolder> listDatos
+- Context context
+- StorageReference mStorage
+- int level
++ View getView(int,View,ViewGroup)
+- void downloadProfileImage(String,ImageView)
+}
+class com.example.pixelmanipulation.data.LoginRepository {
+- {static} LoginRepository instance
+- LoginDataSource dataSource
+- LoggedInUser user
++ {static} LoginRepository getInstance(LoginDataSource)
++ boolean isLoggedIn()
++ void logout()
+- void setLoggedInUser(LoggedInUser)
++ Result<LoggedInUser> login(String,String)
+}
+class com.example.pixelmanipulation.data.LoginDataSource {
++ Result<LoggedInUser> login(String,String)
++ void logout()
+}
+class com.example.pixelmanipulation.canva.common.Common {
++ {static} String BRUSH
++ {static} String ERASER
++ {static} String COLORS
++ {static} String BACKGROUND
++ {static} String RETURN
+}
+class com.example.pixelmanipulation.adapters.ToolsAdapter {
+- List<ToolsItem> toolsItemList
+- int selected
+- ToolsListener listener
++ ToolsViewHolder onCreateViewHolder(ViewGroup,int)
++ void onBindViewHolder(ToolsViewHolder,int)
++ int getItemCount()
+}
+class com.example.pixelmanipulation.canva.DrawableImageView {
+~ float downx
+~ float downy
+~ float upx
+~ float upy
+~ Canvas canvas
+~ Paint paint
+~ Matrix matrix
++ void setNewImage(Bitmap,Bitmap)
++ boolean onTouch(View,MotionEvent)
+~ float[] getPointerCoords(MotionEvent)
+}
+class com.example.pixelmanipulation.InfoListActivity {
+- FirebaseProvider provider
+- ListViewAdapter mListInfoAdapter
+- ImageView ivPrevious
+- TextView tvInfoPrincipal
+- ListView mlista
+- DataViewHolder info
+- StorageReference mStorage
+- int level
+- String idCurrent
+# void onCreate(Bundle)
+# void onStart()
++ void initData()
+- void downloadProfileImage(String,ImageView)
+}
+
+
+androidx.appcompat.app.AppCompatActivity <|-- com.example.pixelmanipulation.LandingPage
+com.example.pixelmanipulation.canva.viewHolder.ViewHolder <|-- com.example.pixelmanipulation.canva.viewHolder.ToolsViewHolder
+androidx.appcompat.app.AppCompatActivity <|-- com.example.pixelmanipulation.canva.DrawOnBitmapActivity
+androidx.appcompat.app.AppCompatActivity <|-- com.example.pixelmanipulation.FilesActivity
+android.view.View <|-- com.example.pixelmanipulation.canva.widget.PaintView
+androidx.appcompat.app.AppCompatActivity <|-- com.example.pixelmanipulation.Home
+androidx.appcompat.app.AppCompatActivity <|-- com.example.pixelmanipulation.NavigationBar
+com.example.pixelmanipulation.data.Result +.. com.example.pixelmanipulation.data.Result.Success
+com.example.pixelmanipulation.data.Result <|-- com.example.pixelmanipulation.data.Result.Success
+com.example.pixelmanipulation.data.Result +.. com.example.pixelmanipulation.data.Result.Error
+com.example.pixelmanipulation.data.Result <|-- com.example.pixelmanipulation.data.Result.Error
+androidx.appcompat.app.AppCompatActivity <|-- com.example.pixelmanipulation.CategoryListActivity
+com.example.pixelmanipulation.canva.Interface.ToolsListener <|.. com.example.pixelmanipulation.canva.CanvaImageView
+androidx.appcompat.app.AppCompatActivity <|-- com.example.pixelmanipulation.canva.CanvaImageView
+androidx.appcompat.app.AppCompatActivity <|-- com.example.pixelmanipulation.UploadImageActivity
+com.example.pixelmanipulation.UploadImageActivity +.. com.example.pixelmanipulation.UploadImageActivity.GenerateImage
+com.example.pixelmanipulation.AsyncTask <|-- com.example.pixelmanipulation.UploadImageActivity.GenerateImage
+androidx.appcompat.app.AppCompatActivity <|-- com.example.pixelmanipulation.ProcessedImagesActivity
+android.widget.ArrayAdapter <|-- com.example.pixelmanipulation.adapters.ListViewAdapter
+com.example.pixelmanipulation.adapters.Adapter <|-- com.example.pixelmanipulation.adapters.ToolsAdapter
+com.example.pixelmanipulation.canva.OnTouchListener <|.. com.example.pixelmanipulation.canva.DrawableImageView
+androidx.appcompat.widget.AppCompatImageView <|-- com.example.pixelmanipulation.canva.DrawableImageView
+androidx.appcompat.app.AppCompatActivity <|-- com.example.pixelmanipulation.InfoListActivity
+@enduml

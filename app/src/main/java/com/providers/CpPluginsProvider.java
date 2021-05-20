@@ -21,8 +21,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,7 +42,7 @@ public class CpPluginsProvider {
         return cpPluginsProvider;
     }
 
-    public JSONObject createJSON(int H, int W, byte[] initialBuffer, byte[] editedBuffer){
+    public JSONObject createJSON(int H, int W, byte[] initialBuffer, byte[] editedBuffer, Context context){
 
         try {
             JSONObject restJSON = new JSONObject();
@@ -90,6 +92,7 @@ public class CpPluginsProvider {
             inputsArray.put(input2);
 
             restJSON.put("inputs", inputsArray);
+            saveJson(context,restJSON);
             return restJSON;
 
         } catch (JSONException e) {
@@ -161,5 +164,20 @@ public class CpPluginsProvider {
         }
     }
 
+
+    public void saveJson(Context context, JSONObject restJSON){
+        try {
+            File checkFile = new File(context.getApplicationInfo().dataDir);
+            if(!checkFile.exists()) {
+                checkFile.mkdir();
+            }
+            FileWriter file = new FileWriter(checkFile.getAbsolutePath() + "/test.json");
+            file.write(restJSON.toString());
+            file.flush();
+            file.close();
+        } catch(IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

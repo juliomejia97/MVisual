@@ -40,6 +40,7 @@ import com.providers.CpPluginsProvider;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -106,6 +107,7 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
     }
 
     public void saveFile(View view) {
+        changeBackground();
 
     }
 
@@ -230,9 +232,7 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         }
 
         Bitmap originalBitmap = mPaintView.getBitmap();
-        ByteArrayOutputStream originalStream = new ByteArrayOutputStream();
-        originalBitmap.compress(Bitmap.CompressFormat.PNG, 100, originalStream);
-        byte[] originalByteArray = originalStream.toByteArray();
+        byte[] originalByteArray = getBase64Bitmap(originalBitmap);
 
         Bitmap imgBitmap = Bitmap.createBitmap(buffer, W, H, Bitmap.Config.ARGB_8888);
         BitmapDrawable background = new BitmapDrawable(getResources(), imgBitmap);
@@ -240,11 +240,23 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
 
         ByteArrayOutputStream newStream = new ByteArrayOutputStream();
         Bitmap newBitmap = mPaintView.getBitmap();
-        newBitmap.compress(Bitmap.CompressFormat.PNG, 100, newStream);
-        byte[] newByteArray = newStream.toByteArray();
+        byte[] newByteArray = getBase64Bitmap(newBitmap);
 
-        JSONObject data = provider.createJSON(H, W, originalByteArray, newByteArray);
-        provider.sendPOSTRequestCpPlugins(CanvaImageView.this, data);
+        JSONObject data = provider.createJSON(H, W, originalByteArray, newByteArray, CanvaImageView.this);
+        //provider.sendPOSTRequestCpPlugins(CanvaImageView.this, data);
     }
 
+    public byte[] getBase64Bitmap(Bitmap bitmap){
+        try {
+            ByteBuffer buffer =
+                    ByteBuffer.allocate(bitmap.getRowBytes() *
+                            bitmap.getHeight());
+            bitmap.copyPixelsToBuffer(buffer);
+            byte[] data = buffer.array();
+            return data;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
