@@ -1,62 +1,34 @@
 package com.example.pixelmanipulation;
 
-import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.ContentUris;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
-import android.provider.OpenableColumns;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.loader.content.CursorLoader;
 
 import com.example.pixelmanipulation.canva.CanvaImageView;
 import com.example.pixelmanipulation.model.ImageMHD;
 import com.providers.CpPluginsProvider;
 
-import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class UploadImageActivity extends AppCompatActivity {
 
     private CpPluginsProvider provider;
     private ImageView image;
     private Bitmap imgBitmap;
-    private Button btnProcess;
+    private ImageView btnProcess;
     private SeekBar sbWindow, sbLevel, sbDepth;
     private TextView tvImage, tvWindow, tvLevel, tvDepth;
     private TextView lblWindow, lblLevel, lblDepth;
@@ -80,7 +52,7 @@ public class UploadImageActivity extends AppCompatActivity {
         llWindow = findViewById(R.id.llWindow);
         llLevel = findViewById(R.id.lllevel);
         llDepth = findViewById(R.id.llDepth);
-        btnProcess = findViewById(R.id.btnProcesar);
+        btnProcess = findViewById(R.id.btnProcess);
         sbWindow = findViewById(R.id.sbWindow);
         sbLevel = findViewById(R.id.sbLevel);
         sbDepth = findViewById(R.id.sbDepth);
