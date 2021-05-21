@@ -46,7 +46,7 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
     private CpPluginsProvider provider;
     private PaintView mPaintView;
     private ImageView previous, btnProcess;
-    private TextView tvTitle;
+    private TextView  imgName;
     private int colorBackground, colorBrush;
     private int brushSize, eraserSize;
     private String imageId;
@@ -60,17 +60,14 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         mPaintView = findViewById(R.id.paint_view);
         previous = findViewById(R.id.previousCanva);
         btnProcess = findViewById(R.id.btnProcessCanva);
-        tvTitle = findViewById(R.id.txt_imagetitle);
-
+        imgName = findViewById(R.id.tvImageNameCanva);
         Intent intent = getIntent();
-
         byte[] byteArray = intent.getByteArrayExtra("BitmapImage");
         Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
         BitmapDrawable background = new BitmapDrawable(getResources(), bmp);
         initTools();
         mPaintView.setBackground(background);
-
-        tvTitle.setText("" + intent.getStringExtra("ImageName"));
+        imgName.setText(intent.getStringExtra("ImageName"));
         imageId = intent.getStringExtra("imageId");
 
         previous.setOnClickListener(new OnClickListener() {
@@ -96,7 +93,7 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         colorBackground= Color.WHITE;
         colorBrush=Color.RED;
 
-        eraserSize=brushSize=12;
+        eraserSize=brushSize=5;
         RecyclerView recyclerView = findViewById(R.id.recycle_view_tools);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, HORIZONTAL,false));
@@ -189,7 +186,7 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         final TextView statusSize = view.findViewById(R.id.status_size);
         final ImageView ivTools = view.findViewById(R.id.iv_tools);
         SeekBar seekBar=view.findViewById(R.id.seekbar_size);
-        seekBar.setMax(99);
+        seekBar.setMax(19);
         if(isEraser){
             toolsSelected.setText("Eraser Size");
             ivTools.setImageResource(R.drawable.eraser24);

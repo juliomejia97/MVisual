@@ -42,7 +42,7 @@ public class UploadImageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_upload_image);
         provider = CpPluginsProvider.getInstance();
         image = findViewById(R.id.imgView);
-        tvImage = findViewById(R.id.tvImageName);
+        tvImage = findViewById(R.id.tvImageNameCanva);
         tvWindow = findViewById(R.id.tvProgressW);
         tvLevel = findViewById(R.id.tvProgressL);
         tvDepth = findViewById(R.id.tvProgressDepth);
