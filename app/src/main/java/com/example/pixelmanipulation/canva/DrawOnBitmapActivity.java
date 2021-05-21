@@ -21,16 +21,13 @@ import java.io.OutputStream;
 public class DrawOnBitmapActivity extends AppCompatActivity {
 
     DrawableImageView choosenImageView;
-    Button saveImage;
     Bitmap bmp;
     Bitmap alteredBitmap;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_canva_draw_on_bitmap);
-        //Inflates
         choosenImageView = findViewById(R.id.ChoosenImageView);
-        //get intent and set bitmap
         Intent intent = getIntent();
         byte[] byteArray = intent.getByteArrayExtra("BitmapImage");
         bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);

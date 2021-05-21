@@ -27,9 +27,7 @@ import com.example.pixelmanipulation.adapters.ToolsAdapter;
 import com.example.pixelmanipulation.canva.common.Common;
 import com.example.pixelmanipulation.model.ToolsItem;
 import com.example.pixelmanipulation.canva.widget.PaintView;
-import com.flask.colorpicker.ColorPickerView;
-import com.flask.colorpicker.builder.ColorPickerClickListener;
-import com.flask.colorpicker.builder.ColorPickerDialogBuilder;
+
 import com.providers.CpPluginsProvider;
 
 import org.json.JSONObject;
@@ -37,6 +35,9 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+
+import petrov.kristiyan.colorpicker.ColorPicker;
 
 import static androidx.recyclerview.widget.RecyclerView.*;
 
@@ -93,7 +94,7 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
     private void initTools() {
 
         colorBackground= Color.WHITE;
-        colorBrush=Color.BLACK;
+        colorBrush=Color.RED;
 
         eraserSize=brushSize=12;
         RecyclerView recyclerView = findViewById(R.id.recycle_view_tools);
@@ -157,30 +158,27 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         }else{
             color=colorBrush;
         }
-        ColorPickerDialogBuilder
-                .with(this)
-                .setTitle("Choose color")
-                .initialColor(color)
-                .wheelType(ColorPickerView.WHEEL_TYPE.CIRCLE)
-                .density(12)
-                .setPositiveButton("OK", new ColorPickerClickListener() {
-                    @Override
-                    public void onClick(DialogInterface d, int lastSelectedColor, Integer[] allColors) {
-                        if(name.equals(Common.BACKGROUND)){
-                            colorBackground=lastSelectedColor;
-                            mPaintView.setColorBackground(colorBackground);
-                        }else {
-                            colorBrush=lastSelectedColor;
-                            mPaintView.setBrushColor(colorBrush);
-                        }
-                    }
-                }).setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+        ColorPicker colorPicker = new ColorPicker(CanvaImageView.this);
+        colorPicker.setOnFastChooseColorListener(new ColorPicker.OnFastChooseColorListener() {
             @Override
-            public void onClick(DialogInterface dialog, int i) {
-
+            public void setOnFastChooseColorListener(int position, int color) {
+                // put code
+                if(name.equals(Common.BACKGROUND)){
+                    colorBackground=color;
+                    mPaintView.setColorBackground(colorBackground);
+                }else {
+                    colorBrush=color;
+                    mPaintView.setBrushColor(colorBrush);
+                }
             }
-        }).build()
-                .show();
+
+            @Override
+            public void onCancel(){
+                // put code
+            }
+        }).disableDefaultButtons(true).setColumns(5).setRoundColorButton(true).show();
+
+
     }
 
     private void showDialogSize(final boolean isEraser) {

@@ -156,7 +156,7 @@ public class Home extends AppCompatActivity {
             };
 
             Handler h = new Handler();
-            h.postDelayed(r, 850);
+            h.postDelayed(r, 1250);
         });
 
         btnFloating.setOnClickListener(new View.OnClickListener() {
