@@ -50,6 +50,7 @@ public class ProcessedImageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_processed_images);
         provider = FirebaseProvider.getInstance();
         ivProcessed = findViewById(R.id.ivProcessed);
+        ivProcessed = findViewById(R.id.ivProcessed);
         ivPrevious = findViewById(R.id.previousProcessed);
         title = findViewById(R.id.tvProcessedImage);
         btnNube = findViewById(R.id.btnNube);

@@ -11,23 +11,20 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="MVisual"
-        android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
         tools:replace="android:label">
-
+        <activity android:name=".ProcessingMethodActivity"></activity>
         <!--
                Set to true if your app is Standalone, that is, it does not require the handheld
                app to run.
         -->
-
-
         <activity
             android:name=".Home"
-            android:label="@string/title_activity_home">
-        </activity>
+            android:label="@string/title_activity_home"></activity>
         <activity android:name=".LandingPage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,7 +37,7 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".FilesActivity"/>
+        <activity android:name=".FilesActivity" />
         <activity android:name=".CategoryListActivity" />
         <activity android:name=".ProcessedImageActivity" />
         <activity android:name=".UploadImageActivity" />

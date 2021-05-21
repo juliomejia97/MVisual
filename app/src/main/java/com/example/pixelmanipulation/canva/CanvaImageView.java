@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.pixelmanipulation.Home;
 import com.example.pixelmanipulation.ProcessedImageActivity;
+import com.example.pixelmanipulation.ProcessingMethodActivity;
 import com.example.pixelmanipulation.R;
 import com.example.pixelmanipulation.canva.Interface.ToolsListener;
 import com.example.pixelmanipulation.adapters.ToolsAdapter;
@@ -267,7 +268,7 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         //JSONObject data = provider.createJSON(H, W, originalByteArray, newByteArray);
         //provider.sendPOSTRequestCpPlugins(CanvaImageView.this, data, imageId);
 
-        Intent intent = new Intent(CanvaImageView.this, ProcessedImageActivity.class);
+        Intent intent = new Intent(CanvaImageView.this, ProcessingMethodActivity.class);
         intent.putExtra("Buffer", newByteArray);
         intent.putExtra("imageId", imageId);
         intent.putExtra("arrival", "CpPlugins");
