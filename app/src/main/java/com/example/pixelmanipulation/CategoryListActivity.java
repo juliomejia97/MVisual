@@ -50,21 +50,21 @@ public class CategoryListActivity extends AppCompatActivity {
 
         if(type.equalsIgnoreCase("pacientes")){
 
-            tvTypeName.setText("Por Pacientes");
+            tvTypeName.setText("Pacientes");
             ivCenter.setImageDrawable(getResources().getDrawable(R.drawable.patients_folder));
             mListInfoAdapter = new ListViewAdapter(CategoryListActivity.this, provider.getAllPatients(), level);
             mlista.setAdapter(mListInfoAdapter);
 
         } else if (type.equalsIgnoreCase("estudios")){
 
-            tvTypeName.setText("Por Estudios");
-            ivCenter.setImageDrawable(getResources().getDrawable(R.drawable.studies_folder));
+            tvTypeName.setText("Estudios");
+            ivCenter.setImageDrawable(getResources().getDrawable(R.drawable.estudies_joume));
             mListInfoAdapter = new ListViewAdapter(CategoryListActivity.this, provider.getAllStudies(), level);
             mlista.setAdapter(mListInfoAdapter);
 
         } else if (type.equalsIgnoreCase("series")){
 
-            tvTypeName.setText("Por Series");
+            tvTypeName.setText("Series");
             ivCenter.setImageDrawable(getResources().getDrawable(R.drawable.heart_folder));
             mListInfoAdapter = new ListViewAdapter(CategoryListActivity.this, provider.getAllSeries(), level);
             mlista.setAdapter(mListInfoAdapter);

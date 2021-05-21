@@ -106,12 +106,12 @@ public class InfoListActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         } else if (info.getType().equalsIgnoreCase("estudios")){
-            ivInfo.setImageDrawable(getResources().getDrawable(R.drawable.folder));
+            ivInfo.setImageDrawable(getResources().getDrawable(R.drawable.carpeta_studios));
             tvInfoSecond.setText(infoSecondary.getInfo());
             mListInfoAdapter = new ListViewAdapter(InfoListActivity.this, provider.getSeriesByStudy(info.getId()), (level + 1));
             mlista.setAdapter(mListInfoAdapter);
         } else if (info.getType().equalsIgnoreCase("series")){
-            ivInfo.setImageDrawable(getResources().getDrawable(R.drawable.scan));
+            ivInfo.setImageDrawable(getResources().getDrawable(R.drawable.series_folder));
             tvInfoSecond.setText(infoSecondary.getInfo());
             tvInfoThird.setText(infoThird.getInfo());
             mListInfoAdapter = new ListViewAdapter(InfoListActivity.this, provider.getImagesBySeries(info.getId()), (level + 1));

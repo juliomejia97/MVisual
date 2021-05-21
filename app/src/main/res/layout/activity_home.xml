@@ -13,7 +13,7 @@
         android:id="@+id/top_bar_home"
         android:layout_width="437dp"
         android:layout_height="300dp"
-        android:layout_marginBottom="490dp"
+        android:layout_marginBottom="495dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -68,7 +68,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="20dip"
-                    app:srcCompat="@drawable/studies_folder" />
+                    app:srcCompat="@drawable/estudies_joume" />
 
                 <TextView
                     android:id="@+id/textView7"

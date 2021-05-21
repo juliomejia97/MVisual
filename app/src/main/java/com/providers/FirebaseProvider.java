@@ -5,11 +5,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
-import com.example.pixelmanipulation.ProcessedImageActivity;
 import com.example.pixelmanipulation.UploadImageActivity;
 import com.example.pixelmanipulation.model.DataViewHolder;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -90,7 +91,15 @@ public class FirebaseProvider {
             }
         });
     }
-
+    public static int getItemsByPatientId(String idPatient){
+        int countPatients = 0;
+        for( DataViewHolder item: studies){
+            if(item.getParentId().equals(idPatient)) {
+                countPatients++;
+            }
+        }
+        return countPatients;
+    }
     public static void getStudiesFromFirebase(){
         mReference = mDatabase.getReference(STUDIES_PATH);
         mReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -112,6 +121,15 @@ public class FirebaseProvider {
 
             }
         });
+    }
+    public static int getItemsByStudiesId(String idStudies){
+        int countStudies = 0;
+        for( DataViewHolder item: series){
+            if(item.getParentId().equals(idStudies)) {
+                countStudies++;
+            }
+        }
+        return countStudies;
     }
 
     public static void getSeriesFromFirebase(){
@@ -136,6 +154,16 @@ public class FirebaseProvider {
             }
         });
     }
+    public static int getItemsBySeriesId(String idSeries){
+        int countImages = 0;
+        for( DataViewHolder item: images){
+            if(item.getParentId().equals(idSeries)) {
+                countImages++;
+            }
+        }
+        return countImages;
+    }
+
 
     public static void getImagesFromFirebase(){
         mReference = mDatabase.getReference(IMAGES_PATH);

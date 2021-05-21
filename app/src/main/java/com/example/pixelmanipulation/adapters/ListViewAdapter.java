@@ -59,6 +59,8 @@ public class ListViewAdapter extends ArrayAdapter<DataViewHolder> {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View mView = layoutInflater.from(this.context).inflate(R.layout.list_adapter, parent, false);
         TextView infoText = mView.findViewById(R.id.txtViewAdapter);
+        TextView txtItemAdapter = mView.findViewById(R.id.txtItemAdapter);
+
         ImageView image = mView.findViewById(R.id.imgViewAdapter);
         String type = this.listDatos.get(position).getType();
         infoText.setText(this.listDatos.get(position).getInfo());
@@ -92,14 +94,18 @@ public class ListViewAdapter extends ArrayAdapter<DataViewHolder> {
 
         if(type.equalsIgnoreCase("pacientes")){
             try {
+                txtItemAdapter.setText(provider.getItemsByPatientId(listDatos.get(position).getId())+" items");
                 downloadProfileImage(this.listDatos.get(position).getId(), image);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else if (type.equalsIgnoreCase("estudios")){
-            image.setImageDrawable(mView.getResources().getDrawable(R.drawable.folder));
+            txtItemAdapter.setText(provider.getItemsByStudiesId(listDatos.get(position).getId())+" items");
+            image.setImageDrawable(mView.getResources().getDrawable(R.drawable.carpeta_studios));
         } else if (type.equalsIgnoreCase("series")){
-            image.setImageDrawable(mView.getResources().getDrawable(R.drawable.scan));
+            txtItemAdapter.setText(provider.getItemsBySeriesId(listDatos.get(position).getId())+" items");
+
+            image.setImageDrawable(mView.getResources().getDrawable(R.drawable.series_folder));
         } else if (type.equalsIgnoreCase("imagenes")){
             image.setImageDrawable(mView.getResources().getDrawable(R.drawable.processed_image));
         } else if (type.equalsIgnoreCase("procesadas")){

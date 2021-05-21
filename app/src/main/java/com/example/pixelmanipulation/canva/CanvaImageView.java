@@ -103,7 +103,7 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
     private List<ToolsItem> loadTools() {
         List<ToolsItem> result = new ArrayList<>();
         result.add(new ToolsItem(R.drawable.ic_baseline_brush_24, Common.BRUSH));
-        result.add(new ToolsItem(R.drawable.eraser24,Common.ERASER));
+        result.add(new ToolsItem(R.drawable.eraser_icon,Common.ERASER));
         result.add(new ToolsItem(R.drawable.ic_baseline_palette_24,Common.COLORS));
         result.add(new ToolsItem(R.drawable.ic_baseline_undo_24,Common.RETURN));
 
