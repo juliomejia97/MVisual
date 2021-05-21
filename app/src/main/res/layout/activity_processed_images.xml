@@ -63,26 +63,28 @@
 
     <Button
         android:id="@+id/btnNube"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="198dp"
+        android:layout_height="52dp"
         android:layout_marginBottom="60dp"
+        android:background="@drawable/btn_background"
         android:text="Guardar en la nube"
-        android:background="@drawable/button_background"
         android:textColor="#FFFFFF"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btnDispositivo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
+        android:layout_width="199dp"
+        android:layout_height="52dp"
+        android:layout_marginBottom="56dp"
+        android:background="@drawable/btn_background2"
         android:text="Guardar en dispositivo"
-        android:background="@drawable/button_background"
         android:textColor="#FFFFFF"
         app:layout_constraintBottom_toTopOf="@+id/btnNube"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 
 
