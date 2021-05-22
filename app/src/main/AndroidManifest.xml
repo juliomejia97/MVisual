@@ -17,7 +17,6 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:replace="android:label">
-        <activity android:name=".ProcessingMethodActivity"></activity>
         <!--
                Set to true if your app is Standalone, that is, it does not require the handheld
                app to run.
@@ -40,6 +39,7 @@
         <activity android:name=".FilesActivity" />
         <activity android:name=".CategoryListActivity" />
         <activity android:name=".ProcessedImageActivity" />
+        <activity android:name=".ProcessingMethodActivity"></activity>
         <activity android:name=".UploadImageActivity" />
         <activity android:name=".InfoListActivity" />
         <activity android:name=".canva.DrawOnBitmapActivity" />

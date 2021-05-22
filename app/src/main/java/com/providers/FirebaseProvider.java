@@ -91,6 +91,7 @@ public class FirebaseProvider {
             }
         });
     }
+
     public static int getItemsByPatientId(String idPatient){
         int countPatients = 0;
         for( DataViewHolder item: studies){
@@ -100,6 +101,7 @@ public class FirebaseProvider {
         }
         return countPatients;
     }
+
     public static void getStudiesFromFirebase(){
         mReference = mDatabase.getReference(STUDIES_PATH);
         mReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -122,6 +124,7 @@ public class FirebaseProvider {
             }
         });
     }
+
     public static int getItemsByStudiesId(String idStudies){
         int countStudies = 0;
         for( DataViewHolder item: series){
@@ -154,6 +157,7 @@ public class FirebaseProvider {
             }
         });
     }
+
     public static int getItemsBySeriesId(String idSeries){
         int countImages = 0;
         for( DataViewHolder item: images){
@@ -163,8 +167,7 @@ public class FirebaseProvider {
         }
         return countImages;
     }
-
-
+    
     public static void getImagesFromFirebase(){
         mReference = mDatabase.getReference(IMAGES_PATH);
         mReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -188,7 +191,8 @@ public class FirebaseProvider {
         });
     }
 
-    public void getProcessedFromFirebase() {
+    public static void getProcessedFromFirebase() {
+        processed.clear();
         mReference = mDatabase.getReference(PROCESSED_PATH);
         mReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -407,6 +411,7 @@ public class FirebaseProvider {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Log.i("Processed Image", "Succesfully uploaded processed image to storage");
+                getProcessedFromFirebase();
                 android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
                 builder.setMessage("La imagen se guardó en la base de datos exitosamente.")
                         .setCancelable(false)

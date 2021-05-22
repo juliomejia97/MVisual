@@ -51,6 +51,8 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
     private int colorBackground, colorBrush;
     private int brushSize, eraserSize;
     private String imageId;
+    private byte[] originalByteArray;
+    private Bitmap originalBmp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -63,9 +65,9 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         btnProcess = findViewById(R.id.btnProcessCanva);
         imgName = findViewById(R.id.tvImageNameCanva);
         Intent intent = getIntent();
-        byte[] byteArray = intent.getByteArrayExtra("BitmapImage");
-        Bitmap bmp = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
-        BitmapDrawable background = new BitmapDrawable(getResources(), bmp);
+        originalByteArray = intent.getByteArrayExtra("BitmapImage");
+        originalBmp = BitmapFactory.decodeByteArray(originalByteArray, 0, originalByteArray.length);
+        BitmapDrawable background = new BitmapDrawable(getResources(), originalBmp);
         initTools();
         mPaintView.setBackground(background);
         imgName.setText(intent.getStringExtra("ImageName"));
@@ -243,11 +245,10 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
             buffer[i] = color;
         }
 
-        //Se obtiene el buffer del bitmap inicial (Solo la imagen)
-        Bitmap originalBitmap = mPaintView.getBitmap();
-        ByteArrayOutputStream originalStream = new ByteArrayOutputStream();
-        originalBitmap.compress(Bitmap.CompressFormat.PNG, 100, originalStream);
-        byte[] originalByteArray = originalStream.toByteArray();
+        ByteArrayOutputStream previewStream = new ByteArrayOutputStream();
+        Bitmap previewBmp = mPaintView.getBitmap();
+        previewBmp.compress(Bitmap.CompressFormat.PNG, 100, previewStream);
+        byte[] previewByteArray = previewStream.toByteArray();
 
         //Se actualiza en nuevo background con el fondo transparente
         Bitmap imgBitmap = Bitmap.createBitmap(buffer, W, H, Bitmap.Config.ARGB_8888);
@@ -261,18 +262,17 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         byte[] newByteArray = newStream.toByteArray();
 
         //Se actualiza nuevamente el background a la imagen original
-        BitmapDrawable back = new BitmapDrawable(getResources(), originalBitmap);
+        BitmapDrawable back = new BitmapDrawable(getResources(), originalBmp);
         mPaintView.setBackground(back);
 
-        //Se hace la petición al servidor de CpPlugins
-        //JSONObject data = provider.createJSON(H, W, originalByteArray, newByteArray);
-        //provider.sendPOSTRequestCpPlugins(CanvaImageView.this, data, imageId);
-
+        //Se envia la información del Canva a la pantalla de la selección de algoritmo
         Intent intent = new Intent(CanvaImageView.this, ProcessingMethodActivity.class);
-        intent.putExtra("Buffer", newByteArray);
+        intent.putExtra("BufferPreview", previewByteArray);
+        intent.putExtra("BufferInitial", originalByteArray);
+        intent.putExtra("BufferEdited", newByteArray);
+        //intent.putExtra("W", W);
+        //intent.putExtra("H", H);
         intent.putExtra("imageId", imageId);
-        intent.putExtra("arrival", "CpPlugins");
-        intent.putExtra("title", "nueva_imagen_procesada");
         startActivity(intent);
     }
 
