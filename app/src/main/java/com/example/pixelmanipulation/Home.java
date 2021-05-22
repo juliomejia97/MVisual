@@ -299,7 +299,7 @@ public class Home extends AppCompatActivity {
                     Intent intent = new Intent(getBaseContext(), UploadImageActivity.class);
                     intent.putExtra("mhd", getFilesDir() + "/" + mhdName);
                     intent.putExtra("raw", getFilesDir() + "/" + rawName);
-                    intent.putExtra("imageId", "");
+                    intent.putExtra("imageId", "Local_Mobile_Processed_Images");
                     startActivity(intent);
                 }
             }
