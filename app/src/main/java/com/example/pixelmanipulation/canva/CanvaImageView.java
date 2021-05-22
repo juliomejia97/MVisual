@@ -1,5 +1,6 @@
 package com.example.pixelmanipulation.canva;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -34,6 +35,9 @@ import com.providers.CpPluginsProvider;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -265,15 +269,29 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         BitmapDrawable back = new BitmapDrawable(getResources(), originalBmp);
         mPaintView.setBackground(back);
 
+        JSONObject jsonObject = provider.createJSON(H,W,originalByteArray,newByteArray,"");
         //Se envia la información del Canva a la pantalla de la selección de algoritmo
         Intent intent = new Intent(CanvaImageView.this, ProcessingMethodActivity.class);
         intent.putExtra("BufferPreview", previewByteArray);
-        intent.putExtra("BufferInitial", originalByteArray);
-        intent.putExtra("BufferEdited", newByteArray);
-        //intent.putExtra("W", W);
-        //intent.putExtra("H", H);
+        saveJSONInternalStorage(jsonObject.toString());
         intent.putExtra("imageId", imageId);
         startActivity(intent);
     }
 
+
+    private boolean saveJSONInternalStorage(String jsonString){
+        String FILENAME = "storage.json";
+        try {
+            FileOutputStream fos = this.openFileOutput(FILENAME,Context.MODE_PRIVATE);
+            if (jsonString != null) {
+                fos.write(jsonString.getBytes());
+            }
+            fos.close();
+            return true;
+        } catch (FileNotFoundException fileNotFound) {
+            return false;
+        } catch (IOException ioException) {
+            return false;
+        }
+    }
 }

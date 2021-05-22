@@ -29,6 +29,7 @@ import com.google.firebase.storage.StorageReference;
 import com.providers.CpPluginsProvider;
 import com.providers.FirebaseProvider;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -42,19 +43,15 @@ public class AlgorithmListAdapter extends ArrayAdapter<String> {
     private List<String> listDatos;
     private Context context;
     private String imageId;
-    private byte[] initialBuffer, editedBuffer;
-    private int W, H;
+    private JSONObject json;
 
-    public AlgorithmListAdapter(Context context, ArrayList<String> listDatos, String imageId, byte[] initialBuffer, byte[] editedBuffer, int W, int H) {
+    public AlgorithmListAdapter(Context context, ArrayList<String> listDatos, String imageId, JSONObject json) {
         super(context, R.layout.algorithm_list_adapter, listDatos);
         this.provider = CpPluginsProvider.getInstance();
         this.context = context;
         this.listDatos = listDatos;
         this.imageId = imageId;
-        this.initialBuffer = initialBuffer;
-        this.editedBuffer = editedBuffer;
-        this.W = W;
-        this.H = H;
+        this.json = json;
     }
 
     @NonNull
@@ -70,14 +67,19 @@ public class AlgorithmListAdapter extends ArrayAdapter<String> {
         llData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                JSONObject data = provider.createJSON(H, W, initialBuffer, editedBuffer, listDatos.get(position));
-                //provider.sendPOSTRequestCpPlugins(context, data, imageId);
-                Intent intent = new Intent(context, ProcessedImageActivity.class);
-                intent.putExtra("Buffer", editedBuffer);
+                try {
+                    json.put("xml_description","itk."+listDatos.get(position).toString());
+                    provider.sendPOSTRequestCpPlugins(context, json, imageId);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                /*Intent intent = new Intent(context, ProcessedImageActivity.class);
+                //intent.putExtra("Buffer", editedBuffer);
                 intent.putExtra("imageId", imageId);
                 intent.putExtra("arrival", "CpPlugins");
                 intent.putExtra("title", "nueva_imagen_procesada");
-                context.startActivity(intent);
+                context.startActivity(intent);*/
             }
         });
 

@@ -12,6 +12,16 @@ import com.example.pixelmanipulation.adapters.AlgorithmListAdapter;
 import com.example.pixelmanipulation.adapters.ListViewAdapter;
 import com.providers.CpPluginsProvider;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 public class ProcessingMethodActivity extends AppCompatActivity {
 
     private ImageView imageView;
@@ -32,18 +42,40 @@ public class ProcessingMethodActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         byte[] preview = getIntent().getByteArrayExtra("BufferPreview");
-        byte[] initial = getIntent().getByteArrayExtra("BufferInitial");
-        byte[] edited = getIntent().getByteArrayExtra("BufferEdited");
+        JSONObject  json = null;
+        try {
+            json = new JSONObject(read("storage.json"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         String imageId = getIntent().getStringExtra("imageId");
-        int W = getIntent().getIntExtra("W", 0);
-        int H = getIntent().getIntExtra("H", 0);
-        initData(preview, initial, edited, imageId, W, H);
+        initData(preview, imageId, json);
     }
 
-    private void initData(byte[] previewBuffer, byte[] initialBuffer, byte[] editedBuffer, String imageId, int W, int H){
+    private void initData(byte[] previewBuffer, String imageId, JSONObject jsonObject){
         Bitmap editedImage = BitmapFactory.decodeByteArray(previewBuffer, 0, previewBuffer.length);
         imageView.setImageBitmap(editedImage);
-        mAdapter = new AlgorithmListAdapter(ProcessingMethodActivity.this, provider.sendGETRequestCpPlugins(), imageId, initialBuffer, editedBuffer, W, H);
+        mAdapter = new AlgorithmListAdapter(ProcessingMethodActivity.this, provider.sendGETRequestCpPlugins(), imageId, jsonObject);
         mLista.setAdapter(mAdapter);
+    }
+
+    private String read(String fileName){
+        try {
+            File jsonFile = new File(getFilesDir() + "/" + fileName);
+            FileInputStream fis = this.openFileInput(fileName);
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader bufferedReader = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+            jsonFile.delete();
+            return sb.toString();
+        } catch (FileNotFoundException fileNotFound) {
+            return null;
+        } catch (IOException ioException) {
+            return null;
+        }
     }
 }
