@@ -12,11 +12,12 @@
     <ImageView
         android:id="@+id/top_bar_home"
         android:layout_width="437dp"
-        android:layout_height="300dp"
-        android:layout_marginBottom="495dp"
+        android:layout_height="288dp"
+        android:layout_marginBottom="510dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/nurse_home" />
 
     <TableLayout

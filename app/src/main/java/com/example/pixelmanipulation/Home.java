@@ -156,7 +156,7 @@ public class Home extends AppCompatActivity {
             };
 
             Handler h = new Handler();
-            h.postDelayed(r, 1250);
+            h.postDelayed(r, 1470);
         });
 
         btnFloating.setOnClickListener(new View.OnClickListener() {
@@ -168,6 +168,10 @@ public class Home extends AppCompatActivity {
                 }
             }
         });
+    }
+    @Override
+    public void onBackPressed() {
+        
     }
 
     private void hideAnimations(ObjectAnimator topBarAnimation, String folder) {
