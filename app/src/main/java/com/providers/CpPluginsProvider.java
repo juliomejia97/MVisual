@@ -190,7 +190,7 @@ public class CpPluginsProvider {
             String raw_buffer = (String) json.get("raw_buffer");
             Intent intent = new Intent(context, ProcessedImageActivity.class);
             intent.putExtra("Buffer", Base64.decode(raw_buffer, Base64.DEFAULT));
-            intent.putExtra("parent", imageId);
+            intent.putExtra("imageId", imageId);
             intent.putExtra("arrival", "CpPlugins");
             intent.putExtra("title", "nueva_imagen_procesada");
             context.startActivity(intent);
