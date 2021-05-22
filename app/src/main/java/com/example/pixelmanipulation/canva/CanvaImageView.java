@@ -122,7 +122,7 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         List<ToolsItem> result = new ArrayList<>();
 
         result.add(new ToolsItem(R.drawable.ic_baseline_brush_24, Common.BRUSH));
-        result.add(new ToolsItem(R.drawable.eraser24,Common.ERASER));
+        result.add(new ToolsItem(R.drawable.eraser_icon,Common.ERASER));
 
         return result;
     }
@@ -196,7 +196,7 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         seekBar.setMax(19);
         if(isEraser){
             toolsSelected.setText("Eraser Size");
-            ivTools.setImageResource(R.drawable.eraser24);
+            ivTools.setImageResource(R.drawable.eraser_icon);
             statusSize.setText("Selected Size: "+ eraserSize);
         }else{
             toolsSelected.setText("Brush Size");
@@ -228,12 +228,7 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
             }
         });
 
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
+        builder.setPositiveButton("OK", (dialogInterface, i) -> dialogInterface.dismiss());
         builder.setView(view);
         builder.show();
     }

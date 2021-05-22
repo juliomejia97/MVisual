@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 
 import com.example.pixelmanipulation.adapters.AlgorithmListAdapter;
-import com.example.pixelmanipulation.adapters.ListViewAdapter;
 import com.providers.CpPluginsProvider;
 
 import org.json.JSONException;
@@ -21,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Objects;
 
 public class ProcessingMethodActivity extends AppCompatActivity {
 
@@ -46,7 +46,7 @@ public class ProcessingMethodActivity extends AppCompatActivity {
 
         try {
             if(json == null){
-                json = new JSONObject(read("storage.json"));
+                json = new JSONObject(Objects.requireNonNull(read("storage.json")));
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -75,9 +75,7 @@ public class ProcessingMethodActivity extends AppCompatActivity {
             }
             jsonFile.delete();
             return sb.toString();
-        } catch (FileNotFoundException fileNotFound) {
-            return null;
-        } catch (IOException ioException) {
+        } catch (IOException fileNotFound) {
             return null;
         }
     }

@@ -2,8 +2,6 @@ package com.example.pixelmanipulation;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -12,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.providers.FirebaseProvider;
 import com.example.pixelmanipulation.adapters.ListViewAdapter;
+
+import java.util.Objects;
 
 public class CategoryListActivity extends AppCompatActivity {
 
@@ -41,7 +41,7 @@ public class CategoryListActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        initView(getIntent().getStringExtra("Type"));
+        initView(Objects.requireNonNull(getIntent().getStringExtra("Type")));
     }
     @Override
     public void onBackPressed() {

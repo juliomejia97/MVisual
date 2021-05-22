@@ -89,27 +89,19 @@ public class UploadImageActivity extends AppCompatActivity {
                 AlertDialog.Builder builder = new AlertDialog.Builder(view.getContext());
                 builder.setMessage("¿Seguro que desea continuar? Si continua y regresa perderá su proceso.")
                         .setCancelable(false)
-                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                ByteArrayOutputStream stream = new ByteArrayOutputStream();
-                                Bitmap bitmapIntent = image.getDrawingCache();
-                                bitmapIntent.compress(Bitmap.CompressFormat.PNG, 100, stream);
-                                byte[] byteArray = stream.toByteArray();
-                                Intent intent = new Intent(view.getContext(), CanvaImageView.class);
-                                intent.putExtra("BitmapImage", byteArray);
-                                intent.putExtra("ImageName", mhdName);
-                                intent.putExtra("imageId", imageId);
-                                startActivity(intent);
-                                finish();
-                            }
+                        .setPositiveButton("Si", (dialogInterface, i) -> {
+                            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                            Bitmap bitmapIntent = image.getDrawingCache();
+                            bitmapIntent.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                            byte[] byteArray = stream.toByteArray();
+                            Intent intent = new Intent(view.getContext(), CanvaImageView.class);
+                            intent.putExtra("BitmapImage", byteArray);
+                            intent.putExtra("ImageName", mhdName);
+                            intent.putExtra("imageId", imageId);
+                            startActivity(intent);
+                            finish();
                         })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.cancel();
-                            }
-                        });
+                        .setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
                 AlertDialog alert = builder.create();
                 alert.show();
             }
@@ -165,34 +157,13 @@ public class UploadImageActivity extends AppCompatActivity {
     }
 
     public void updateWindow() {
-
         tvWindow.setText("" + sbWindow.getProgress());
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                image.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        wlAlgorithm();
-                    }
-                });
-            }
-        }).start();
+        new Thread(() -> image.post(() -> wlAlgorithm())).start();
     }
 
     public void updateLevel() {
         tvLevel.setText("" + sbLevel.getProgress());
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                image.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        wlAlgorithm();
-                    }
-                });
-            }
-        }).start();
+        new Thread(() -> image.post(() -> wlAlgorithm())).start();
     }
 
     public void updateDepth(){
@@ -201,22 +172,10 @@ public class UploadImageActivity extends AppCompatActivity {
         tvDepth.setText("" + sbDepth.getProgress());
         tvWindow.setText("" + sbWindow.getProgress());
         tvLevel.setText("" + sbLevel.getProgress());
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                image.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        getBuffer(sbDepth.getProgress());
-                    }
-                });
-            }
-        }).start();
+        new Thread(() -> image.post(() -> getBuffer(sbDepth.getProgress()))).start();
     }
 
     public void getBuffer(int bufferIndex) {
-
-        //Se obtiene el buffer del indice bufferIndex
         int[] buffer = imageMHD.getDepths().get(bufferIndex);
         for(int i = 0; i < buffer.length; i++){
             int color = (255 & 0xff) << 24 | (buffer[i] & 0xff) << 16 | (buffer[i] & 0xff) << 8 | (buffer[i] & 0xff);

@@ -50,22 +50,19 @@ public class InfoListActivity extends AppCompatActivity {
         tvInfoThird = findViewById(R.id.tvInfoThird);
         mlista = findViewById(R.id.lvInfo);
 
-        ivPrevious.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (level == 1){
-                    Intent intent = new Intent(InfoListActivity.this, CategoryListActivity.class);
-                    intent.putExtra("Type", info.getType());
-                    startActivity(intent);
-                    finish();
-                } else {
-                    Intent intent = new Intent(InfoListActivity.this, InfoListActivity.class);
-                    intent.putExtra("Type", infoSecondary.getType());
-                    intent.putExtra("Id", infoSecondary.getId());
-                    intent.putExtra("Level", (level - 1));
-                    startActivity(intent);
-                    finish();
-                }
+        ivPrevious.setOnClickListener(view -> {
+            if (level == 1){
+                Intent intent = new Intent(InfoListActivity.this, CategoryListActivity.class);
+                intent.putExtra("Type", info.getType());
+                startActivity(intent);
+                finish();
+            } else {
+                Intent intent = new Intent(InfoListActivity.this, InfoListActivity.class);
+                intent.putExtra("Type", infoSecondary.getType());
+                intent.putExtra("Id", infoSecondary.getId());
+                intent.putExtra("Level", (level - 1));
+                startActivity(intent);
+                finish();
             }
         });
     }
@@ -96,12 +93,12 @@ public class InfoListActivity extends AppCompatActivity {
             infoSecondary = null;
             infoThird = null;
         } else if(type.equalsIgnoreCase("estudios")){
-            info = provider.getStudyById(idCurrent);
-            infoSecondary = provider.getStudyPatient(info.getId());
+            info = FirebaseProvider.getStudyById(idCurrent);
+            infoSecondary = FirebaseProvider.getStudyPatient(info.getId());
         } else if(type.equalsIgnoreCase("series")){
-            info = provider.getSeriesById(idCurrent);
-            infoSecondary = provider.getSeriesStudy(info.getId());
-            infoThird = provider.getStudyPatient(infoSecondary.getId());
+            info = FirebaseProvider.getSeriesById(idCurrent);
+            infoSecondary = FirebaseProvider.getSeriesStudy(info.getId());
+            infoThird = FirebaseProvider.getStudyPatient(infoSecondary.getId());
         }
 
         initData();
@@ -115,7 +112,7 @@ public class InfoListActivity extends AppCompatActivity {
         if(info.getType().equalsIgnoreCase("pacientes")){
             try {
                 downloadProfileImage(idCurrent, ivInfo);
-                mListInfoAdapter = new ListViewAdapter(InfoListActivity.this, provider.getStudiesByPatient(info.getId()), (level + 1));
+                mListInfoAdapter = new ListViewAdapter(InfoListActivity.this, FirebaseProvider.getStudiesByPatient(info.getId()), (level + 1));
                 mlista.setAdapter(mListInfoAdapter);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -123,13 +120,13 @@ public class InfoListActivity extends AppCompatActivity {
         } else if (info.getType().equalsIgnoreCase("estudios")){
             ivInfo.setImageDrawable(getResources().getDrawable(R.drawable.carpeta_studios));
             tvInfoSecond.setText(infoSecondary.getInfo());
-            mListInfoAdapter = new ListViewAdapter(InfoListActivity.this, provider.getSeriesByStudy(info.getId()), (level + 1));
+            mListInfoAdapter = new ListViewAdapter(InfoListActivity.this, FirebaseProvider.getSeriesByStudy(info.getId()), (level + 1));
             mlista.setAdapter(mListInfoAdapter);
         } else if (info.getType().equalsIgnoreCase("series")){
             ivInfo.setImageDrawable(getResources().getDrawable(R.drawable.series_folder));
             tvInfoSecond.setText(infoSecondary.getInfo());
             tvInfoThird.setText(infoThird.getInfo());
-            mListInfoAdapter = new ListViewAdapter(InfoListActivity.this, provider.getImagesBySeries(info.getId()), (level + 1));
+            mListInfoAdapter = new ListViewAdapter(InfoListActivity.this, FirebaseProvider.getImagesBySeries(info.getId()), (level + 1));
             mlista.setAdapter(mListInfoAdapter);
         }
     }
@@ -138,15 +135,7 @@ public class InfoListActivity extends AppCompatActivity {
         final File localFile = File.createTempFile("images", "png");
         StorageReference imageRef = mStorage.child("Profile/" + idPatient + "/Profile.png");
         imageRef.getFile(localFile)
-                .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                        photo.setImageURI(Uri.fromFile(localFile));
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-            }
-        });
+                .addOnSuccessListener(taskSnapshot -> photo.setImageURI(Uri.fromFile(localFile))).addOnFailureListener(exception -> {
+                });
     }
 }

@@ -64,22 +64,12 @@ public class AlgorithmListAdapter extends ArrayAdapter<String> {
         ImageView image = mView.findViewById(R.id.imgViewAlgorithmAdapter);
         image.setImageDrawable(mView.getResources().getDrawable(R.drawable.neural));
         LinearLayout llData = mView.findViewById(R.id.llDataInfoAlgorithm);
-        llData.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    json.put("xml_description","itk."+listDatos.get(position).toString());
-                    provider.sendPOSTRequestCpPlugins(context, json, imageId);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                /*Intent intent = new Intent(context, ProcessedImageActivity.class);
-                //intent.putExtra("Buffer", editedBuffer);
-                intent.putExtra("imageId", imageId);
-                intent.putExtra("arrival", "CpPlugins");
-                intent.putExtra("title", "nueva_imagen_procesada");
-                context.startActivity(intent);*/
+        llData.setOnClickListener(view -> {
+            try {
+                json.put("xml_description","itk."+listDatos.get(position).toString());
+                provider.sendPOSTRequestCpPlugins(context, json, imageId);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
         });
 

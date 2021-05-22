@@ -36,7 +36,6 @@ import java.nio.ByteBuffer;
 
 public class ProcessedImageActivity extends AppCompatActivity {
 
-    private FirebaseProvider provider;
     private ImageView ivProcessed, ivPrevious;
     private Button btnNube, btnDispositivo;
     private String imageId, arrival;
@@ -48,7 +47,6 @@ public class ProcessedImageActivity extends AppCompatActivity {
     public void onCreate( Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_processed_images);
-        provider = FirebaseProvider.getInstance();
         ivProcessed = findViewById(R.id.ivProcessed);
         ivProcessed = findViewById(R.id.ivProcessed);
         ivPrevious = findViewById(R.id.previousProcessed);
@@ -69,20 +67,12 @@ public class ProcessedImageActivity extends AppCompatActivity {
                     android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(view.getContext());
                     builder.setMessage("¿Seguro que desea regresar? Se recomienda guardar la imagen primero ya que se perderá el procesamiento realizado.")
                             .setCancelable(false)
-                            .setPositiveButton("Si", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    Intent intent = new Intent(ProcessedImageActivity.this, Home.class);
-                                    startActivity(intent);
-                                    finish();
-                                }
+                            .setPositiveButton("Si", (dialogInterface, i) -> {
+                                Intent intent = new Intent(ProcessedImageActivity.this, Home.class);
+                                startActivity(intent);
+                                finish();
                             })
-                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) {
-                                    dialogInterface.cancel();
-                                }
-                            });
+                            .setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
                     android.app.AlertDialog alert = builder.create();
                     alert.show();
                 } else {
@@ -93,61 +83,37 @@ public class ProcessedImageActivity extends AppCompatActivity {
             }
         });
 
-        btnNube.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnNube.setOnClickListener(view -> {
 
-                savedFile = true;
-                AlertDialog.Builder builder = new AlertDialog.Builder(ProcessedImageActivity.this);
-                builder.setTitle("Digite el nombre de la imagen a guardar");
-                final EditText input = new EditText(ProcessedImageActivity.this);
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setView(input);
+            savedFile = true;
+            AlertDialog.Builder builder = new AlertDialog.Builder(ProcessedImageActivity.this);
+            builder.setTitle("Digite el nombre de la imagen a guardar");
+            final EditText input = new EditText(ProcessedImageActivity.this);
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            builder.setView(input);
 
-                builder.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String key = provider.createProcessed(new DataViewHolder(input.getText().toString(), "procesadas"), imageId);
-                        provider.uploadProcessedImage(processedBmp, key, input.getText().toString(), ProcessedImageActivity.this);
-                    }
-                });
-                builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
+            builder.setPositiveButton("Guardar", (dialog, which) -> {
+                String key = FirebaseProvider.createProcessed(new DataViewHolder(input.getText().toString(), "procesadas"), imageId);
+                FirebaseProvider.uploadProcessedImage(processedBmp, key, input.getText().toString(), ProcessedImageActivity.this);
+            });
+            builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
 
-                builder.show();
-            }
+            builder.show();
         });
 
-        btnDispositivo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btnDispositivo.setOnClickListener(view -> {
 
-                savedFile = true;
-                AlertDialog.Builder builder = new AlertDialog.Builder(ProcessedImageActivity.this);
-                builder.setTitle("Digite el nombre de la imagen a guardar");
-                final EditText input = new EditText(ProcessedImageActivity.this);
-                input.setInputType(InputType.TYPE_CLASS_TEXT);
-                builder.setView(input);
+            savedFile = true;
+            AlertDialog.Builder builder = new AlertDialog.Builder(ProcessedImageActivity.this);
+            builder.setTitle("Digite el nombre de la imagen a guardar");
+            final EditText input = new EditText(ProcessedImageActivity.this);
+            input.setInputType(InputType.TYPE_CLASS_TEXT);
+            builder.setView(input);
 
-                builder.setPositiveButton("Guardar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        saveImage(processedBmp, input.getText().toString());
-                    }
-                });
-                builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
+            builder.setPositiveButton("Guardar", (dialog, which) -> saveImage(processedBmp, input.getText().toString()));
+            builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
 
-                builder.show();
-            }
+            builder.show();
         });
     }
 
@@ -164,20 +130,12 @@ public class ProcessedImageActivity extends AppCompatActivity {
                 android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
                 builder.setMessage("¿Seguro que desea regresar? Se recomienda guardar la imagen primero ya que se perderá el procesamiento realizado.")
                         .setCancelable(false)
-                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                Intent intent = new Intent(ProcessedImageActivity.this, Home.class);
-                                startActivity(intent);
-                                finish();
-                            }
+                        .setPositiveButton("Si", (dialogInterface, i) -> {
+                            Intent intent = new Intent(ProcessedImageActivity.this, Home.class);
+                            startActivity(intent);
+                            finish();
                         })
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                dialogInterface.cancel();
-                            }
-                        });
+                        .setNegativeButton("No", (dialogInterface, i) -> dialogInterface.cancel());
                 android.app.AlertDialog alert = builder.create();
                 alert.show();
             } else {
@@ -189,7 +147,6 @@ public class ProcessedImageActivity extends AppCompatActivity {
     }
     @Override
     protected void onStart() {
-        //https://stackoverflow.com/questions/7620401/how-to-convert-image-file-data-in-a-byte-array-to-a-bitmap
         super.onStart();
         imageId = getIntent().getStringExtra("imageId");
         arrival = getIntent().getStringExtra("arrival");
@@ -221,10 +178,7 @@ public class ProcessedImageActivity extends AppCompatActivity {
                     android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(ProcessedImageActivity.this);
                     builder.setMessage("La imagen se guardó en el dispositivo exitosamente.")
                             .setCancelable(false)
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) { }
-                            });
+                            .setPositiveButton("OK", (dialogInterface, i) -> { });
                     android.app.AlertDialog alert = builder.create();
                     alert.show();
                 } catch (FileNotFoundException e) {
@@ -232,10 +186,7 @@ public class ProcessedImageActivity extends AppCompatActivity {
                     android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(ProcessedImageActivity.this);
                     builder.setMessage("No se pudo guardar la imagen en el dispositivo.")
                             .setCancelable(false)
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialogInterface, int i) { }
-                            });
+                            .setPositiveButton("OK", (dialogInterface, i) -> { });
                     android.app.AlertDialog alert = builder.create();
                     alert.show();
                 }
@@ -257,10 +208,7 @@ public class ProcessedImageActivity extends AppCompatActivity {
                 android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(ProcessedImageActivity.this);
                 builder.setMessage("La imagen se guardó en el dispositivo exitosamente.")
                         .setCancelable(false)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) { }
-                        });
+                        .setPositiveButton("OK", (dialogInterface, i) -> { });
                 android.app.AlertDialog alert = builder.create();
                 alert.show();
             } catch (FileNotFoundException e) {
@@ -268,10 +216,7 @@ public class ProcessedImageActivity extends AppCompatActivity {
                 android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(ProcessedImageActivity.this);
                 builder.setMessage("No se pudo guardar la imagen en el dispositivo.")
                         .setCancelable(false)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) { }
-                        });
+                        .setPositiveButton("OK", (dialogInterface, i) -> { });
                 android.app.AlertDialog alert = builder.create();
                 alert.show();
             }

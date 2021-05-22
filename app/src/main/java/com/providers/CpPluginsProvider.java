@@ -7,29 +7,19 @@ import android.content.Intent;
 import android.util.Base64;
 import android.util.Log;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.pixelmanipulation.FilesActivity;
 import com.example.pixelmanipulation.ProcessedImageActivity;
-import com.example.pixelmanipulation.UploadImageActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class CpPluginsProvider {
 
@@ -147,13 +137,10 @@ public class CpPluginsProvider {
 
         String url = "http://150.136.161.199:5000/api/v1.0/pipeline";
         RequestQueue queue = Volley.newRequestQueue(context);
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, data, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                Log.i("CpPlugins POST OK", response.toString());
-                pDialog.dismiss();
-                readPOSTJson(response, imageId, context);
-            }
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, data, response -> {
+            Log.i("CpPlugins POST OK", response.toString());
+            pDialog.dismiss();
+            readPOSTJson(response, imageId, context);
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
@@ -162,10 +149,7 @@ public class CpPluginsProvider {
                 android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
                 builder.setMessage("Error procesando la imagen en CpPlugins.")
                         .setCancelable(false)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) { }
-                        });
+                        .setPositiveButton("OK", (dialogInterface, i) -> { });
                 android.app.AlertDialog alert = builder.create();
                 alert.show();
             }

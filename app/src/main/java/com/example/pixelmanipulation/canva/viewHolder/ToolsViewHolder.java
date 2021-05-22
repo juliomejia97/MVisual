@@ -27,12 +27,7 @@ public class ToolsViewHolder extends RecyclerView.ViewHolder {
         icone = itemView.findViewById(R.id.tools_icone);
         name = itemView.findViewById(R.id.tools_name);
 
-        itemView.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view){
-            viewOnClick.onClick(getAdapterPosition());
-            }
-        });
+        itemView.setOnClickListener(view -> viewOnClick.onClick(getAdapterPosition()));
     }
 
 

@@ -53,11 +53,11 @@ public class FirebaseProvider {
     private FirebaseProvider(){
         mStorageRef = FirebaseStorage.getInstance().getReference();
         mDatabase = FirebaseDatabase.getInstance();
-        patients = new ArrayList<DataViewHolder>();
-        studies = new ArrayList<DataViewHolder>();
-        series = new ArrayList<DataViewHolder>();
-        images = new ArrayList<DataViewHolder>();
-        processed = new ArrayList<DataViewHolder>();
+        patients = new ArrayList<>();
+        studies = new ArrayList<>();
+        series = new ArrayList<>();
+        images = new ArrayList<>();
+        processed = new ArrayList<>();
         getPatientsFromFirebase();
         getStudiesFromFirebase();
         getSeriesFromFirebase();
@@ -311,12 +311,7 @@ public class FirebaseProvider {
             final File localFile = File.createTempFile(mhdName, ".mhd", context.getFilesDir());
             StorageReference imageRef = mStorageRef.child(STORAGE_IMAGE_PATH + mhdName + ".mhd");
             imageRef.getFile(localFile)
-                    .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                            loadRawImage(rawName, imageId, localFile.getAbsolutePath().toString(), context);
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
+                    .addOnSuccessListener(taskSnapshot -> loadRawImage(rawName, imageId, localFile.getAbsolutePath().toString(), context)).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
                     Log.i("Firebase", "Error encontrando el archivo");
@@ -334,49 +329,17 @@ public class FirebaseProvider {
             final File localFile = File.createTempFile(rawImage, ".raw", context.getFilesDir());
             StorageReference imageRef = mStorageRef.child(STORAGE_IMAGE_PATH + rawImage + ".raw");
             imageRef.getFile(localFile)
-                    .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                            Intent intent = new Intent(context, UploadImageActivity.class);
-                            intent.putExtra("mhd", pathMhd);
-                            intent.putExtra("raw", localFile.getAbsoluteFile().toString());
-                            intent.putExtra("imageId", imageId);
-                            pDialog.dismiss();
-                            context.startActivity(intent);
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    Log.i("Firebase", "Error encontrando el archivo");
-                }
-            });
+                    .addOnSuccessListener(taskSnapshot -> {
+                        Intent intent = new Intent(context, UploadImageActivity.class);
+                        intent.putExtra("mhd", pathMhd);
+                        intent.putExtra("raw", localFile.getAbsoluteFile().toString());
+                        intent.putExtra("imageId", imageId);
+                        pDialog.dismiss();
+                        context.startActivity(intent);
+                    }).addOnFailureListener(exception -> Log.i("Firebase", "Error encontrando el archivo"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public static void createPatient(DataViewHolder newPatient){
-        mReference = mDatabase.getReference(PATIENTS_PATH);
-        String key = mReference.push().getKey();
-        mReference.child(key).setValue(newPatient);
-    }
-
-    public static void createStudies(DataViewHolder newStudy, String idPatient){
-        mReference = mDatabase.getReference(STUDIES_PATH);
-        String key = mReference.push().getKey();
-        mReference.child(idPatient).child(key).setValue(newStudy);
-    }
-
-    public static void createSeries(DataViewHolder newSeries, String idStudy){
-        mReference = mDatabase.getReference(SERIES_PATH);
-        String key = mReference.push().getKey();
-        mReference.child(idStudy).child(key).setValue(newSeries);
-    }
-
-    public static void createImages(DataViewHolder newImage, String idSeries){
-        mReference = mDatabase.getReference(IMAGES_PATH);
-        String key = mReference.push().getKey();
-        mReference.child(idSeries).child(key).setValue(newImage);
     }
 
     public static String createProcessed(DataViewHolder newProcessed, String idImage){
@@ -393,35 +356,23 @@ public class FirebaseProvider {
 
         StorageReference processedRef = mStorageRef.child("Processed/" + key + "/" + title + ".png");
         UploadTask ut = processedRef.putBytes(data);
-        ut.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.i("Processed Image", "Failed to upload processed image to storage");
-                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
-                builder.setMessage("No se pudo guardar la imagen en la base de datos.")
-                        .setCancelable(false)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) { }
-                        });
-                android.app.AlertDialog alert = builder.create();
-                alert.show();
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Log.i("Processed Image", "Succesfully uploaded processed image to storage");
-                getProcessedFromFirebase();
-                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
-                builder.setMessage("La imagen se guardó en la base de datos exitosamente.")
-                        .setCancelable(false)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) { }
-                        });
-                android.app.AlertDialog alert = builder.create();
-                alert.show();
-            }
+        ut.addOnFailureListener(e -> {
+            Log.i("Processed Image", "Failed to upload processed image to storage");
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
+            builder.setMessage("No se pudo guardar la imagen en la base de datos.")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", (dialogInterface, i) -> { });
+            android.app.AlertDialog alert = builder.create();
+            alert.show();
+        }).addOnSuccessListener(taskSnapshot -> {
+            Log.i("Processed Image", "Succesfully uploaded processed image to storage");
+            getProcessedFromFirebase();
+            android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
+            builder.setMessage("La imagen se guardó en la base de datos exitosamente.")
+                    .setCancelable(false)
+                    .setPositiveButton("OK", (dialogInterface, i) -> { });
+            android.app.AlertDialog alert = builder.create();
+            alert.show();
         });
     }
 }

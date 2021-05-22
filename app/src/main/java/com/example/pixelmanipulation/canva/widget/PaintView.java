@@ -35,7 +35,6 @@ public class PaintView extends View {
 
     private void init() {
         sizeEraser = sizeBrush = 12;
-        //colorBackground = Color.WHITE;
         mPaint.setColor(Color.BLACK);
         mPaint.setAntiAlias(true);
         mPaint.setDither(true);

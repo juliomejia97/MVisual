@@ -36,7 +36,6 @@
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".FilesActivity" />
         <activity android:name=".CategoryListActivity" />
         <activity android:name=".ProcessedImageActivity" />
         <activity android:name=".ProcessingMethodActivity"></activity>

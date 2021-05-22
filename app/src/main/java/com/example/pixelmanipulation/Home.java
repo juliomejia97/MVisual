@@ -1,9 +1,7 @@
 package com.example.pixelmanipulation;
 
 import android.Manifest;
-import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Context;
@@ -20,11 +18,9 @@ import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Switch;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,7 +33,6 @@ import androidx.core.content.ContextCompat;
 import androidx.loader.content.CursorLoader;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.providers.FirebaseProvider;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -159,13 +154,10 @@ public class Home extends AppCompatActivity {
             h.postDelayed(r, 1470);
         });
 
-        btnFloating.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                accessAlm = requestPermission(Home.this, Manifest.permission.READ_EXTERNAL_STORAGE, "Permission to Access Gallery", ALMACENAMIENTO_EXTERNO);
-                if(accessAlm){
-                    usePermissionApplication();
-                }
+        btnFloating.setOnClickListener(view -> {
+            accessAlm = requestPermission(Home.this, Manifest.permission.READ_EXTERNAL_STORAGE, "Permission to Access Gallery", ALMACENAMIENTO_EXTERNO);
+            if(accessAlm){
+                usePermissionApplication();
             }
         });
     }
@@ -286,26 +278,23 @@ public class Home extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch(requestCode){
+        if (requestCode == FILE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                final Uri fileUri = data.getData();
+                String mhdPath = getPathFromUri(Home.this, fileUri);
+                String mhdName = getFileName(fileUri);
 
-            case FILE_PICKER_REQUEST: {
-                if(resultCode == RESULT_OK){
-                    final Uri fileUri = data.getData();
-                    String mhdPath = getPathFromUri(Home.this, fileUri);
-                    String mhdName = getFileName(fileUri);
-
-                    insertIntoInternalStorage(mhdName, mhdPath);
-                    String rawName = mhdName.replace(".mhd", ".raw");
-                    String rawPath = mhdPath.replace(mhdName, rawName);
-                    insertIntoInternalStorage(rawName, rawPath);
-                    Log.i("mhd", "mhdnme " + mhdName);
-                    Log.i("mhd", "mhdnme " + rawName);
-                    Intent intent = new Intent(getBaseContext(), UploadImageActivity.class);
-                    intent.putExtra("mhd", getFilesDir() + "/" + mhdName);
-                    intent.putExtra("raw", getFilesDir() + "/" + rawName);
-                    intent.putExtra("imageId", "Local_Mobile_Processed_Images");
-                    startActivity(intent);
-                }
+                insertIntoInternalStorage(mhdName, mhdPath);
+                String rawName = mhdName.replace(".mhd", ".raw");
+                String rawPath = mhdPath.replace(mhdName, rawName);
+                insertIntoInternalStorage(rawName, rawPath);
+                Log.i("mhd", "mhdnme " + mhdName);
+                Log.i("mhd", "mhdnme " + rawName);
+                Intent intent = new Intent(getBaseContext(), UploadImageActivity.class);
+                intent.putExtra("mhd", getFilesDir() + "/" + mhdName);
+                intent.putExtra("raw", getFilesDir() + "/" + rawName);
+                intent.putExtra("imageId", "Local_Mobile_Processed_Images");
+                startActivity(intent);
             }
         }
     }
@@ -313,15 +302,11 @@ public class Home extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
-
-            case ALMACENAMIENTO_EXTERNO: {
-                if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                    usePermissionApplication();
-                } else {
-                    Toast.makeText(getBaseContext(), "Access denied to image gallery", Toast.LENGTH_LONG).show();
-                }
-                break;
+        if (requestCode == ALMACENAMIENTO_EXTERNO) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                usePermissionApplication();
+            } else {
+                Toast.makeText(getBaseContext(), "Access denied to image gallery", Toast.LENGTH_LONG).show();
             }
         }
     }
