@@ -28,7 +28,7 @@ public class ProcessingMethodActivity extends AppCompatActivity {
     private ListView mLista;
     private AlgorithmListAdapter mAdapter;
     private CpPluginsProvider provider;
-
+    private JSONObject json;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,15 +36,18 @@ public class ProcessingMethodActivity extends AppCompatActivity {
         provider = CpPluginsProvider.getInstance();
         imageView = findViewById(R.id.ivMethod);
         mLista = findViewById(R.id.lvMethod);
+        json = null;
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         byte[] preview = getIntent().getByteArrayExtra("BufferPreview");
-        JSONObject  json = null;
+
         try {
-            json = new JSONObject(read("storage.json"));
+            if(json == null){
+                json = new JSONObject(read("storage.json"));
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
