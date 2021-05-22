@@ -18,7 +18,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/previousCanva"
+            android:id="@+id/previousUpload"
             android:layout_width="39dp"
             android:layout_height="40dp"
             android:layout_marginStart="16dp"

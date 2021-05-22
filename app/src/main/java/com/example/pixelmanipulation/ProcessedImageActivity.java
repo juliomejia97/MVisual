@@ -57,41 +57,38 @@ public class ProcessedImageActivity extends AppCompatActivity {
         btnDispositivo = findViewById(R.id.btnDispositivo);
         savedFile = false;
 
-        ivPrevious.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(arrival.equalsIgnoreCase("ProcessedList")){
-                    Intent intent = new Intent(ProcessedImageActivity.this, CategoryListActivity.class);
-                    intent.putExtra("Type", "Procesadas");
+        ivPrevious.setOnClickListener(view -> {
+            if(arrival.equalsIgnoreCase("ProcessedList")){
+                Intent intent = new Intent(ProcessedImageActivity.this, CategoryListActivity.class);
+                intent.putExtra("Type", "Procesadas");
+                startActivity(intent);
+                finish();
+            } else if(arrival.equalsIgnoreCase("CpPlugins")){
+                Log.i("Processed", "Retornar desde CpPlugins");
+                if(!savedFile){
+                    android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(view.getContext());
+                    builder.setMessage("¿Seguro que desea regresar? Se recomienda guardar la imagen primero ya que se perderá el procesamiento realizado.")
+                            .setCancelable(false)
+                            .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Intent intent = new Intent(ProcessedImageActivity.this, Home.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                            })
+                            .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    dialogInterface.cancel();
+                                }
+                            });
+                    android.app.AlertDialog alert = builder.create();
+                    alert.show();
+                } else {
+                    Intent intent = new Intent(ProcessedImageActivity.this, Home.class);
                     startActivity(intent);
                     finish();
-                } else if(arrival.equalsIgnoreCase("CpPlugins")){
-                    Log.i("Processed", "Retornar desde CpPlugins");
-                    if(!savedFile){
-                        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(view.getContext());
-                        builder.setMessage("¿Seguro que desea regresar? Se recomienda guardar la imagen primero ya que se perderá el procesamiento realizado.")
-                                .setCancelable(false)
-                                .setPositiveButton("Si", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        Intent intent = new Intent(ProcessedImageActivity.this, Home.class);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                })
-                                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialogInterface, int i) {
-                                        dialogInterface.cancel();
-                                    }
-                                });
-                        android.app.AlertDialog alert = builder.create();
-                        alert.show();
-                    } else {
-                        Intent intent = new Intent(ProcessedImageActivity.this, Home.class);
-                        startActivity(intent);
-                        finish();
-                    }
                 }
             }
         });
@@ -154,6 +151,42 @@ public class ProcessedImageActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        if(arrival.equalsIgnoreCase("ProcessedList")){
+            Intent intent = new Intent(ProcessedImageActivity.this, CategoryListActivity.class);
+            intent.putExtra("Type", "Procesadas");
+            startActivity(intent);
+            finish();
+        } else if(arrival.equalsIgnoreCase("CpPlugins")){
+            Log.i("Processed", "Retornar desde CpPlugins");
+            if(!savedFile){
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
+                builder.setMessage("¿Seguro que desea regresar? Se recomienda guardar la imagen primero ya que se perderá el procesamiento realizado.")
+                        .setCancelable(false)
+                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent intent = new Intent(ProcessedImageActivity.this, Home.class);
+                                startActivity(intent);
+                                finish();
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                dialogInterface.cancel();
+                            }
+                        });
+                android.app.AlertDialog alert = builder.create();
+                alert.show();
+            } else {
+                Intent intent = new Intent(ProcessedImageActivity.this, Home.class);
+                startActivity(intent);
+                finish();
+            }
+        }
+    }
     @Override
     protected void onStart() {
         //https://stackoverflow.com/questions/7620401/how-to-convert-image-file-data-in-a-byte-array-to-a-bitmap

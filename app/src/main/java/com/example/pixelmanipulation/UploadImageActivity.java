@@ -28,7 +28,7 @@ public class UploadImageActivity extends AppCompatActivity {
     private CpPluginsProvider provider;
     private ImageView image;
     private Bitmap imgBitmap;
-    private ImageView btnProcess;
+    private ImageView btnProcess,previousUpload;
     private SeekBar sbWindow, sbLevel, sbDepth;
     private TextView tvImage, tvWindow, tvLevel, tvDepth;
     private TextView lblWindow, lblLevel, lblDepth;
@@ -53,6 +53,8 @@ public class UploadImageActivity extends AppCompatActivity {
         llLevel = findViewById(R.id.lllevel);
         llDepth = findViewById(R.id.llDepth);
         btnProcess = findViewById(R.id.btnProcess);
+        previousUpload =findViewById(R.id.previousUpload);
+
         sbWindow = findViewById(R.id.sbWindow);
         sbLevel = findViewById(R.id.sbLevel);
         sbDepth = findViewById(R.id.sbDepth);
@@ -74,6 +76,12 @@ public class UploadImageActivity extends AppCompatActivity {
         llWindow.setVisibility(View.INVISIBLE);
         llLevel.setVisibility(View.INVISIBLE);
         btnProcess.setVisibility(View.INVISIBLE);
+
+        previousUpload.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), Home.class);
+            startActivity(intent);
+            finish();
+        });
 
         btnProcess.setOnClickListener(new View.OnClickListener() {
             @Override

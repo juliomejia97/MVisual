@@ -43,6 +43,12 @@ public class CategoryListActivity extends AppCompatActivity {
         super.onStart();
         initView(getIntent().getStringExtra("Type"));
     }
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), Home.class);
+        startActivity(intent);
+        finish();
+    }
 
     public void initView(String type) {
 
