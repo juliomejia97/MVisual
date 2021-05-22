@@ -1,6 +1,8 @@
 package com.providers;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Base64;
 import android.util.Log;
@@ -16,6 +18,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.pixelmanipulation.FilesActivity;
 import com.example.pixelmanipulation.ProcessedImageActivity;
+import com.example.pixelmanipulation.UploadImageActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -24,6 +27,7 @@ import org.json.JSONObject;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +44,7 @@ public class CpPluginsProvider {
         return cpPluginsProvider;
     }
 
-    public JSONObject createJSON(int H, int W, byte[] initialBuffer, byte[] editedBuffer){
+    public JSONObject createJSON(int H, int W, byte[] initialBuffer, byte[] editedBuffer, String algorithm){
 
         try {
             JSONObject restJSON = new JSONObject();
@@ -49,7 +53,7 @@ public class CpPluginsProvider {
             restJSON.put("packages", "itk");
 
             //Description JSON
-            restJSON.put("xml_description", "itk.OtsuMultipleThresholdsImageFilter");
+            restJSON.put("xml_description", "itk." + algorithm);
 
             //Parameters JSON
             JSONArray paramArray = new JSONArray();
@@ -98,9 +102,24 @@ public class CpPluginsProvider {
         }
     }
 
-    public void sendGETRequestCpPlugins(Context context) {
+    public ArrayList<String> sendGETRequestCpPlugins() {
 
-        String url = "http://150.136.161.199:5000/api/v1.0/pipeline";
+        ArrayList<String> algorithms = new ArrayList<String>();
+        algorithms.add("AbortCheckEvent");
+        algorithms.add("AbortEvent");
+        algorithms.add("AbsImageFilter");
+        algorithms.add("AmoebaOptimizer");
+        algorithms.add("DelaunayConformingQuadEdgeMeshFilter");
+        algorithms.add("EdgePotentialImageFilter");
+        algorithms.add("GaussianDerivativeOperatorEnums");
+        algorithms.add("GrayscaleErodeImageFilter");
+        algorithms.add("ITKIOMeshFreeSurfer");
+        algorithms.add("MaskNegatedImageFilter");
+        algorithms.add("OtsuMultipleThresholdsImageFilter");
+        algorithms.add("ParticleSwarmOptimizer");
+        algorithms.add("PowellOptimizer");
+
+        /*String url = "http://150.136.161.199:5000/api/v1.0/pipeline";
         RequestQueue queue = Volley.newRequestQueue(context);
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
             @Override
@@ -114,10 +133,15 @@ public class CpPluginsProvider {
             }
         });
 
-        queue.add(request);
+        queue.add(request);*/
+
+        return algorithms;
     }
 
-    public void sendPOSTRequestCpPlugins(Context context, JSONObject data) {
+    public void sendPOSTRequestCpPlugins(Context context, JSONObject data, String imageId) {
+
+        ProgressDialog pDialog;
+        pDialog = ProgressDialog.show(context, "Procesando Imagen...", "Por favor espere", true,false);
 
         Log.i("CpPlugins", "Entered POST request...");
 
@@ -127,12 +151,23 @@ public class CpPluginsProvider {
             @Override
             public void onResponse(JSONObject response) {
                 Log.i("CpPlugins POST OK", response.toString());
-                readPOSTJson(response, context);
+                pDialog.dismiss();
+                readPOSTJson(response, imageId, context);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i("CpPlugins POST Error", error.toString());
+                pDialog.dismiss();
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
+                builder.setMessage("Error procesando la imagen en CpPlugins.")
+                        .setCancelable(false)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) { }
+                        });
+                android.app.AlertDialog alert = builder.create();
+                alert.show();
             }
         });/*{
             @Override
@@ -150,11 +185,14 @@ public class CpPluginsProvider {
         queue.add(request);
     }
 
-    public void readPOSTJson(JSONObject json, Context context){
+    public void readPOSTJson(JSONObject json, String imageId, Context context){
         try {
             String raw_buffer = (String) json.get("raw_buffer");
             Intent intent = new Intent(context, ProcessedImageActivity.class);
             intent.putExtra("Buffer", Base64.decode(raw_buffer, Base64.DEFAULT));
+            intent.putExtra("imageId", imageId);
+            intent.putExtra("arrival", "CpPlugins");
+            intent.putExtra("title", "nueva_imagen_procesada");
             context.startActivity(intent);
         } catch (JSONException e) {
             e.printStackTrace();

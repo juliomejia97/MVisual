@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.pixelmanipulation">
 
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -11,34 +11,39 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="MVisual"
-        android:usesCleartextTraffic="true"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true"
+        tools:replace="android:label">
         <!--
                Set to true if your app is Standalone, that is, it does not require the handheld
                app to run.
         -->
-        <meta-data
-            android:name="com.google.android.wearable.standalone"
-            android:value="true" />
-
-
-        <activity android:name=".FilesActivity">
+        <activity
+            android:name=".Home"
+            android:label="@string/title_activity_home"></activity>
+        <activity android:name=".LandingPage">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <meta-data
+            android:name="preloaded_fonts"
+            android:resource="@array/preloaded_fonts" />
+
+        <activity android:name=".FilesActivity" />
         <activity android:name=".CategoryListActivity" />
         <activity android:name=".ProcessedImageActivity" />
+        <activity android:name=".ProcessingMethodActivity"></activity>
         <activity android:name=".UploadImageActivity" />
         <activity android:name=".InfoListActivity" />
         <activity android:name=".canva.DrawOnBitmapActivity" />
         <activity android:name=".canva.CanvaImageView" />
-
     </application>
 
 </manifest>

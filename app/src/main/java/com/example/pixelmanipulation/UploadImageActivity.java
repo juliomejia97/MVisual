@@ -1,67 +1,40 @@
 package com.example.pixelmanipulation;
 
-import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.ContentUris;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
-import android.provider.OpenableColumns;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.loader.content.CursorLoader;
 
 import com.example.pixelmanipulation.canva.CanvaImageView;
 import com.example.pixelmanipulation.model.ImageMHD;
 import com.providers.CpPluginsProvider;
 
-import org.json.JSONObject;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 
 public class UploadImageActivity extends AppCompatActivity {
 
     private CpPluginsProvider provider;
     private ImageView image;
     private Bitmap imgBitmap;
-    private Button btnProcess;
+    private ImageView btnProcess,previousUpload;
     private SeekBar sbWindow, sbLevel, sbDepth;
     private TextView tvImage, tvWindow, tvLevel, tvDepth;
+    private TextView lblWindow, lblLevel, lblDepth;
     private LinearLayout llWindow, llLevel, llDepth;
     private ImageMHD imageMHD;
-    private String mhdName, rawName;
+    private String mhdName, rawName, imageId;
 
     @Override
     public void onCreate( Bundle savedInstanceState) {
@@ -69,14 +42,19 @@ public class UploadImageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_upload_image);
         provider = CpPluginsProvider.getInstance();
         image = findViewById(R.id.imgView);
-        tvImage = findViewById(R.id.tvImageName);
+        tvImage = findViewById(R.id.tvImageNameCanva);
         tvWindow = findViewById(R.id.tvProgressW);
         tvLevel = findViewById(R.id.tvProgressL);
         tvDepth = findViewById(R.id.tvProgressDepth);
+        lblWindow = findViewById(R.id.textView3);
+        lblLevel = findViewById(R.id.textView4);
+        lblDepth = findViewById(R.id.txt_depth);
         llWindow = findViewById(R.id.llWindow);
         llLevel = findViewById(R.id.lllevel);
         llDepth = findViewById(R.id.llDepth);
-        btnProcess = findViewById(R.id.btnProcesar);
+        btnProcess = findViewById(R.id.btnProcess);
+        previousUpload =findViewById(R.id.previousUpload);
+
         sbWindow = findViewById(R.id.sbWindow);
         sbLevel = findViewById(R.id.sbLevel);
         sbDepth = findViewById(R.id.sbDepth);
@@ -90,11 +68,20 @@ public class UploadImageActivity extends AppCompatActivity {
 
         image.setDrawingCacheEnabled(true);
 
+        lblWindow.setVisibility(View.INVISIBLE);
+        lblLevel.setVisibility(View.INVISIBLE);
+        lblDepth.setVisibility(View.INVISIBLE);
         tvImage.setVisibility(View.INVISIBLE);
         llDepth.setVisibility(View.INVISIBLE);
         llWindow.setVisibility(View.INVISIBLE);
         llLevel.setVisibility(View.INVISIBLE);
         btnProcess.setVisibility(View.INVISIBLE);
+
+        previousUpload.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), Home.class);
+            startActivity(intent);
+            finish();
+        });
 
         btnProcess.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,6 +98,8 @@ public class UploadImageActivity extends AppCompatActivity {
                                 byte[] byteArray = stream.toByteArray();
                                 Intent intent = new Intent(view.getContext(), CanvaImageView.class);
                                 intent.putExtra("BitmapImage", byteArray);
+                                intent.putExtra("ImageName", mhdName);
+                                intent.putExtra("imageId", imageId);
                                 startActivity(intent);
                                 finish();
                             }
@@ -171,6 +160,7 @@ public class UploadImageActivity extends AppCompatActivity {
         super.onStart();
         mhdName = getIntent().getStringExtra("mhd");
         rawName = getIntent().getStringExtra("raw");
+        imageId = getIntent().getStringExtra("imageId");
         new GenerateImage().execute(mhdName, rawName);
     }
 
@@ -292,6 +282,9 @@ public class UploadImageActivity extends AppCompatActivity {
         tvDepth.setText("" + sbDepth.getProgress());
         tvImage.setText("" + mhdName);
 
+        lblWindow.setVisibility(View.VISIBLE);
+        lblLevel.setVisibility(View.VISIBLE);
+        lblDepth.setVisibility(View.VISIBLE);
         tvImage.setVisibility(View.VISIBLE);
         llWindow.setVisibility(View.VISIBLE);
         llLevel.setVisibility(View.VISIBLE);

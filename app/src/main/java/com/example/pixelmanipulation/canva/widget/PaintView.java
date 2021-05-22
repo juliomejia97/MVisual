@@ -19,12 +19,11 @@ import java.util.ArrayList;
 public class PaintView extends View {
     private Bitmap btmBackground, btmView;
     private Paint mPaint = new Paint();
-    private Paint paint = new Paint();
 
     private Path mPath = new Path();
-    private int colorBackground, sizeBrush, sizeEraser;
+    private int sizeBrush, sizeEraser;
     private float mX, mY;
-    private Canvas mCanvas,canvas;
+    private Canvas mCanvas;
     private final int DEFFERENCE_SPACE = 4;
     private ArrayList<Bitmap> listAction = new ArrayList<>();
 
@@ -32,11 +31,7 @@ public class PaintView extends View {
         super(context, attrs);
         init();
     }
-    public void setNewImage(Bitmap alteredBitmap, Bitmap bmp)
-    {
-        //canvas = new Canvas(alteredBitmap);
-        btmBackground = alteredBitmap;
-    }
+
 
     private void init() {
         sizeEraser = sizeBrush = 12;
@@ -66,13 +61,11 @@ public class PaintView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        //canvas.drawColor(colorBackground);
         canvas.drawBitmap(btmBackground, 0, 0, null);
         canvas.drawBitmap(btmView, 0, 0, null);
     }
 
     public void setColorBackground(int color) {
-        //colorBackground = color;
         invalidate();
     }
 

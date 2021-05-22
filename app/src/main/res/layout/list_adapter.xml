@@ -22,7 +22,7 @@
             android:src="@drawable/waiting"
             android:scaleType="fitCenter"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1"/>
+            android:layout_weight="0.2"/>
 
         <TextView
             android:id="@+id/txtViewAdapter"
@@ -30,17 +30,19 @@
             android:layout_height="match_parent"
             android:textSize="20dp"
             android:gravity="center"
-            android:layout_weight="1"/>
+            android:layout_weight="0.3"/>
 
-        <ImageView
-            android:id="@+id/imgNext"
-            android:layout_width="70dp"
-            android:layout_height="35dp"
-            android:src="@drawable/next"
-            android:scaleType="fitCenter"
-            android:layout_marginLeft="10dp"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"/>
+        <TextView
+            android:id="@+id/txtItemAdapter"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text=""
+            android:gravity="center"
+            android:textSize="10dp"
+            />
+
+
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

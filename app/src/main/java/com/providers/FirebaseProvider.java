@@ -2,10 +2,14 @@ package com.providers;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.example.pixelmanipulation.UploadImageActivity;
 import com.example.pixelmanipulation.model.DataViewHolder;
@@ -19,7 +23,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,11 +37,13 @@ public class FirebaseProvider {
     private static final String STUDIES_PATH = "estudios";
     private static final String SERIES_PATH = "series";
     private static final String IMAGES_PATH = "imagenes";
+    private static final String PROCESSED_PATH = "procesadas";
 
     private static ArrayList<DataViewHolder> patients;
     private static ArrayList<DataViewHolder> studies;
     private static ArrayList<DataViewHolder> series;
     private static ArrayList<DataViewHolder> images;
+    private static ArrayList<DataViewHolder> processed;
 
     private static StorageReference mStorageRef;
     private static FirebaseProvider firebaseInstance;
@@ -49,10 +57,12 @@ public class FirebaseProvider {
         studies = new ArrayList<DataViewHolder>();
         series = new ArrayList<DataViewHolder>();
         images = new ArrayList<DataViewHolder>();
+        processed = new ArrayList<DataViewHolder>();
         getPatientsFromFirebase();
         getStudiesFromFirebase();
         getSeriesFromFirebase();
         getImagesFromFirebase();
+        getProcessedFromFirebase();
     }
 
     public static FirebaseProvider getInstance() {
@@ -82,6 +92,16 @@ public class FirebaseProvider {
         });
     }
 
+    public static int getItemsByPatientId(String idPatient){
+        int countPatients = 0;
+        for( DataViewHolder item: studies){
+            if(item.getParentId().equals(idPatient)) {
+                countPatients++;
+            }
+        }
+        return countPatients;
+    }
+
     public static void getStudiesFromFirebase(){
         mReference = mDatabase.getReference(STUDIES_PATH);
         mReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -103,6 +123,16 @@ public class FirebaseProvider {
 
             }
         });
+    }
+
+    public static int getItemsByStudiesId(String idStudies){
+        int countStudies = 0;
+        for( DataViewHolder item: series){
+            if(item.getParentId().equals(idStudies)) {
+                countStudies++;
+            }
+        }
+        return countStudies;
     }
 
     public static void getSeriesFromFirebase(){
@@ -128,6 +158,16 @@ public class FirebaseProvider {
         });
     }
 
+    public static int getItemsBySeriesId(String idSeries){
+        int countImages = 0;
+        for( DataViewHolder item: images){
+            if(item.getParentId().equals(idSeries)) {
+                countImages++;
+            }
+        }
+        return countImages;
+    }
+    
     public static void getImagesFromFirebase(){
         mReference = mDatabase.getReference(IMAGES_PATH);
         mReference.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -151,6 +191,30 @@ public class FirebaseProvider {
         });
     }
 
+    public static void getProcessedFromFirebase() {
+        processed.clear();
+        mReference = mDatabase.getReference(PROCESSED_PATH);
+        mReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(DataSnapshot image: snapshot.getChildren()){
+                    for(DataSnapshot single: image.getChildren()){
+                        DataViewHolder newProcessed = single.getValue(DataViewHolder.class);
+                        newProcessed.setId(single.getKey());
+                        newProcessed.setParentId(image.getKey());
+                        processed.add(newProcessed);
+                    }
+                }
+                Log.i("Firebase", "Processed Images Initialized");
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     public static ArrayList<DataViewHolder> getAllPatients(){
         return patients;
     }
@@ -162,6 +226,8 @@ public class FirebaseProvider {
     public static ArrayList<DataViewHolder> getAllSeries(){
         return series;
     }
+
+    public static ArrayList<DataViewHolder> getAllProcessed() { return processed; }
 
     public static DataViewHolder getPatientById(String id){
         for(DataViewHolder patient: patients){
@@ -240,7 +306,7 @@ public class FirebaseProvider {
         return imgSeries;
     }
 
-    public void loadImage(String mhdName, String rawName, Context context){
+    public void loadImage(String mhdName, String rawName, String imageId, Context context){
         try {
             final File localFile = File.createTempFile(mhdName, ".mhd", context.getFilesDir());
             StorageReference imageRef = mStorageRef.child(STORAGE_IMAGE_PATH + mhdName + ".mhd");
@@ -248,7 +314,7 @@ public class FirebaseProvider {
                     .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
                         @Override
                         public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                            loadRawImage(rawName, localFile.getAbsolutePath().toString(), context);
+                            loadRawImage(rawName, imageId, localFile.getAbsolutePath().toString(), context);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
@@ -261,9 +327,9 @@ public class FirebaseProvider {
         }
     }
 
-    public void loadRawImage(String rawImage, String pathMhd, Context context){
+    public void loadRawImage(String rawImage, String imageId, String pathMhd, Context context){
         try {
-            ProgressDialog pDialog = ProgressDialog.show(context, "Obteniendo Archivo de la Base de Datos...", "Por favor espere", true,false);
+            ProgressDialog pDialog = ProgressDialog.show(context, "Obteniendo archivo de la base de datos...", "Por favor espere", true,false);
 
             final File localFile = File.createTempFile(rawImage, ".raw", context.getFilesDir());
             StorageReference imageRef = mStorageRef.child(STORAGE_IMAGE_PATH + rawImage + ".raw");
@@ -274,6 +340,7 @@ public class FirebaseProvider {
                             Intent intent = new Intent(context, UploadImageActivity.class);
                             intent.putExtra("mhd", pathMhd);
                             intent.putExtra("raw", localFile.getAbsoluteFile().toString());
+                            intent.putExtra("imageId", imageId);
                             pDialog.dismiss();
                             context.startActivity(intent);
                         }
@@ -312,5 +379,49 @@ public class FirebaseProvider {
         mReference.child(idSeries).child(key).setValue(newImage);
     }
 
+    public static String createProcessed(DataViewHolder newProcessed, String idImage){
+        mReference = mDatabase.getReference(PROCESSED_PATH);
+        String key = mReference.push().getKey();
+        mReference.child(idImage).child(key).setValue(newProcessed);
+        return key;
+    }
 
+    public static void uploadProcessedImage(Bitmap processedBmp, String key, String title, Context context) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        processedBmp.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        StorageReference processedRef = mStorageRef.child("Processed/" + key + "/" + title + ".png");
+        UploadTask ut = processedRef.putBytes(data);
+        ut.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.i("Processed Image", "Failed to upload processed image to storage");
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
+                builder.setMessage("No se pudo guardar la imagen en la base de datos.")
+                        .setCancelable(false)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) { }
+                        });
+                android.app.AlertDialog alert = builder.create();
+                alert.show();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Log.i("Processed Image", "Succesfully uploaded processed image to storage");
+                getProcessedFromFirebase();
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(context);
+                builder.setMessage("La imagen se guardó en la base de datos exitosamente.")
+                        .setCancelable(false)
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) { }
+                        });
+                android.app.AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
+    }
 }

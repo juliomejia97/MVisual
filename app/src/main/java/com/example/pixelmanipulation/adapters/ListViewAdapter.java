@@ -3,7 +3,11 @@ package com.example.pixelmanipulation.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.util.Base64;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +20,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.pixelmanipulation.InfoListActivity;
+import com.example.pixelmanipulation.ProcessedImageActivity;
 import com.example.pixelmanipulation.R;
 import com.example.pixelmanipulation.model.DataViewHolder;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -25,6 +30,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.providers.FirebaseProvider;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,6 +59,8 @@ public class ListViewAdapter extends ArrayAdapter<DataViewHolder> {
         LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View mView = layoutInflater.from(this.context).inflate(R.layout.list_adapter, parent, false);
         TextView infoText = mView.findViewById(R.id.txtViewAdapter);
+        TextView txtItemAdapter = mView.findViewById(R.id.txtItemAdapter);
+
         ImageView image = mView.findViewById(R.id.imgViewAdapter);
         String type = this.listDatos.get(position).getType();
         infoText.setText(this.listDatos.get(position).getInfo());
@@ -60,34 +68,52 @@ public class ListViewAdapter extends ArrayAdapter<DataViewHolder> {
         llData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!type.equalsIgnoreCase("imagenes")){
+                if(type.equalsIgnoreCase("pacientes") || type.equalsIgnoreCase("estudios") || type.equalsIgnoreCase("series")){
                     Intent intent = new Intent(getContext(), InfoListActivity.class);
                     intent.putExtra("Id", listDatos.get(position).getId());
                     intent.putExtra("Type", type);
                     intent.putExtra("Level", level);
                     view.getContext().startActivity(intent);
-                } else {
+                } else if(type.equalsIgnoreCase("imagenes")) {
+                    String id = listDatos.get(position).getId();
                     String mhdName = listDatos.get(position).getInfo();
                     String rawName = mhdName.replace(".mhd", ".raw");
                     mhdName = mhdName.replace(".mhd", "");
                     rawName = rawName.replace(".raw", "");
-                    provider.loadImage(mhdName, rawName, view.getContext());
+                    provider.loadImage(mhdName, rawName, id, view.getContext());
+                } else if(type.equalsIgnoreCase("procesadas")){
+                    Intent intent = new Intent(getContext(), ProcessedImageActivity.class);
+                    intent.putExtra("Buffer", getBuffer(image));
+                    intent.putExtra("imageId", listDatos.get(position).getId());
+                    intent.putExtra("arrival", "ProcessedList");
+                    intent.putExtra("title", listDatos.get(position).getInfo());
+                    context.startActivity(intent);
                 }
             }
         });
 
         if(type.equalsIgnoreCase("pacientes")){
             try {
+                txtItemAdapter.setText(provider.getItemsByPatientId(listDatos.get(position).getId())+" items");
                 downloadProfileImage(this.listDatos.get(position).getId(), image);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else if (type.equalsIgnoreCase("estudios")){
-            image.setImageDrawable(mView.getResources().getDrawable(R.drawable.folder));
+            txtItemAdapter.setText(provider.getItemsByStudiesId(listDatos.get(position).getId())+" items");
+            image.setImageDrawable(mView.getResources().getDrawable(R.drawable.carpeta_studios));
         } else if (type.equalsIgnoreCase("series")){
-            image.setImageDrawable(mView.getResources().getDrawable(R.drawable.scan));
+            txtItemAdapter.setText(provider.getItemsBySeriesId(listDatos.get(position).getId())+" items");
+
+            image.setImageDrawable(mView.getResources().getDrawable(R.drawable.series_folder));
         } else if (type.equalsIgnoreCase("imagenes")){
             image.setImageDrawable(mView.getResources().getDrawable(R.drawable.processed_image));
+        } else if (type.equalsIgnoreCase("procesadas")){
+            try {
+                downloadProcessedImage(this.listDatos.get(position).getId(), image, position);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         return mView;
@@ -107,6 +133,29 @@ public class ListViewAdapter extends ArrayAdapter<DataViewHolder> {
             public void onFailure(@NonNull Exception exception) {
             }
         });
+    }
+
+    private void downloadProcessedImage(String idImage, final ImageView photo, int position) throws IOException {
+        final File localFile = File.createTempFile("images", "png");
+        StorageReference imageRef = mStorage.child("Processed/" + idImage + "/" + this.listDatos.get(position).getInfo() + ".png");
+        imageRef.getFile(localFile)
+                .addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                        photo.setImageURI(Uri.fromFile(localFile));
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+            }
+        });
+    }
+
+    private byte[] getBuffer(ImageView image){
+        Bitmap bitmap = ((BitmapDrawable) image.getDrawable()).getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        return baos.toByteArray();
     }
 
 }

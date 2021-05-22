@@ -69,7 +69,22 @@ public class InfoListActivity extends AppCompatActivity {
             }
         });
     }
-
+    @Override
+    public void onBackPressed() {
+        if (level == 1){
+            Intent intent = new Intent(InfoListActivity.this, CategoryListActivity.class);
+            intent.putExtra("Type", info.getType());
+            startActivity(intent);
+            finish();
+        } else {
+            Intent intent = new Intent(InfoListActivity.this, InfoListActivity.class);
+            intent.putExtra("Type", infoSecondary.getType());
+            intent.putExtra("Id", infoSecondary.getId());
+            intent.putExtra("Level", (level - 1));
+            startActivity(intent);
+            finish();
+        }
+    }
     @Override
     protected void onStart() {
         super.onStart();
@@ -106,12 +121,12 @@ public class InfoListActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         } else if (info.getType().equalsIgnoreCase("estudios")){
-            ivInfo.setImageDrawable(getResources().getDrawable(R.drawable.folder));
+            ivInfo.setImageDrawable(getResources().getDrawable(R.drawable.carpeta_studios));
             tvInfoSecond.setText(infoSecondary.getInfo());
             mListInfoAdapter = new ListViewAdapter(InfoListActivity.this, provider.getSeriesByStudy(info.getId()), (level + 1));
             mlista.setAdapter(mListInfoAdapter);
         } else if (info.getType().equalsIgnoreCase("series")){
-            ivInfo.setImageDrawable(getResources().getDrawable(R.drawable.scan));
+            ivInfo.setImageDrawable(getResources().getDrawable(R.drawable.series_folder));
             tvInfoSecond.setText(infoSecondary.getInfo());
             tvInfoThird.setText(infoThird.getInfo());
             mListInfoAdapter = new ListViewAdapter(InfoListActivity.this, provider.getImagesBySeries(info.getId()), (level + 1));

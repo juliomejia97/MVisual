@@ -59,44 +59,33 @@ public class FilesActivity extends AppCompatActivity {
         llPacientes = findViewById(R.id.llPacientes);
         llEstudios = findViewById(R.id.llEstudios);
         llSeries = findViewById(R.id.llSeries);
-        llPacientes.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), CategoryListActivity.class);
-                intent.putExtra("Type", "Pacientes");
-                startActivity(intent);
-            }
+        llPacientes.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), CategoryListActivity.class);
+            intent.putExtra("Type", "Pacientes");
+            startActivity(intent);
         });
 
-        llEstudios.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), CategoryListActivity.class);
-                intent.putExtra("Type", "Estudios");
-                startActivity(intent);
-            }
+        llEstudios.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), CategoryListActivity.class);
+            intent.putExtra("Type", "Estudios");
+            startActivity(intent);
         });
 
-        llSeries.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), CategoryListActivity.class);
-                intent.putExtra("Type", "Series");
-                startActivity(intent);
-            }
+        llSeries.setOnClickListener(view -> {
+            Intent intent = new Intent(getApplicationContext(), CategoryListActivity.class);
+            intent.putExtra("Type", "Series");
+            startActivity(intent);
         });
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                accessAlm = requestPermission(FilesActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE, "Permission to Access Gallery", ALMACENAMIENTO_EXTERNO);
-                if(accessAlm){
-                    usePermissionApplication();
-                }
+        FloatingActionButton fab = findViewById(R.id.btnFloating);
+        fab.setOnClickListener(view -> {
+            accessAlm = requestPermission(FilesActivity.this, Manifest.permission.READ_EXTERNAL_STORAGE, "Permission to Access Gallery", ALMACENAMIENTO_EXTERNO);
+            if(accessAlm){
+                usePermissionApplication();
             }
         });
     }
+
 
     private boolean requestPermission(Activity context, String permit, String justification, int id){
         if(ContextCompat.checkSelfPermission(context, permit) != PackageManager.PERMISSION_GRANTED){
