@@ -31,13 +31,19 @@ public class ProcessingMethodActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        initData(getIntent().getByteArrayExtra("BufferPreview"), getIntent().getByteArrayExtra("BufferInitial"), getIntent().getByteArrayExtra("BufferEdited"), getIntent().getStringExtra("imageId"));
+        byte[] preview = getIntent().getByteArrayExtra("BufferPreview");
+        byte[] initial = getIntent().getByteArrayExtra("BufferInitial");
+        byte[] edited = getIntent().getByteArrayExtra("BufferEdited");
+        String imageId = getIntent().getStringExtra("imageId");
+        int W = getIntent().getIntExtra("W", 0);
+        int H = getIntent().getIntExtra("H", 0);
+        initData(preview, initial, edited, imageId, W, H);
     }
 
-    private void initData(byte[] previewBuffer, byte[] initialBuffer, byte[] editedBuffer, String imageId){
+    private void initData(byte[] previewBuffer, byte[] initialBuffer, byte[] editedBuffer, String imageId, int W, int H){
         Bitmap editedImage = BitmapFactory.decodeByteArray(previewBuffer, 0, previewBuffer.length);
         imageView.setImageBitmap(editedImage);
-        mAdapter = new AlgorithmListAdapter(ProcessingMethodActivity.this, provider.sendGETRequestCpPlugins(), imageId, initialBuffer, editedBuffer);
+        mAdapter = new AlgorithmListAdapter(ProcessingMethodActivity.this, provider.sendGETRequestCpPlugins(), imageId, initialBuffer, editedBuffer, W, H);
         mLista.setAdapter(mAdapter);
     }
 }

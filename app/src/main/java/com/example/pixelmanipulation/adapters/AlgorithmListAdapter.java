@@ -43,8 +43,9 @@ public class AlgorithmListAdapter extends ArrayAdapter<String> {
     private Context context;
     private String imageId;
     private byte[] initialBuffer, editedBuffer;
+    private int W, H;
 
-    public AlgorithmListAdapter(Context context, ArrayList<String> listDatos, String imageId, byte[] initialBuffer, byte[] editedBuffer) {
+    public AlgorithmListAdapter(Context context, ArrayList<String> listDatos, String imageId, byte[] initialBuffer, byte[] editedBuffer, int W, int H) {
         super(context, R.layout.algorithm_list_adapter, listDatos);
         this.provider = CpPluginsProvider.getInstance();
         this.context = context;
@@ -52,6 +53,8 @@ public class AlgorithmListAdapter extends ArrayAdapter<String> {
         this.imageId = imageId;
         this.initialBuffer = initialBuffer;
         this.editedBuffer = editedBuffer;
+        this.W = W;
+        this.H = H;
     }
 
     @NonNull
@@ -67,7 +70,7 @@ public class AlgorithmListAdapter extends ArrayAdapter<String> {
         llData.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //JSONObject data = provider.createJSON(H, W, initialBuffer, editedBuffer, listDatos.get(position));
+                JSONObject data = provider.createJSON(H, W, initialBuffer, editedBuffer, listDatos.get(position));
                 //provider.sendPOSTRequestCpPlugins(context, data, imageId);
                 Intent intent = new Intent(context, ProcessedImageActivity.class);
                 intent.putExtra("Buffer", editedBuffer);
