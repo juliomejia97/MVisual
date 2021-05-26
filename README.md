@@ -2,8 +2,6 @@
 
 MVisual en su primera versión es un aplicativo móvil para la visualización y procesamiento de imágenes diagnósticas que provengan desde la nube (mediante Firebase) y el almacenamiento del dispositivo.
 
-## Tabla de Contenidos
-
 ## Guía de Instalación
 
 Este documento sirve para la primera versión de MVisual.
