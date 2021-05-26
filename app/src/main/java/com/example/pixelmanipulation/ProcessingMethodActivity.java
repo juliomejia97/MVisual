@@ -39,6 +39,7 @@ public class ProcessingMethodActivity extends AppCompatActivity {
     private CpPluginsProvider provider;
     private JSONObject json;
     private ArrayList<String> algorithms;
+    private final String url = "http://150.136.161.199:5000/api/v1.0/pipeline";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +93,6 @@ public class ProcessingMethodActivity extends AppCompatActivity {
 
     public void initAlgorithms(String imageId, JSONObject jsonObject){
         algorithms = new ArrayList<>();
-        String url = "http://150.136.161.199:5000/api/v1.0/pipeline";
         RequestQueue queue = Volley.newRequestQueue(this);
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
             @Override
