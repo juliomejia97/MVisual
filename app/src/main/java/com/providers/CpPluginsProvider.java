@@ -12,6 +12,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -47,7 +48,7 @@ public class CpPluginsProvider {
             //restJSON.put("packages", "itk");
 
             //Description JSON
-            restJSON.put("filter_name", "OtsuMultipleThresholdsImageFilter");
+            restJSON.put("filter_name", algorithm);
 
             //Parameters JSON
             JSONArray paramArray = new JSONArray();
@@ -89,7 +90,7 @@ public class CpPluginsProvider {
             input2.put("raw_buffer", Base64.encodeToString(editedBuffer, Base64.DEFAULT));*/
 
             inputsArray.put(input1);
-            inputsArray.put(input2);
+            //inputsArray.put(input2);
 
 
             restJSON.put("inputs", inputsArray);
@@ -102,10 +103,10 @@ public class CpPluginsProvider {
         }
     }
 
-    public ArrayList<String> sendGETRequestCpPlugins() {
+    public ArrayList<String> sendGETRequestCpPlugins(Context context) {
 
         ArrayList<String> algorithms = new ArrayList<String>();
-        algorithms.add("AbortCheckEvent");
+        /*algorithms.add("AbortCheckEvent");
         algorithms.add("AbortEvent");
         algorithms.add("AbsImageFilter");
         algorithms.add("AmoebaOptimizer");
@@ -117,14 +118,22 @@ public class CpPluginsProvider {
         algorithms.add("MaskNegatedImageFilter");
         algorithms.add("OtsuMultipleThresholdsImageFilter");
         algorithms.add("ParticleSwarmOptimizer");
-        algorithms.add("PowellOptimizer");
+        algorithms.add("PowellOptimizer");*/
 
-        /*String url = "http://150.136.161.199:5000/api/v1.0/pipeline";
+        String url = "http://150.136.161.199:5000/api/v1.0/pipeline";
         RequestQueue queue = Volley.newRequestQueue(context);
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 Log.i("CpPlugins GET OK", response.toString());
+                try {
+                    for(int i = 0; i < response.length(); i++){
+                        algorithms.add(response.getString(i));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -133,7 +142,7 @@ public class CpPluginsProvider {
             }
         });
 
-        queue.add(request);*/
+        queue.add(request);
 
         return algorithms;
     }
