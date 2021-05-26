@@ -264,7 +264,7 @@ public class CanvaImageView  extends AppCompatActivity implements ToolsListener 
         BitmapDrawable back = new BitmapDrawable(getResources(), originalBmp);
         mPaintView.setBackground(back);
 
-        JSONObject jsonObject = provider.createJSON(H,W,originalByteArray,newByteArray,"");
+        JSONObject jsonObject = provider.createJSON(H, W, previewByteArray, newByteArray,"");
         //Se envia la información del Canva a la pantalla de la selección de algoritmo
         Intent intent = new Intent(CanvaImageView.this, ProcessingMethodActivity.class);
         intent.putExtra("BufferPreview", previewByteArray);

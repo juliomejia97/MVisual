@@ -7,11 +7,14 @@ import android.content.Intent;
 import android.util.Base64;
 import android.util.Log;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.pixelmanipulation.ProcessedImageActivity;
 
@@ -20,6 +23,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CpPluginsProvider {
 
@@ -40,21 +45,25 @@ public class CpPluginsProvider {
             JSONObject restJSON = new JSONObject();
 
             //Packages JSON
-            restJSON.put("packages", "itk");
+            //restJSON.put("packages", "itk");
 
             //Description JSON
-            restJSON.put("xml_description", "itk." + algorithm);
+            restJSON.put("filter_name", algorithm);
 
             //Parameters JSON
             JSONArray paramArray = new JSONArray();
             JSONObject param1 = new JSONObject();
             JSONObject param2 = new JSONObject();
+            JSONObject param3 = new JSONObject();
             param1.put("name", "NumberOfHistogramBins");
-            param1.put("value", "100");
+            param1.put("value", "255");
             param2.put("name", "ReturnBinMidPoint");
             param2.put("value", "True");
+            param3.put("name", "NumberOfThresholds");
+            param3.put("value", "3");
             paramArray.put(param1);
             paramArray.put(param2);
+            paramArray.put(param3);
 
             restJSON.put("parameters", paramArray);
 
@@ -71,19 +80,21 @@ public class CpPluginsProvider {
             input1.put("direction", "1,0,0,1");
             input1.put("raw_buffer", Base64.encodeToString(initialBuffer, Base64.DEFAULT));
 
-            input2.put("name", "Mask");
+            /*input2.put("name", "Mask");
             input2.put("data_format", "rgba");
             input2.put("data_type", "uchar");
             input2.put("dimensions", W + "," + H);
             input2.put("origin", "0,0");
             input2.put("spacing", "1,1");
             input2.put("direction", "1,0,0,1");
-            input2.put("raw_buffer", Base64.encodeToString(editedBuffer, Base64.DEFAULT));
+            input2.put("raw_buffer", Base64.encodeToString(editedBuffer, Base64.DEFAULT));*/
 
             inputsArray.put(input1);
-            inputsArray.put(input2);
+            //inputsArray.put(input2);
+
 
             restJSON.put("inputs", inputsArray);
+            Log.i("JSON", restJSON.toString());
             return restJSON;
 
         } catch (JSONException e) {
@@ -92,10 +103,10 @@ public class CpPluginsProvider {
         }
     }
 
-    public ArrayList<String> sendGETRequestCpPlugins() {
+    public ArrayList<String> sendGETRequestCpPlugins(Context context) {
 
         ArrayList<String> algorithms = new ArrayList<String>();
-        algorithms.add("AbortCheckEvent");
+        /*algorithms.add("AbortCheckEvent");
         algorithms.add("AbortEvent");
         algorithms.add("AbsImageFilter");
         algorithms.add("AmoebaOptimizer");
@@ -107,14 +118,22 @@ public class CpPluginsProvider {
         algorithms.add("MaskNegatedImageFilter");
         algorithms.add("OtsuMultipleThresholdsImageFilter");
         algorithms.add("ParticleSwarmOptimizer");
-        algorithms.add("PowellOptimizer");
+        algorithms.add("PowellOptimizer");*/
 
-        /*String url = "http://150.136.161.199:5000/api/v1.0/pipeline";
+        String url = "http://150.136.161.199:5000/api/v1.0/pipeline";
         RequestQueue queue = Volley.newRequestQueue(context);
         JsonArrayRequest request = new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 Log.i("CpPlugins GET OK", response.toString());
+                try {
+                    for(int i = 0; i < response.length(); i++){
+                        algorithms.add(response.getString(i));
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
         }, new Response.ErrorListener() {
             @Override
@@ -123,7 +142,7 @@ public class CpPluginsProvider {
             }
         });
 
-        queue.add(request);*/
+        queue.add(request);
 
         return algorithms;
     }
@@ -137,11 +156,14 @@ public class CpPluginsProvider {
 
         String url = "http://150.136.161.199:5000/api/v1.0/pipeline";
         RequestQueue queue = Volley.newRequestQueue(context);
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, data, response -> {
-            Log.i("CpPlugins POST OK", response.toString());
-            pDialog.dismiss();
-            readPOSTJson(response, imageId, context);
-        }, new Response.ErrorListener() {
+        StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Log.i("CpPlugins POST OK", response);
+                pDialog.dismiss();
+                readPOSTJson(response, imageId, context);
+            }
+            }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.i("CpPlugins POST Error", error.toString());
@@ -153,7 +175,7 @@ public class CpPluginsProvider {
                 android.app.AlertDialog alert = builder.create();
                 alert.show();
             }
-        });/*{
+        }){
             @Override
             public byte[] getBody() throws AuthFailureError {
                 return data.toString().getBytes();
@@ -165,22 +187,18 @@ public class CpPluginsProvider {
                 headers.put("Content-Type","application/json");
                 return headers;
             }
-        };*/
+        };
         queue.add(request);
     }
 
-    public void readPOSTJson(JSONObject json, String imageId, Context context){
-        try {
-            String raw_buffer = (String) json.get("raw_buffer");
-            Intent intent = new Intent(context, ProcessedImageActivity.class);
-            intent.putExtra("Buffer", Base64.decode(raw_buffer, Base64.DEFAULT));
-            intent.putExtra("imageId", imageId);
-            intent.putExtra("arrival", "CpPlugins");
-            intent.putExtra("title", "nueva_imagen_procesada");
-            context.startActivity(intent);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+    public void readPOSTJson(String new_buffer, String imageId, Context context){
+        //String raw_buffer = (String) json.get("raw_buffer");
+        Intent intent = new Intent(context, ProcessedImageActivity.class);
+        intent.putExtra("Buffer", Base64.decode(new_buffer, Base64.DEFAULT));
+        intent.putExtra("imageId", imageId);
+        intent.putExtra("arrival", "CpPlugins");
+        intent.putExtra("title", "nueva_imagen_procesada");
+        context.startActivity(intent);
     }
 
 
