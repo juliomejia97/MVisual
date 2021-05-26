@@ -66,7 +66,7 @@ public class AlgorithmListAdapter extends ArrayAdapter<String> {
         LinearLayout llData = mView.findViewById(R.id.llDataInfoAlgorithm);
         llData.setOnClickListener(view -> {
             try {
-                json.put("xml_description","itk."+listDatos.get(position).toString());
+                json.put("filter_name", listDatos.get(position));
                 provider.sendPOSTRequestCpPlugins(context, json, imageId);
             } catch (JSONException e) {
                 e.printStackTrace();

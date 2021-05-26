@@ -73,7 +73,7 @@ public class ProcessingMethodActivity extends AppCompatActivity {
             while ((line = bufferedReader.readLine()) != null) {
                 sb.append(line);
             }
-            jsonFile.delete();
+            //jsonFile.delete();
             return sb.toString();
         } catch (IOException fileNotFound) {
             return null;
