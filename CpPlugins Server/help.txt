@@ -1,0 +1,5 @@
+server:
+flask run
+
+client:
+curl -i -X POST -H 'Content-Type: application/json' -d @test.json http://localhost:5000/api/v1.0/pipeline

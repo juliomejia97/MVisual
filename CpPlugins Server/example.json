@@ -1,0 +1,38 @@
+####### ----->  instalar: wheel, flask, flask_marshmallow, flask_migrate, itk, numpy, vtk
+
+{
+  "packages": "itk",
+  "xml_description": "itk.OtsuMultipleThresholdsImageFilter",
+  "parameters": [
+    {
+      "name": "NumberOfHistogramBins",
+      "value": "100"
+    },
+    {
+      "name": "ReturnBinMidPoint",
+      "value": "True"
+    }
+  ],
+  "inputs": [
+    {
+      "name": "Input",
+      "data_format": "scalar",
+      "data_type": "short",
+      "dimensions": "512,512",
+      "origin": "0,0",
+      "spacing": "1,1",
+      "direction": "1,0,0,1",
+      "raw_buffer": "0101010101"
+    },    
+    {
+      "name": "Mask",
+      "data_format": "rgba",
+      "data_type": "uchar",
+      "dimensions": "512,512",
+      "origin": "0,0",
+      "spacing": "1,1",
+      "direction": "1,0,0,1",
+      "raw_buffer": "0101010101"
+    }
+  ]
+}
